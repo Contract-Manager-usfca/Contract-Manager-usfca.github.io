@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Contract-Manager-usfca.github.io/static/css/main.bc5161fb.css",
-    "main.js": "/Contract-Manager-usfca.github.io/static/js/main.83a0af44.js",
-    "static/js/787.a0d86958.chunk.js": "/Contract-Manager-usfca.github.io/static/js/787.a0d86958.chunk.js",
-    "index.html": "/Contract-Manager-usfca.github.io/index.html",
-    "main.bc5161fb.css.map": "/Contract-Manager-usfca.github.io/static/css/main.bc5161fb.css.map",
-    "main.83a0af44.js.map": "/Contract-Manager-usfca.github.io/static/js/main.83a0af44.js.map",
-    "787.a0d86958.chunk.js.map": "/Contract-Manager-usfca.github.io/static/js/787.a0d86958.chunk.js.map"
+    "main.css": "/static/css/main.bc5161fb.css",
+    "main.js": "/static/js/main.64f8d3fb.js",
+    "static/js/787.a0d86958.chunk.js": "/static/js/787.a0d86958.chunk.js",
+    "index.html": "/index.html",
+    "main.bc5161fb.css.map": "/static/css/main.bc5161fb.css.map",
+    "main.64f8d3fb.js.map": "/static/js/main.64f8d3fb.js.map",
+    "787.a0d86958.chunk.js.map": "/static/js/787.a0d86958.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bc5161fb.css",
-    "static/js/main.83a0af44.js"
+    "static/js/main.64f8d3fb.js"
   ]
 }
