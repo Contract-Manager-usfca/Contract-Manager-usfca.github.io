@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const styles = {
     container: {
-        backgroundColor: '#210043',
+        backgroundColor: '#111111',
         padding: '20px 0',
-        position: 'fixed',
+        position: 'static',
         bottom: 0,
         left: 0,
         right: 0,
@@ -18,30 +18,30 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10 20px',
-        backgroundColor: 'white',
+        backgroundColor: '#3E3E3E',
     },
-    link: {
-        color: '#C188FB',
+    link: (isHovered) => ({
+        color: isHovered ? '#9487E4' : 'white',
         textDecoration: 'none',
         marginLeft: '20px',
         padding: '5px 10px',
-        backgroundColor: 'white',
         transition: 'background-color 0.3s ease, color 0.3s ease',
-        '&:hover': {
-            backgroundColor: '#C188FB',
-            color: '#210043',
-        }
-    },
+    }),
 };
 
 export default function Footer() {
+    const [hoveredLink, setHoveredLink] = useState(null);
+
     return (
         <div style={styles.container}>
             <div style={styles.footer}>
-                <a href="#" style={styles.link}>Home</a>
-                <a href="#" style={styles.link}>About Us</a>
-                <a href="#" style={styles.link}>Help</a>
-                <a href="#" style={styles.link}>Contact Us</a>
+                {['Home', 'About Us', 'Help', 'Contact Us'].map((text) => (
+                    <a key={text} href="#" style={styles.link(hoveredLink === text)}
+                    onMouseEnter={() => setHoveredLink(text)}
+                    onMouseLeave={() => setHoveredLink(null)}>
+                    {text}
+                    </a>
+                ))}
             </div>
         </div>
     );

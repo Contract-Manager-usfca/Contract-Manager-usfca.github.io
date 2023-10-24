@@ -1,0 +1,24 @@
+.bar-chart {
+    text-align: center;
+}
+
+.axis-label {
+    font-size: 14px;
+}
+
+svg {
+    background-color: #111111;
+}
+
+ g {
+    color: white;
+}
+
+.line {
+    stroke-width: 2px;
+}
+
+.circle:hover {
+    stroke: #333;
+    stroke-width: 1px;
+}
