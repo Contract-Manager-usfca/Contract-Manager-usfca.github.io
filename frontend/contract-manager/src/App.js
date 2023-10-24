@@ -1,6 +1,7 @@
 import React from "react";
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// Import HashRouter
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Homepage from './components/HomePage';
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
@@ -9,7 +10,8 @@ import Dashboard from "./components/Dashboard";
 function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Router>
+      {/* Use HashRouter instead of BrowserRouter */}
+      <Router basename="/">
         <div className="flex-column justify-center align-center min-100-vh bg-primary">
           <NavBar />
           <Routes>
@@ -18,7 +20,7 @@ function App() {
               element={<Homepage />}
             />
             <Route
-              path="/Dashboard"
+              path="/Dashboard" // Consider using lowercase "/dashboard" for consistency
               element={<Dashboard />}
             />
           </Routes>
