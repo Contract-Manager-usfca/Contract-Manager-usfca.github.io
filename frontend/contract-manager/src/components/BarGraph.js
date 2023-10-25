@@ -43,8 +43,6 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
       name: gender,
       value: genderDemos[index],
     }));
-    
-    
 
     x.domain(updatedData.map(d => d.name));
     y.domain([0, d3.max(updatedData, d => d.value)]);
