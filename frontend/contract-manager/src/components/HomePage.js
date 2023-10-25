@@ -93,7 +93,7 @@ function HomePage() {
   };
 
   const loadGenderChips = () => {
-    axios.get('http://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
+    axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
       .then(response => {
         const genderDemos = response.data;
   
