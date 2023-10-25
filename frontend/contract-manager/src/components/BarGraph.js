@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
-import '../styles/BarGraph.css';
+import '../styles/bargraph.css';
 
-const BarGraph = ({ selectedDemographics }) => { 
+const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount }) => { 
 
   // TEST DATA 
   // const [data, setData] = useState([
@@ -14,8 +14,10 @@ const BarGraph = ({ selectedDemographics }) => {
 
   // CURRENTLY THE DATA THE GRAPH IS PRODUCING DOESN'T MAKE SENSE
   // need to grab data, group users, add them within their groups, and display
+  // console.log(maleCount, femaleCount, nonBinaryCount);
 
   useEffect(() => {
+
     const margin = { top: 20, right: 20, bottom: 30, left: 100 };
     const width = 800 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
@@ -28,7 +30,12 @@ const BarGraph = ({ selectedDemographics }) => {
 
     // Update the data whenever selectedDemographics changes
     //CURRENTLY USING DEMOGRAPHICS BUT ALSO A RANDOM NUMBER 
-    const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));
+    // const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
+    const updatedData = [
+      { name: "Male", value: maleCount },
+      { name: "Female", value: femaleCount },
+      { name: "Nonbinary", value: nonBinaryCount },
+    ];
 
     x.domain(updatedData.map(d => d.name));
     y.domain([0, d3.max(updatedData, d => d.value)]);
@@ -101,7 +108,7 @@ const BarGraph = ({ selectedDemographics }) => {
     });
 
     svg.append("g").call(d3.axisLeft(y));
-  }, [selectedDemographics]);
+  }, [selectedDemographics, maleCount, femaleCount, nonBinaryCount]);
 
   return <div className="bar-chart"></div>;
 };

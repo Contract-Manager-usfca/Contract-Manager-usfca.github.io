@@ -23,25 +23,17 @@ export default function Navbar() {
   return (
     <div style={styles.nav}>
       <h3
-        style={{
-          padding: "7px",
-          borderRadius: "90%",
-          backgroundColor: "#C188FB",
-          border: "none",
-          fontSize: "17px",
-        }}
-      >
-        {" "}
-        Contract Manager{" "}
+        style={{ padding: "7px", fontSize: "17px" }}>
+        Contract Manager
       </h3>
       <div style={styles.links}>
-        <Nav>
+        <Nav class='bg-transparent'>
           <NavDropdown
-            className="dropdown bg-light bg-large"
+            className="dropdown bg-large"
             title="☰"
             id="basic-nav-dropdown"
             align="end"
-            style={{ fontSize: "20px" }}
+            style={{ fontSize: "23px"}}
           >
             <NavDropdown.Item
               className="nav-item"
