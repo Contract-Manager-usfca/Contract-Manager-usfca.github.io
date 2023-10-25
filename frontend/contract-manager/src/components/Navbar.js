@@ -54,7 +54,7 @@ export default function Navbar() {
               <NavDropdown.Item
                 className="nav-item"
                 style={{ color: "black" }}
-                href="/Dashboard"
+                href="/#/Dashboard"
               >
                 Profile
               </NavDropdown.Item>
@@ -77,17 +77,6 @@ export default function Navbar() {
                 Log Out
               </NavDropdown.Item>
             )}
-            {/* {Auth.loggedIn() ? (
-              <>
-                <NavDropdown.Item className="nav-item" href="/me">{Auth.getProfile().data.username}'s profile</NavDropdown.Item>
-                <NavDropdown.Item className="nav-item" onClick={logout}>Logout</NavDropdown.Item>
-              </>
-            ) : (
-              <>
-                <NavDropdown.Item className="nav-item" href="/login">Login</NavDropdown.Item>
-                <NavDropdown.Item className="nav-item" href="/signup">Signup</NavDropdown.Item>
-              </>
-            )} */}
           </NavDropdown>
         </Nav>
       </div>
