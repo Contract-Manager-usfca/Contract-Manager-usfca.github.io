@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ScrollMagic from "scrollmagic";
+// import ScrollMagic from "scrollmagic";
 // import "scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap";
 // import { gsap } from 'gsap';
 import BarGraph from "./BarGraph";
@@ -10,9 +10,19 @@ function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
   const [selectedDemographics, setSelectedDemographics] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [maleCount, setMaleCount] = useState(0);
+  const [femaleCount, setFemaleCount] = useState(0);
+  const [nonBinaryCount, setNonBinaryCount] = useState(0);
 
-  // Fetch and set all available demographics from your database
+
+  // targeted genders
+  // need to figure out how to make this universal later
+  const targetGenders = ['Male', 'Female', 'Nonbinary'];
+
+
+  // Fetch and set all available demographics from database
   useEffect(() => {
+    // Getting demographics list
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
       .then(response => {
         const demographicsArray = response.data.map(demographic => demographic.demographic);
@@ -21,48 +31,55 @@ function HomePage() {
       .catch(error => {
         console.error("Error fetching demographics:", error);
       });
+
+
+    // SCROLL MAGIC STUFF
     // Create a new ScrollMagic Controller
-    const controller = new ScrollMagic.Controller();
+    // const controller = new ScrollMagic.Controller();
 
-    // Create a scene to trigger animations for the first graph
-    new ScrollMagic.Scene({
-      triggerElement: ".first-graph-trigger", // Replace with the appropriate trigger element
-      triggerHook: 0.8, // Adjust the trigger hook as needed
-    })
-      .setClassToggle(".first-graph-trigger", "animated") // Toggle a CSS class on the trigger element
-      .addTo(controller);
+    // // Create a scene to trigger animations for the first graph
+    // new ScrollMagic.Scene({
+    //   triggerElement: ".first-graph-trigger", // Replace with the appropriate trigger element
+    //   triggerHook: 0.8, // Adjust the trigger hook as needed
+    // })
+    //   .setClassToggle(".first-graph-trigger", "animated") // Toggle a CSS class on the trigger element
+    //   .addTo(controller);
 
-    // Create a scene to trigger animations for the second graph
-    new ScrollMagic.Scene({
-      triggerElement: ".second-graph-trigger", // Replace with the appropriate trigger element
-      triggerHook: 0.8, // Adjust the trigger hook as needed
-    })
-      .setClassToggle(".second-graph-trigger", "animated") // Toggle a CSS class on the trigger element
-      .addTo(controller);
+    // // Create a scene to trigger animations for the second graph
+    // new ScrollMagic.Scene({
+    //   triggerElement: ".second-graph-trigger", // Replace with the appropriate trigger element
+    //   triggerHook: 0.8, // Adjust the trigger hook as needed
+    // })
+    //   .setClassToggle(".second-graph-trigger", "animated") // Toggle a CSS class on the trigger element
+    //   .addTo(controller);
+
+
   }, []);
 
   const fetchDemographic = () => {
+    if (searchQuery.toLowerCase() === "gender") {
+      loadGenderChips();
+      setSearchQuery("");
+      return; // exit the function early if it's a gender search
+    }
+
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
       .then(response => {
         const filteredData = response.data.filter(demographic => {
           return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
         });
 
-        // Check If the filteredData contains results
         if (filteredData.length > 0) {
           const demographicName = filteredData[0].demographic;
-          // Check if the demographic is already selected
+
           if (selectedDemographics.includes(demographicName)) {
-            // Notify the user
             console.warn(`${demographicName} has already been selected!`);
-            // Optionally, you can use an alert or other methods to notify the user
             alert(`${demographicName} has already been selected!`);
           } else {
             selectDemographic(demographicName);
             setSearchQuery("");
           }
         } else {
-          // if demographic doesn't exist yet
           alert("Demographic not found!");
         }
       })
@@ -71,9 +88,49 @@ function HomePage() {
       });
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
-  const handleSearchInputChange = (event) => {
-    setSearchQuery(event.target.value);
+  const loadGenderChips = () => {
+    axios.get('http://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
+      .then(response => {
+        const genderDemos = response.data;
+  
+        // Initialize counts
+        let maleCount = 0;
+        let femaleCount = 0;
+        let nonBinaryCount = 0;
+  
+        // Iterate through the data and count users for each gender
+        genderDemos.forEach(demo => {
+          const gender = demo.demo;
+          if (targetGenders.includes(gender)) {
+            if (gender === "Male") {
+              maleCount++;
+            } else if (gender === "Female") {
+              femaleCount++;
+            } else if (gender === "Nonbinary") {
+              nonBinaryCount++;
+            }
+          }
+        });
+  
+        // Set state with the counts
+        setMaleCount(maleCount);
+        setFemaleCount(femaleCount);
+        setNonBinaryCount(nonBinaryCount);
+  
+        // Set selected demographics
+        setSelectedDemographics(["Male", "Female", "Nonbinary"]);
+  
+        console.log("Male Count:", maleCount);
+        console.log("Female Count:", femaleCount);
+        console.log("Nonbinary Count:", nonBinaryCount);
+      })
+      .catch(error => {
+        console.error("Error fetching creator demographics:", error);
+      });
   };
 
   const selectDemographic = (demographic) => {
@@ -83,7 +140,11 @@ function HomePage() {
   };
 
   const deselectDemographic = (demographic) => {
-    setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+    if (targetGenders.includes(demographic)) {
+      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+    } else {
+      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+    }
   };
 
   function Chip({ label, onRemove }) {
@@ -168,7 +229,7 @@ function HomePage() {
             style={styles.searchInput}
             placeholder="Search..."
             value={searchQuery}
-            onChange={handleSearchInputChange}
+            onChange={handleSearchChange}
             list="demographics-list"
           />
           <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
@@ -188,7 +249,7 @@ function HomePage() {
       <div style={styles.chartContainer}>
         <div style={styles.barGraph}>
           <h2 style={styles.chartTitle}>First D3 Graph</h2>
-          <BarGraph selectedDemographics={selectedDemographics} />
+          <BarGraph selectedDemographics={selectedDemographics} maleCount={maleCount} femaleCount={femaleCount} nonBinaryCount={nonBinaryCount}/>
           <p style={styles.chartText}>
             This is a <span style={styles.boldTextColor}>Bar Graph</span> generated with your selected Demographics.
             <br /><br />
