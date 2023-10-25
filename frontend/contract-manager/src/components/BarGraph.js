@@ -1,133 +1,292 @@
-import React, { useState, useEffect } from "react";
-import * as d3 from "d3";
-import '../styles/bargraph.css';
+import { useState, useEffect } from "react";
+// import ScrollMagic from "scrollmagic";
+// import "scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap";
+// import { gsap } from 'gsap';
+import BarGraph from "./BarGraph";
+import LollipopPlot from "./LollipopPlot";
+import axios from 'axios';
 
-const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount }) => { 
+function HomePage() {
+  const [allDemographics, setAllDemographics] = useState([]);
+  const [selectedDemographics, setSelectedDemographics] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [maleCount, setMaleCount] = useState(0);
+  const [femaleCount, setFemaleCount] = useState(0);
+  const [nonBinaryCount, setNonBinaryCount] = useState(0);
 
-  // TEST DATA 
-  // const [data, setData] = useState([
-  //   { name: "A", value: 50 },
-  //   { name: "B", value: 20 },
-  //   { name: "C", value: 40 },
-  //   { name: "D", value: 70 },
-  // ]);
 
-  // CURRENTLY THE DATA THE GRAPH IS PRODUCING DOESN'T MAKE SENSE
-  // need to grab data, group users, add them within their groups, and display
-  // console.log(maleCount, femaleCount, nonBinaryCount);
-  const genderDemos = [maleCount, femaleCount, nonBinaryCount];
-  console.log(genderDemos);
+  // targeted genders
+  // need to figure out how to make this universal later
+  const targetGenders = ['Male', 'Female', 'Nonbinary'];
+
+
+  // Fetch and set all available demographics from database
   useEffect(() => {
-
-    const margin = { top: 20, right: 20, bottom: 30, left: 100 };
-    const width = 800 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
-
-    const x = d3.scaleBand().range([0, width]).padding(0.1);
-    const y = d3.scaleLinear().range([height, 0]);
-
-    const svgContainer = d3.select(".bar-chart");
-    svgContainer.selectAll("*").remove();
-
-    // Update the data whenever selectedDemographics changes
-    //CURRENTLY USING DEMOGRAPHICS BUT ALSO A RANDOM NUMBER 
-    // const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
-     //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
-    //const updatedData = selectedDemographics.map(genderDemos => ({ name: genderDemos, value: genderDemos }));   
-    // const updatedData = [
-    //   { name: "Male", value: maleCount },
-    //   { name: "Female", value: femaleCount },
-    //   { name: "Nonbinary", value: nonBinaryCount },
-    // ];
-    const updatedData = selectedDemographics.map((gender, index) => ({
-      name: gender,
-      value: genderDemos[index],
-    }));
-    
-    
-
-    x.domain(updatedData.map(d => d.name));
-    y.domain([0, d3.max(updatedData, d => d.value)]);
-
-    const svg = svgContainer
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    x.domain(updatedData.map(d => d.name));
-    y.domain([0, d3.max(updatedData, d => d.value)]);
-
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-    const colorScale = d3.scaleOrdinal()
-      .domain(updatedData.map(d => d.name))
-      .range(["#c8e6c9", "#a5d6a7", "#81c784", "#66bb6a"]);
-
-    const bars = svg
-      .selectAll(".bar")
-      .data(updatedData)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", d => x(d.name))
-      .attr("width", x.bandwidth())
-      .attr("y", d => y(d.value))
-      // .attr("height", d => height - y(d.value))
-      .attr("height", d => {
-        const heightValue = height - y(d.value);
-        if (isNaN(heightValue)) {
-          console.error("Invalid heightValue for data point:", d);
-        }
-        return heightValue;
+    // Getting demographics list
+    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
+      .then(response => {
+        const demographicsArray = response.data.map(demographic => demographic.demographic);
+        setAllDemographics(demographicsArray);
       })
-      .attr("fill", d => colorScale(d.name));
+      .catch(error => {
+        console.error("Error fetching demographics:", error);
+      });
 
-    const labels = svg
-      .selectAll(".bar-label")
-      .data(updatedData)
-      .enter()
-      .append("text")
-      .attr("class", "bar-label")
-      .attr("x", d => x(d.name) + x.bandwidth() / 2)
-      .attr("y", d => y(d.value) + (height - y(d.value)) / 2) // Position in the middle of the bar
-      .attr("text-anchor", "middle")
-      .attr("fill", "white")
-      .style("display", "none") // Initially set to hidden
-      .text(d => d.value);
 
-    bars.on("mouseover", function (event, d) {
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .ease(d3.easeQuadInOut)
-        .attr("opacity", 0.7);
+    // SCROLL MAGIC STUFF
+    // Create a new ScrollMagic Controller
+    // const controller = new ScrollMagic.Controller();
 
-      labels
-        .filter(labelData => labelData === d)
-        .style("display", "block")
-        .style("font-size", "16px") // Increase font size on hover
-        .style("font-weight", "bolder"); // Increase font weight on hover
-    });
+    // // Create a scene to trigger animations for the first graph
+    // new ScrollMagic.Scene({
+    //   triggerElement: ".first-graph-trigger", // Replace with the appropriate trigger element
+    //   triggerHook: 0.8, // Adjust the trigger hook as needed
+    // })
+    //   .setClassToggle(".first-graph-trigger", "animated") // Toggle a CSS class on the trigger element
+    //   .addTo(controller);
 
-    bars.on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .ease(d3.easeQuadInOut)
-        .attr("opacity", 1);
+    // // Create a scene to trigger animations for the second graph
+    // new ScrollMagic.Scene({
+    //   triggerElement: ".second-graph-trigger", // Replace with the appropriate trigger element
+    //   triggerHook: 0.8, // Adjust the trigger hook as needed
+    // })
+    //   .setClassToggle(".second-graph-trigger", "animated") // Toggle a CSS class on the trigger element
+    //   .addTo(controller);
 
-      labels.style("display", "none");
-    });
 
-    svg.append("g").call(d3.axisLeft(y));
-  }, [selectedDemographics, maleCount, femaleCount, nonBinaryCount]);
+  }, []);
 
-  return <div className="bar-chart"></div>;
-};
+  const fetchDemographic = () => {
+    if (searchQuery.toLowerCase() === "gender") {
+      loadGenderChips();
+      setSearchQuery("");
+      return; // exit the function early if it's a gender search
+    }
 
-export default BarGraph;
+    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
+      .then(response => {
+        const filteredData = response.data.filter(demographic => {
+          return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
+        });
 
+        if (filteredData.length > 0) {
+          const demographicName = filteredData[0].demographic;
+
+          if (selectedDemographics.includes(demographicName)) {
+            console.warn(`${demographicName} has already been selected!`);
+            alert(`${demographicName} has already been selected!`);
+          } else {
+            selectDemographic(demographicName);
+            setSearchQuery("");
+          }
+        } else {
+          alert("Demographic not found!");
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching demographics:", error);
+      });
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const loadGenderChips = () => {
+    axios.get('http://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
+      .then(response => {
+        const genderDemos = response.data;
+  
+        // Initialize counts
+        let maleCount = 0;
+        let femaleCount = 0;
+        let nonBinaryCount = 0;
+  
+        // Iterate through the data and count users for each gender
+        genderDemos.forEach(demo => {
+          const gender = demo.demo;
+          if (targetGenders.includes(gender)) {
+            if (gender === "Male") {
+              maleCount++;
+            } else if (gender === "Female") {
+              femaleCount++;
+            } else if (gender === "Nonbinary") {
+              nonBinaryCount++;
+            }
+          }
+        });
+  
+        // Set state with the counts
+        setMaleCount(maleCount);
+        setFemaleCount(femaleCount);
+        setNonBinaryCount(nonBinaryCount);
+  
+        // Set selected demographics
+        setSelectedDemographics(["Male", "Female", "Nonbinary"]);
+  
+        console.log("Male Count:", maleCount);
+        console.log("Female Count:", femaleCount);
+        console.log("Nonbinary Count:", nonBinaryCount);
+      })
+      .catch(error => {
+        console.error("Error fetching creator demographics:", error);
+      });
+  };
+
+  const selectDemographic = (demographic) => {
+    if (!selectedDemographics.includes(demographic)) {
+      setSelectedDemographics(prev => [...prev, demographic]);
+    }
+  };
+
+  const deselectDemographic = (demographic) => {
+    if (targetGenders.includes(demographic)) {
+      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+    } else {
+      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+    }
+  };
+
+  function Chip({ label, onRemove }) {
+    return (
+      <div style={{ display: 'inline-flex', padding: '5px 10px', border: '1px solid #9487E4', borderRadius: '20px', marginRight: '10px', backgroundColor: '#303030' }}>
+        <span>{label}</span>
+        <button onClick={onRemove} style={{ margin: 'auto', cursor: 'pointer', background: 'none', border: 'none', color: '#9487E4' }}>x</button>
+      </div>
+    );
+  }
+
+  const styles = {
+    card: {
+      display: 'flex',
+      alignItems: 'center',
+      margin: '20px 400px',
+      textAlign: 'center',
+      borderRadius: '40%',
+    },
+    cardTitle: {
+      color: 'white',
+      paddingRight: '10%',
+    },
+    chartContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '70%',
+      margin: '10px 250px 20px',
+      background: '#202020',
+      padding: '20px',
+      border: 'solid #CBE1AE 1px',
+    },
+    chartTitle: {
+      color: 'white',
+      marginBottom: '20px',
+      textAlign: 'center',
+    },
+    chartText: {
+      color: 'white',
+      maxWidth: '100%',
+      fontSize: '17px',
+      marginTop: '20px',
+      textAlign: 'center',
+    },
+    searchBar: {
+      display: 'flex',
+      gap: '10px',
+      backgroundColor: 'white',
+      padding: '.5%',
+      width: '500px',
+    },
+    searchInput: {
+      padding: '5px',
+      fontSize: '16px',
+      border: '1px solid #ccc',
+      borderRadius: '4px',
+      flexGrow: 1,
+      textColor: '#CBE1AE',
+    },
+    searchBtn: {
+      padding: '5px 15px',
+      fontSize: '16px',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      backgroundColor: '#CBE1AE',
+    },
+    boldTextColor: {
+      color: '#C188FB',
+      fontWeight: 'bold'
+    },
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#252525', paddingBottom: '100px' }}>
+      <div style={styles.card}>
+        <h2 style={styles.cardTitle}>Search Demographic</h2>
+        <div style={styles.searchBar}>
+          <input
+            type="text"
+            style={styles.searchInput}
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            list="demographics-list"
+          />
+          <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
+        </div>
+        {/* Create the datalist with all available demographics */}
+        <datalist id="demographics-list">
+          {allDemographics.map((option, index) => (
+            <option key={index} value={option} />
+          ))}
+        </datalist>
+      </div>
+      <div style={{ color: 'white', alignContent: 'center', margin: 'auto', marginBottom: '4px' }}>
+        {selectedDemographics.map(demo => (
+          <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
+        ))}
+      </div>
+      <div style={styles.chartContainer}>
+        <div style={styles.barGraph}>
+          <h2 style={styles.chartTitle}>First D3 Graph</h2>
+          <BarGraph selectedDemographics={selectedDemographics} maleCount={maleCount} femaleCount={femaleCount} nonBinaryCount={nonBinaryCount}/>
+          <p style={styles.chartText}>
+            This is a <span style={styles.boldTextColor}>Bar Graph</span> generated with your selected Demographics.
+            <br /><br />
+            {selectedDemographics.length > 0 ? (
+              <span>
+                The Demographics currently selected are:&nbsp;
+                <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+              </span>
+            ) : (
+              <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+            )}
+          </p>
+        </div>
+      </div>
+
+      <div style={styles.chartContainer}>
+        <div className="first-graph-trigger">
+          <div style={styles.barGraph}>
+            <h2 style={styles.chartTitle}>Second D3 Graph</h2>
+            <LollipopPlot selectedDemographics={selectedDemographics} />
+            <p style={styles.chartText}>
+              This is a <span style={styles.boldTextColor}>Lollipop Plot Graph</span> generated with your selected Demographics.
+              <br /><br />
+              {selectedDemographics.length > 0 ? (
+                <span>
+                  The Demographics currently selected are:&nbsp;
+                  <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                </span>
+              ) : (
+                <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default HomePage;
