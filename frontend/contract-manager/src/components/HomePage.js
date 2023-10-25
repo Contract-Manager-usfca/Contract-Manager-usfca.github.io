@@ -147,6 +147,10 @@ function HomePage() {
     }
   };
 
+  const clearSelectedDemographics = () => {
+    setSelectedDemographics([]);
+  };
+
   function Chip({ label, onRemove }) {
     return (
       <div style={{ display: 'inline-flex', padding: '5px 10px', border: '1px solid #9487E4', borderRadius: '20px', marginRight: '10px', backgroundColor: '#303030' }}>
@@ -233,6 +237,7 @@ function HomePage() {
             list="demographics-list"
           />
           <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
+          <button onClick={clearSelectedDemographics} style={styles.searchBtn}>Clear</button>
         </div>
         {/* Create the datalist with all available demographics */}
         <datalist id="demographics-list">
