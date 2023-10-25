@@ -251,7 +251,7 @@ function HomePage() {
       <div style={styles.chartContainer}>
         <div style={styles.barGraph}>
           <h2 style={styles.chartTitle}>First D3 Graph</h2>
-          <BarGraph selectedDemographics={selectedDemographics} maleCount={setMaleCount} femaleCount={setFemaleCount} nonBinaryCount={setNonBinaryCount}/>
+          <BarGraph selectedDemographics={selectedDemographics} maleCount={maleCount} femaleCount={femaleCount} nonBinaryCount={nonBinaryCount}/>
           <p style={styles.chartText}>
             This is a <span style={styles.boldTextColor}>Bar Graph</span> generated with your selected Demographics.
             <br /><br />

@@ -30,7 +30,8 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
 
     // Update the data whenever selectedDemographics changes
     //CURRENTLY USING DEMOGRAPHICS BUT ALSO A RANDOM NUMBER 
-    // const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
+    //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
+     //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
     const updatedData = [
       { name: "Male", value: maleCount },
       { name: "Female", value: femaleCount },
