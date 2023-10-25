@@ -132,8 +132,6 @@ function HomePage() {
         console.error("Error fetching creator demographics:", error);
       });
   };
-  
-
 
   const selectDemographic = (demographic) => {
     if (!selectedDemographics.includes(demographic)) {

@@ -15,7 +15,8 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
   // CURRENTLY THE DATA THE GRAPH IS PRODUCING DOESN'T MAKE SENSE
   // need to grab data, group users, add them within their groups, and display
   // console.log(maleCount, femaleCount, nonBinaryCount);
-
+  const genderDemos = [maleCount, femaleCount, nonBinaryCount];
+  console.log(genderDemos);
   useEffect(() => {
 
     const margin = { top: 20, right: 20, bottom: 30, left: 100 };
@@ -30,13 +31,20 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
 
     // Update the data whenever selectedDemographics changes
     //CURRENTLY USING DEMOGRAPHICS BUT ALSO A RANDOM NUMBER 
-    //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
+    // const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
      //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
-    const updatedData = [
-      { name: "Male", value: maleCount },
-      { name: "Female", value: femaleCount },
-      { name: "Nonbinary", value: nonBinaryCount },
-    ];
+    //const updatedData = selectedDemographics.map(genderDemos => ({ name: genderDemos, value: genderDemos }));   
+    // const updatedData = [
+    //   { name: "Male", value: maleCount },
+    //   { name: "Female", value: femaleCount },
+    //   { name: "Nonbinary", value: nonBinaryCount },
+    // ];
+    const updatedData = selectedDemographics.map((gender, index) => ({
+      name: gender,
+      value: genderDemos[index],
+    }));
+    
+    
 
     x.domain(updatedData.map(d => d.name));
     y.domain([0, d3.max(updatedData, d => d.value)]);
@@ -68,7 +76,14 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
       .attr("x", d => x(d.name))
       .attr("width", x.bandwidth())
       .attr("y", d => y(d.value))
-      .attr("height", d => height - y(d.value))
+      // .attr("height", d => height - y(d.value))
+      .attr("height", d => {
+        const heightValue = height - y(d.value);
+        if (isNaN(heightValue)) {
+          console.error("Invalid heightValue for data point:", d);
+        }
+        return heightValue;
+      })
       .attr("fill", d => colorScale(d.name));
 
     const labels = svg
