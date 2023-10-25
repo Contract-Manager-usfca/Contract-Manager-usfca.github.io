@@ -96,16 +96,21 @@ function HomePage() {
     axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
       .then(response => {
         const genderDemos = response.data;
-  
+
         // Initialize counts
         let maleCount = 0;
         let femaleCount = 0;
         let nonBinaryCount = 0;
-  
+        // Initialize an array to store user data with gender and user ID
+        const userData = [];
+
         // Iterate through the data and count users for each gender
         genderDemos.forEach(demo => {
           const gender = demo.demo;
+          const userID = demo.creator;
+          // console.log(userID);
           if (targetGenders.includes(gender)) {
+            userData.push({ gender, userID });
             if (gender === "Male") {
               maleCount++;
             } else if (gender === "Female") {
@@ -113,17 +118,18 @@ function HomePage() {
             } else if (gender === "Nonbinary") {
               nonBinaryCount++;
             }
+            // console.log(userData);
           }
         });
-  
+
         // Set state with the counts
         setMaleCount(maleCount);
         setFemaleCount(femaleCount);
         setNonBinaryCount(nonBinaryCount);
-  
+
         // Set selected demographics
-        setSelectedDemographics(["Male", "Female", "Nonbinary"]);
-  
+        setSelectedDemographics(targetGenders);
+
         console.log("Male Count:", maleCount);
         console.log("Female Count:", femaleCount);
         console.log("Nonbinary Count:", nonBinaryCount);
@@ -132,44 +138,44 @@ function HomePage() {
         console.error("Error fetching creator demographics:", error);
       });
 
-      // axios.get('https://contract-manager.aquaflare.io/creator-platforms/', { withCredentials: true })
-      // .then(response => {
-      //   const genderDemos = response.data;
-  
-      //   // Initialize counts
-      //   let maleCount = 0;
-      //   let femaleCount = 0;
-      //   let nonBinaryCount = 0;
-  
-      //   // Iterate through the data and count users for each gender
-      //   genderDemos.forEach(demo => {
-      //     const gender = demo.demo;
-      //     if (targetGenders.includes(gender)) {
-      //       if (gender === "Male") {
-      //         maleCount++;
-      //       } else if (gender === "Female") {
-      //         femaleCount++;
-      //       } else if (gender === "Nonbinary") {
-      //         nonBinaryCount++;
-      //       }
-      //     }
-      //   });
-  
-      //   // Set state with the counts
-      //   setMaleCount(maleCount);
-      //   setFemaleCount(femaleCount);
-      //   setNonBinaryCount(nonBinaryCount);
-  
-      //   // Set selected demographics
-      //   setSelectedDemographics(["Male", "Female", "Nonbinary"]);
-  
-      //   console.log("Male Count:", maleCount);
-      //   console.log("Female Count:", femaleCount);
-      //   console.log("Nonbinary Count:", nonBinaryCount);
-      // })
-      // .catch(error => {
-      //   console.error("Error fetching creator demographics:", error);
-      // });
+    // axios.get('https://contract-manager.aquaflare.io/creator-platforms/', { withCredentials: true })
+    // .then(response => {
+    //   const genderDemos = response.data;
+
+    //   // Initialize counts
+    //   let maleCount = 0;
+    //   let femaleCount = 0;
+    //   let nonBinaryCount = 0;
+
+    //   // Iterate through the data and count users for each gender
+    //   genderDemos.forEach(demo => {
+    //     const gender = demo.demo;
+    //     if (targetGenders.includes(gender)) {
+    //       if (gender === "Male") {
+    //         maleCount++;
+    //       } else if (gender === "Female") {
+    //         femaleCount++;
+    //       } else if (gender === "Nonbinary") {
+    //         nonBinaryCount++;
+    //       }
+    //     }
+    //   });
+
+    //   // Set state with the counts
+    //   setMaleCount(maleCount);
+    //   setFemaleCount(femaleCount);
+    //   setNonBinaryCount(nonBinaryCount);
+
+    //   // Set selected demographics
+    //   setSelectedDemographics(["Male", "Female", "Nonbinary"]);
+
+    //   console.log("Male Count:", maleCount);
+    //   console.log("Female Count:", femaleCount);
+    //   console.log("Nonbinary Count:", nonBinaryCount);
+    // })
+    // .catch(error => {
+    //   console.error("Error fetching creator demographics:", error);
+    // });
   };
 
   const selectDemographic = (demographic) => {
@@ -296,7 +302,7 @@ function HomePage() {
       <div style={styles.chartContainer}>
         <div style={styles.barGraph}>
           <h2 style={styles.chartTitle}>Total Follow Count</h2>
-          <BarGraph selectedDemographics={selectedDemographics} maleCount={maleCount} femaleCount={femaleCount} nonBinaryCount={nonBinaryCount}/>
+          <BarGraph selectedDemographics={selectedDemographics} maleCount={maleCount} femaleCount={femaleCount} nonBinaryCount={nonBinaryCount} />
           <p style={styles.chartText}>
             This is a <b>Bar Graph</b> generated with your selected Demographics.
             <br /><br />
