@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import '../styles/bargraph.css';
 
-const BarGraph = ({ selectedDemographics, genderAverages }) => { 
+const BarGraph = ({ selectedDemographics, genderAverages }) => {
   // const genderDemos = [maleCount, femaleCount, nonBinaryCount];
   console.log("gender averages: ", genderAverages);
   useEffect(() => {
@@ -20,7 +20,7 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
     // Update the data whenever selectedDemographics changes
     //CURRENTLY USING DEMOGRAPHICS BUT ALSO A RANDOM NUMBER 
     // const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
-     //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
+    //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
     //const updatedData = selectedDemographics.map(genderDemos => ({ name: genderDemos, value: genderDemos }));   
     // const updatedData = [
     //   { name: "Male", value: maleCount },
@@ -49,6 +49,15 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position if needed
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .attr("fill", "white")
+      .text("Follower Count");
 
     const colorScale = d3.scaleOrdinal()
       .domain(updatedData.map(d => d.name))
@@ -96,7 +105,7 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
       labels
         .filter(labelData => labelData === d)
         .style("display", "block")
-        .style("font-size", "16px") // Increase font size on hover
+        .style("font-size", "16px")
         .style("font-weight", "bolder"); // Increase font weight on hover
     });
 

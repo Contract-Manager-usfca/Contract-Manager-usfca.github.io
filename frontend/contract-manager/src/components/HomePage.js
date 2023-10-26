@@ -102,7 +102,7 @@ function HomePage() {
   // FETCH GENDERS
   const loadGenderData = () => {
     // Check if gender data has already been loaded
-    // if (maleCount === 0 && femaleCount === 0 && nonBinaryCount === 0) {
+    if (maleCount === 0 && femaleCount === 0 && nonBinaryCount === 0) {
       axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
         .then(response => {
           const genderDemos = response.data;
@@ -139,10 +139,10 @@ function HomePage() {
         .catch(error => {
           console.error("Error fetching creator demographics:", error);
         });
-    // } else {
-    //   // Gender data has already been loaded so don't fetch it again
-    //   setSelectedDemographics(targetGenders);
-    // }
+    } else {
+      // Gender data has already been loaded so don't fetch it again
+      setSelectedDemographics(targetGenders);
+    }
   };
 
   // FETCHING FOLLOW COUNTS
