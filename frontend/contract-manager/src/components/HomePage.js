@@ -13,6 +13,8 @@ function HomePage() {
   const [maleCount, setMaleCount] = useState(0);
   const [femaleCount, setFemaleCount] = useState(0);
   const [nonBinaryCount, setNonBinaryCount] = useState(0);
+  const [genderAverages, setGenderAverages] = useState({});
+  const [genderCounts, setGenderCounts] = useState({});
 
 
   // targeted genders
@@ -31,7 +33,6 @@ function HomePage() {
       .catch(error => {
         console.error("Error fetching demographics:", error);
       });
-
 
     // SCROLL MAGIC STUFF
     // Create a new ScrollMagic Controller
@@ -56,13 +57,16 @@ function HomePage() {
 
   }, []);
 
+  // WILL CHANGE 
   const fetchDemographic = () => {
     if (searchQuery.toLowerCase() === "gender") {
-      loadGenderChips();
+      loadGenderData();
       setSearchQuery("");
-      return; // exit the function early if it's a gender search
+      // exit the function early if it's a gender search
+      return;
     }
 
+    // FETCH DEMOGRAPHICS LIST
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
       .then(response => {
         const filteredData = response.data.filter(demographic => {
@@ -92,91 +96,110 @@ function HomePage() {
     setSearchQuery(e.target.value);
   };
 
-  const loadGenderChips = () => {
-    axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
-      .then(response => {
-        const genderDemos = response.data;
-
-        // Initialize counts
-        let maleCount = 0;
-        let femaleCount = 0;
-        let nonBinaryCount = 0;
-        // Initialize an array to store user data with gender and user ID
-        const userData = [];
-
-        // Iterate through the data and count users for each gender
-        genderDemos.forEach(demo => {
-          const gender = demo.demo;
-          const userID = demo.creator;
-          // console.log(userID);
-          if (targetGenders.includes(gender)) {
-            userData.push({ gender, userID });
-            if (gender === "Male") {
-              maleCount++;
-            } else if (gender === "Female") {
-              femaleCount++;
-            } else if (gender === "Nonbinary") {
-              nonBinaryCount++;
+  // FETCH GENDERS
+  const loadGenderData = () => {
+    // Check if gender data has already been loaded
+    if (maleCount === 0 && femaleCount === 0 && nonBinaryCount === 0) {
+      axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
+        .then(response => {
+          const genderDemos = response.data;
+          const userData = [];
+  
+          let newMaleCount = 0;
+          let newFemaleCount = 0;
+          let newNonBinaryCount = 0;
+  
+          genderDemos.forEach(demo => {
+            const gender = demo.demo;
+  
+            if (targetGenders.includes(gender)) {
+              if (gender === "Male") {
+                newMaleCount++;
+              } else if (gender === "Female") {
+                newFemaleCount++;
+              } else if (gender === "Nonbinary") {
+                newNonBinaryCount++;
+              }
             }
-            // console.log(userData);
+  
+            userData.push({
+              demographic: gender,
+              userID: demo.creator,
+            });
+          });
+  
+          setMaleCount(newMaleCount);
+          setFemaleCount(newFemaleCount);
+          setNonBinaryCount(newNonBinaryCount);
+          setSelectedDemographics(targetGenders);
+  
+          // Fetch follower counts and calculate the averages
+          fetchFollowerCounts(userData);
+        })
+        .catch(error => {
+          console.error("Error fetching creator demographics:", error);
+        });
+    } else {
+      // Gender data has already been loaded so don't fetch it again
+      setSelectedDemographics(targetGenders);
+    }
+  };  
+
+  // FETCHING FOLLOW COUNTS
+  const fetchFollowerCounts = (userData) => {
+    axios.get('https://contract-manager.aquaflare.io/creator-platforms/', { withCredentials: true })
+      .then(response => {
+        const followerData = response.data;
+        const followerCounts = {};
+
+        followerData.forEach(user => {
+          const userID = user.creator;
+          const followerCount = user.follower_count;
+
+          if (userID in followerCounts) {
+            followerCounts[userID] += followerCount;
+          } else {
+            followerCounts[userID] = followerCount;
+          }
+
+          // Check the gender of the user and add the follower count to the respective gender count
+          const gender = userData.find(u => u.userID === userID)?.demographic;
+          if (gender) {
+            if (!(gender in genderCounts)) {
+              genderCounts[gender] = 0;
+            }
+            genderCounts[gender] += followerCount;
           }
         });
 
-        // Set state with the counts
-        setMaleCount(maleCount);
-        setFemaleCount(femaleCount);
-        setNonBinaryCount(nonBinaryCount);
+        // follower counts for each user 
+        // THIS IS CORRECT
+        console.log("follwer counts: ", followerCounts);
 
-        // Set selected demographics
-        setSelectedDemographics(targetGenders);
+        // gender-specific follower counts
+        // THIS IS ALSO CORRECT
+        console.log("gender counts", genderCounts);
+        setGenderCounts(genderCounts);
 
-        console.log("Male Count:", maleCount);
-        console.log("Female Count:", femaleCount);
-        console.log("Nonbinary Count:", nonBinaryCount);
+
+        // Calculating Average number of followers per gender
+        targetGenders.forEach(demographic => {
+          // grab total follower count for the current gender or else 0
+          const totalFollowerCount = genderCounts[demographic] || 0;
+          // grab number of users in the current gender group:
+          const numberOfUsers = userData.filter(user => user.demographic === demographic).length;
+          const average = numberOfUsers > 0 ? totalFollowerCount / numberOfUsers : 0;
+          // set average
+          genderAverages[demographic] = Math.round(average);
+        });
+        console.log(genderAverages);
+        setGenderAverages(genderAverages);
       })
       .catch(error => {
-        console.error("Error fetching creator demographics:", error);
+        console.error("Error fetching follower counts:", error);
       });
-
-    // axios.get('https://contract-manager.aquaflare.io/creator-platforms/', { withCredentials: true })
-    // .then(response => {
-    //   const genderDemos = response.data;
-
-    //   // Initialize counts
-    //   let maleCount = 0;
-    //   let femaleCount = 0;
-    //   let nonBinaryCount = 0;
-
-    //   // Iterate through the data and count users for each gender
-    //   genderDemos.forEach(demo => {
-    //     const gender = demo.demo;
-    //     if (targetGenders.includes(gender)) {
-    //       if (gender === "Male") {
-    //         maleCount++;
-    //       } else if (gender === "Female") {
-    //         femaleCount++;
-    //       } else if (gender === "Nonbinary") {
-    //         nonBinaryCount++;
-    //       }
-    //     }
-    //   });
-
-    //   // Set state with the counts
-    //   setMaleCount(maleCount);
-    //   setFemaleCount(femaleCount);
-    //   setNonBinaryCount(nonBinaryCount);
-
-    //   // Set selected demographics
-    //   setSelectedDemographics(["Male", "Female", "Nonbinary"]);
-
-    //   console.log("Male Count:", maleCount);
-    //   console.log("Female Count:", femaleCount);
-    //   console.log("Nonbinary Count:", nonBinaryCount);
-    // })
-    // .catch(error => {
-    //   console.error("Error fetching creator demographics:", error);
-    // });
   };
+
 
   const selectDemographic = (demographic) => {
     if (!selectedDemographics.includes(demographic)) {
