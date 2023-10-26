@@ -174,11 +174,11 @@ function HomePage() {
 
         // follower counts for each user 
         // THIS IS CORRECT
-        console.log("follwer counts: ", followerCounts);
+        // console.log("follwer counts: ", followerCounts);
 
         // gender-specific follower counts
         // THIS IS ALSO CORRECT
-        console.log("gender counts", genderCounts);
+        // console.log("gender counts", genderCounts);
         setGenderCounts(genderCounts);
 
         // Calculating Average number of followers per gender
