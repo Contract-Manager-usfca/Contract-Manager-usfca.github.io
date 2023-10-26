@@ -4,17 +4,6 @@ import '../styles/bargraph.css';
 
 const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount }) => { 
 
-  // TEST DATA 
-  // const [data, setData] = useState([
-  //   { name: "A", value: 50 },
-  //   { name: "B", value: 20 },
-  //   { name: "C", value: 40 },
-  //   { name: "D", value: 70 },
-  // ]);
-
-  // CURRENTLY THE DATA THE GRAPH IS PRODUCING DOESN'T MAKE SENSE
-  // need to grab data, group users, add them within their groups, and display
-  // console.log(maleCount, femaleCount, nonBinaryCount);
   const genderDemos = [maleCount, femaleCount, nonBinaryCount];
   console.log(genderDemos);
   useEffect(() => {

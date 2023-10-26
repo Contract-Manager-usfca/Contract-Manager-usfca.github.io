@@ -76,6 +76,9 @@ function HomePage() {
         if (filteredData.length > 0) {
           const demographicName = filteredData[0].demographic;
 
+          // checks to see if a demographic has already been selected
+          // most likely will change because user shouldn't be able to 
+          // select multiple demographics at the same time
           if (selectedDemographics.includes(demographicName)) {
             console.warn(`${demographicName} has already been selected!`);
             alert(`${demographicName} has already been selected!`);
@@ -104,14 +107,13 @@ function HomePage() {
         .then(response => {
           const genderDemos = response.data;
           const userData = [];
-  
           let newMaleCount = 0;
           let newFemaleCount = 0;
           let newNonBinaryCount = 0;
-  
+
           genderDemos.forEach(demo => {
             const gender = demo.demo;
-  
+
             if (targetGenders.includes(gender)) {
               if (gender === "Male") {
                 newMaleCount++;
@@ -121,19 +123,17 @@ function HomePage() {
                 newNonBinaryCount++;
               }
             }
-  
-            userData.push({
-              demographic: gender,
-              userID: demo.creator,
-            });
+
+            // push data to array
+            userData.push({ demographic: gender, userID: demo.creator, });
           });
-  
+
           setMaleCount(newMaleCount);
           setFemaleCount(newFemaleCount);
           setNonBinaryCount(newNonBinaryCount);
           setSelectedDemographics(targetGenders);
-  
-          // Fetch follower counts and calculate the averages
+
+          // Fetch follower counts and calculate averages
           fetchFollowerCounts(userData);
         })
         .catch(error => {
@@ -143,7 +143,7 @@ function HomePage() {
       // Gender data has already been loaded so don't fetch it again
       setSelectedDemographics(targetGenders);
     }
-  };  
+  };
 
   // FETCHING FOLLOW COUNTS
   const fetchFollowerCounts = (userData) => {
@@ -181,7 +181,6 @@ function HomePage() {
         console.log("gender counts", genderCounts);
         setGenderCounts(genderCounts);
 
-
         // Calculating Average number of followers per gender
         targetGenders.forEach(demographic => {
           // grab total follower count for the current gender or else 0
@@ -199,7 +198,6 @@ function HomePage() {
         console.error("Error fetching follower counts:", error);
       });
   };
-
 
   const selectDemographic = (demographic) => {
     if (!selectedDemographics.includes(demographic)) {
