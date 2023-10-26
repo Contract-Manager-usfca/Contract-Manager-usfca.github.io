@@ -1,17 +1,17 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const styles = {
   platformBtn: {
-    padding: "5px 15px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
+    marginBottom: "15px",
   },
   submitBtn: {
-    padding: "5px 15px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
@@ -132,6 +132,45 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
 }
 
 function DemographicInput() {
+  //   const { user } = useAuth0();
+
+  //   if (user) {
+  //     const userId = user.sub; // User ID (sub) from Auth0
+
+  //     // Send the user ID to your backend API to store in the database
+  //     fetch("/your-backend-api/endpoint", {
+  //       method: "POST",
+  //       body: JSON.stringify({ userId }),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     })
+  //       .then((response) => {
+  //         // Handle the response from your API
+  //       })
+  //       .catch((error) => {
+  //         // Handle any errors
+  //       });
+  //   }
+
+  //   axios
+  //     .get("https://contract-manager.aquaflare.io/demographics/", {
+  //       withCredentials: true,
+  //     })
+  //     .then((response) => {
+  //       const demographicsArray = response.data.map(
+  //         (demographic) => demographic.demographic
+  //       );
+  //       setAllDemographics(demographicsArray);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching demographics:", error);
+  //     });
+
+  //   axios.put("https://contract-manager.aquaflare.io/demographics/", "thing", {
+  //     withCredentials: true,
+  //   });
+
   const [savedText, setSavedText] = useState({
     Race: "",
     Gender: "",

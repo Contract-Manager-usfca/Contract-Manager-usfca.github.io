@@ -2,16 +2,15 @@ import React, { useState } from "react";
 
 const styles = {
   platformBtn: {
-    padding: "5px 15px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
+    marginBottom: "15px",
   },
   submitBtn: {
-    padding: "5px 15px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
