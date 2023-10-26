@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import '../styles/bargraph.css';
 
-const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount }) => { 
-
-  const genderDemos = [maleCount, femaleCount, nonBinaryCount];
-  console.log(genderDemos);
+const BarGraph = ({ selectedDemographics, genderAverages }) => { 
+  // const genderDemos = [maleCount, femaleCount, nonBinaryCount];
+  console.log("gender averages: ", genderAverages);
   useEffect(() => {
 
     const margin = { top: 20, right: 20, bottom: 30, left: 100 };
@@ -28,9 +27,10 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
     //   { name: "Female", value: femaleCount },
     //   { name: "Nonbinary", value: nonBinaryCount },
     // ];
+
     const updatedData = selectedDemographics.map((gender, index) => ({
       name: gender,
-      value: genderDemos[index],
+      value: genderAverages[gender],
     }));
 
     x.domain(updatedData.map(d => d.name));
@@ -111,7 +111,7 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
     });
 
     svg.append("g").call(d3.axisLeft(y));
-  }, [selectedDemographics, maleCount, femaleCount, nonBinaryCount]);
+  }, [selectedDemographics, genderAverages]);
 
   return <div className="bar-chart"></div>;
 };
