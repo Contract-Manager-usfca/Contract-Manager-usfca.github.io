@@ -15,6 +15,7 @@ function HomePage() {
   const [nonBinaryCount, setNonBinaryCount] = useState(0);
   const [genderAverages, setGenderAverages] = useState({});
   const [genderCounts, setGenderCounts] = useState({});
+  const [searchMade, setSearchMade] = useState(false);
 
 
   // targeted genders
@@ -33,28 +34,6 @@ function HomePage() {
       .catch(error => {
         console.error("Error fetching demographics:", error);
       });
-
-    // SCROLL MAGIC STUFF
-    // Create a new ScrollMagic Controller
-    // const controller = new ScrollMagic.Controller();
-
-    // // Create a scene to trigger animations for the first graph
-    // new ScrollMagic.Scene({
-    //   triggerElement: ".first-graph-trigger", // Replace with the appropriate trigger element
-    //   triggerHook: 0.8, // Adjust the trigger hook as needed
-    // })
-    //   .setClassToggle(".first-graph-trigger", "animated") // Toggle a CSS class on the trigger element
-    //   .addTo(controller);
-
-    // // Create a scene to trigger animations for the second graph
-    // new ScrollMagic.Scene({
-    //   triggerElement: ".second-graph-trigger", // Replace with the appropriate trigger element
-    //   triggerHook: 0.8, // Adjust the trigger hook as needed
-    // })
-    //   .setClassToggle(".second-graph-trigger", "animated") // Toggle a CSS class on the trigger element
-    //   .addTo(controller);
-
-
   }, []);
 
   // WILL CHANGE 
@@ -62,6 +41,7 @@ function HomePage() {
     if (searchQuery.toLowerCase() === "gender") {
       loadGenderData();
       setSearchQuery("");
+      setSearchMade(true);
       // exit the function early if it's a gender search
       return;
     }
@@ -292,6 +272,57 @@ function HomePage() {
     },
   };
 
+  // Render the graphs only if a search has been made
+  const renderGraphs = () => {
+    if (searchMade) {
+      return (
+        <div>
+          <div style={styles.chartContainer}>
+            <div style={styles.barGraph}>
+              <h2 style={styles.chartTitle}>Total Follow Count</h2>
+              <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
+              <p style={styles.chartText}>
+                This is a <b>Bar Graph</b> generated with your selected Demographics.
+                <br /><br />
+                {selectedDemographics.length > 0 ? (
+                  <span>
+                    The Demographics currently selected are:&nbsp;
+                    <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                  </span>
+                ) : (
+                  <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.chartContainer}>
+            <div className="first-graph-trigger">
+              <div style={styles.barGraph}>
+                <h2 style={styles.chartTitle}>Second D3 Graph</h2>
+                <LollipopPlot selectedDemographics={selectedDemographics} />
+                <p style={styles.chartText}>
+                  This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
+                  <br /><br />
+                  {selectedDemographics.length > 0 ? (
+                    <span>
+                      The Demographics currently selected are:&nbsp;
+                      <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                    </span>
+                  ) : (
+                    <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return null; // Render nothing if no search has been made
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#252525', paddingBottom: '100px' }}>
       <div style={styles.card}>
@@ -320,48 +351,9 @@ function HomePage() {
           <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
         ))}
       </div>
-      <div style={styles.chartContainer}>
-        <div style={styles.barGraph}>
-          <h2 style={styles.chartTitle}>Total Follow Count</h2>
-          <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
-          <p style={styles.chartText}>
-            This is a <b>Bar Graph</b> generated with your selected Demographics.
-            <br /><br />
-            {selectedDemographics.length > 0 ? (
-              <span>
-                The Demographics currently selected are:&nbsp;
-                <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
-              </span>
-            ) : (
-              <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
-            )}
-          </p>
-        </div>
-      </div>
-
-      <div style={styles.chartContainer}>
-        <div className="first-graph-trigger">
-          <div style={styles.barGraph}>
-            <h2 style={styles.chartTitle}>Second D3 Graph</h2>
-            <LollipopPlot selectedDemographics={selectedDemographics} />
-            <p style={styles.chartText}>
-              This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
-              <br /><br />
-              {selectedDemographics.length > 0 ? (
-                <span>
-                  The Demographics currently selected are:&nbsp;
-                  <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
-                </span>
-              ) : (
-                <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
-              )}
-            </p>
-          </div>
-        </div>
-      </div>
+      {renderGraphs()}
     </div>
   );
 }
-
 export default HomePage;
 
