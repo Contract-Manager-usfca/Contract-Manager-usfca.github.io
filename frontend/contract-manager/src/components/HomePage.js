@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-// import ScrollMagic from "scrollmagic";
-// import "scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap";
-// import { gsap } from 'gsap';
 import BarGraph from "./BarGraph";
 import LollipopPlot from "./LollipopPlot";
 import axios from 'axios';
