@@ -61,7 +61,7 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
 
     svg.append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left) // Adjust the position if needed
+      .attr("y", 12 - margin.left)
       .attr("x", 0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")

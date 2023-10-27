@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import BarGraph from "./BarGraph";
 import LollipopPlot from "./LollipopPlot";
 import axios from 'axios';
+import Fade from 'react-reveal/Fade';
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -192,6 +193,7 @@ function HomePage() {
 
   const clearSelectedDemographics = () => {
     setSelectedDemographics([]);
+    setSearchMade(false);
   };
 
   function Chip({ label, onRemove }) {
@@ -271,13 +273,16 @@ function HomePage() {
 
   // Render the graphs only if a search has been made
   const renderGraphs = () => {
-    if (searchMade) {
+    if (searchMade && selectedDemographics.length > 0) {
       return (
         <div>
+          <Fade bottom>
           <div style={styles.chartContainer}>
             <div style={styles.barGraph}>
               <h2 style={styles.chartTitle}>Total Follow Count</h2>
+              {/* <Fade bottom> */}
               <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
+              {/* </Fade> */}
               <p style={styles.chartText}>
                 This is a <b>Bar Graph</b> generated with your selected Demographics.
                 <br /><br />
@@ -296,8 +301,8 @@ function HomePage() {
           <div style={styles.chartContainer}>
             <div className="first-graph-trigger">
               <div style={styles.barGraph}>
-                <h2 style={styles.chartTitle}>Second D3 Graph</h2>
-                <LollipopPlot selectedDemographics={selectedDemographics} />
+              <h2 style={styles.chartTitle}>Total Follow Count</h2>
+                <LollipopPlot selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
                 <p style={styles.chartText}>
                   This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
                   <br /><br />
@@ -313,15 +318,17 @@ function HomePage() {
               </div>
             </div>
           </div>
+          </Fade>
         </div>
       );
     } else {
-      return null; // Render nothing if no search has been made
+      return null;
     }
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#252525', paddingBottom: '100px' }}>
+      <Fade bottom>
       <div style={styles.card}>
         <h2 style={styles.cardTitle}>Search Demographic</h2>
         <div style={styles.searchBar}>
@@ -343,11 +350,14 @@ function HomePage() {
           ))}
         </datalist>
       </div>
+      </Fade>
+      <Fade bottom>
       <div style={{ color: 'white', alignContent: 'center', margin: 'auto', marginBottom: '4px' }}>
         {selectedDemographics.map(demo => (
           <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
         ))}
       </div>
+      </Fade>
       {renderGraphs()}
     </div>
   );
