@@ -5,7 +5,9 @@ const Auth0ProviderWithHistory = ({ children }) => {
     <Auth0Provider
       domain="contract-manager.us.auth0.com"
       clientId="lEBSEWK6hD4CUCJah11xwBFXGpTHcG9p"
-      redirectUri={window.location.origin + '/#/Dashboard'} 
+      authorizationParams={{
+        redirect_uri: window.location.origin + "/#/Dashboard",
+      }}
     >
       {children}
     </Auth0Provider>
