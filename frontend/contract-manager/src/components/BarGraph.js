@@ -2,21 +2,11 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import '../styles/bargraph.css';
 
-const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount }) => { 
+const BarGraph = ({ selectedDemographics, genderAverages }) => {
+  // const genderDemos = [maleCount, femaleCount, nonBinaryCount];
+  console.log("gender averages: ", genderAverages);
+  console.log("selectedDemographics", selectedDemographics);
 
-  // TEST DATA 
-  // const [data, setData] = useState([
-  //   { name: "A", value: 50 },
-  //   { name: "B", value: 20 },
-  //   { name: "C", value: 40 },
-  //   { name: "D", value: 70 },
-  // ]);
-
-  // CURRENTLY THE DATA THE GRAPH IS PRODUCING DOESN'T MAKE SENSE
-  // need to grab data, group users, add them within their groups, and display
-  // console.log(maleCount, femaleCount, nonBinaryCount);
-  const genderDemos = [maleCount, femaleCount, nonBinaryCount];
-  console.log(genderDemos);
   useEffect(() => {
 
     const margin = { top: 20, right: 20, bottom: 30, left: 100 };
@@ -31,18 +21,26 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
 
     // Update the data whenever selectedDemographics changes
     //CURRENTLY USING DEMOGRAPHICS BUT ALSO A RANDOM NUMBER 
-    // const updatedData = selectedDemographics.map(demo => ({ name: demo, value: Math.random() * 100 }));    
-     //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
+    const updatedData = selectedDemographics.map(gender => ({ name: gender, value: genderAverages[gender] }));
+    //const updatedData = selectedDemographics.map(demo => ({ name: demo, value: 3 }));    
     //const updatedData = selectedDemographics.map(genderDemos => ({ name: genderDemos, value: genderDemos }));   
     // const updatedData = [
     //   { name: "Male", value: maleCount },
     //   { name: "Female", value: femaleCount },
     //   { name: "Nonbinary", value: nonBinaryCount },
     // ];
-    const updatedData = selectedDemographics.map((gender, index) => ({
-      name: gender,
-      value: genderDemos[index],
-    }));
+
+    // const updatedData = selectedDemographics.map(gender => ({
+    //   name: gender,
+    //   value: isNaN(genderAverages[gender]) ? 0 : genderAverages[gender]
+    // }));
+
+
+    // THE BUG IS HERE SOMEWHERE BUT IDK WHY
+    // const updatedData = selectedDemographics.map((gender, index) => ({
+    //   name: gender,
+    //   value: genderAverages[gender],
+    // }));
 
     x.domain(updatedData.map(d => d.name));
     y.domain([0, d3.max(updatedData, d => d.value)]);
@@ -60,6 +58,15 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position if needed
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .attr("fill", "white")
+      .text("Follower Count");
 
     const colorScale = d3.scaleOrdinal()
       .domain(updatedData.map(d => d.name))
@@ -107,7 +114,7 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
       labels
         .filter(labelData => labelData === d)
         .style("display", "block")
-        .style("font-size", "16px") // Increase font size on hover
+        .style("font-size", "16px")
         .style("font-weight", "bolder"); // Increase font weight on hover
     });
 
@@ -122,10 +129,9 @@ const BarGraph = ({ selectedDemographics, maleCount, femaleCount, nonBinaryCount
     });
 
     svg.append("g").call(d3.axisLeft(y));
-  }, [selectedDemographics, maleCount, femaleCount, nonBinaryCount]);
+  }, [selectedDemographics, genderAverages]);
 
   return <div className="bar-chart"></div>;
 };
 
 export default BarGraph;
-

@@ -23,7 +23,7 @@ export default function Navbar() {
   return (
     <div style={styles.nav}>
       <h3
-        style={{ padding: "7px", fontSize: "17px" }}>
+        style={{fontSize: "17px" }}>
         Contract Manager
       </h3>
       <div style={styles.links}>
