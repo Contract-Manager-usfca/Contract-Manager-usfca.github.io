@@ -198,7 +198,7 @@ function PlatformInput() {
   };
 
   return (
-    <div style={{ color: "white" }}>
+    <div style={{ color: "white"}}>
       <h3>Platforms:</h3>
       <h6>Click on a platform to update your handle.</h6>
       {Object.keys(savedText).map((platform) => (

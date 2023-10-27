@@ -279,7 +279,7 @@ function HomePage() {
           <Fade bottom>
           <div style={styles.chartContainer}>
             <div style={styles.barGraph}>
-              <h2 style={styles.chartTitle}>Total Follow Count</h2>
+              <h2 style={styles.chartTitle}>Average Follow Count</h2>
               {/* <Fade bottom> */}
               <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
               {/* </Fade> */}
@@ -301,7 +301,7 @@ function HomePage() {
           <div style={styles.chartContainer}>
             <div className="first-graph-trigger">
               <div style={styles.barGraph}>
-              <h2 style={styles.chartTitle}>Total Follow Count</h2>
+              <h2 style={styles.chartTitle}>Average Follow Count</h2>
                 <LollipopPlot selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
                 <p style={styles.chartText}>
                   This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
