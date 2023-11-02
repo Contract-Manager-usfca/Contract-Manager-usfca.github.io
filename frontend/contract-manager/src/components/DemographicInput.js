@@ -62,71 +62,77 @@ function SaveAdd(saveId, input1Id, cancelId, elementId, deleteId) {
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   return (
     <div>
-      <button
-        onClick={() =>
-          AddInput(
-            `${element}Save`,
-            `${element}Input1`,
-            `${element}Cancel`,
-            `${element}Delete`
-          )
-        }
-        id={element}
-        style={styles.platformBtn}
-      >
-        {element}
-      </button>
-      <p style={{ display: "inline-block" }}>{savedText}</p>
-      <input
-        type="text"
-        placeholder="Demographic..."
-        id={`${element}Input1`}
-        style={{ visibility: "hidden" }}
-      />
-      <button
-        onClick={() =>
-          onSave(
-            `${element}Save`,
-            `${element}Input1`,
-            `${element}Cancel`,
-            element,
-            `${element}Delete`
-          )
-        }
-        id={`${element}Save`}
-        style={styles.submitBtn}
-      >
-        Save
-      </button>
-      <button
-        onClick={() =>
-          onDelete(
-            `${element}Save`,
-            `${element}Input1`,
-            `${element}Cancel`,
-            element,
-            `${element}Delete`
-          )
-        }
-        id={`${element}Delete`}
-        style={styles.submitBtn}
-      >
-        Delete
-      </button>
-      <button
-        onClick={() =>
-          onCancel(
-            `${element}Save`,
-            `${element}Input1`,
-            `${element}Cancel`,
-            `${element}Delete`
-          )
-        }
-        id={`${element}Cancel`}
-        style={styles.submitBtn}
-      >
-        Cancel
-      </button>
+      <div>
+        <button
+          onClick={() =>
+            AddInput(
+              `${element}Save`,
+              `${element}Input1`,
+              `${element}Cancel`,
+              `${element}Delete`
+            )
+          }
+          id={element}
+          style={styles.platformBtn}
+        >
+          {element}
+        </button>
+        <p style={{ display: "inline-block", marginBottom: "-15px" }}>
+          {savedText}
+        </p>
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="Demographic..."
+          id={`${element}Input1`}
+          style={{ visibility: "hidden" }}
+        />
+        <button
+          onClick={() =>
+            onSave(
+              `${element}Save`,
+              `${element}Input1`,
+              `${element}Cancel`,
+              element,
+              `${element}Delete`
+            )
+          }
+          id={`${element}Save`}
+          style={styles.submitBtn}
+        >
+          Save
+        </button>
+        <button
+          onClick={() =>
+            onDelete(
+              `${element}Save`,
+              `${element}Input1`,
+              `${element}Cancel`,
+              element,
+              `${element}Delete`
+            )
+          }
+          id={`${element}Delete`}
+          style={styles.submitBtn}
+        >
+          Delete
+        </button>
+        <button
+          onClick={() =>
+            onCancel(
+              `${element}Save`,
+              `${element}Input1`,
+              `${element}Cancel`,
+              `${element}Delete`
+            )
+          }
+          id={`${element}Cancel`}
+          style={styles.submitBtn}
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }
@@ -177,7 +183,14 @@ function DemographicInput() {
   };
 
   return (
-    <div style={{ color: "white" }}>
+    <div
+      style={{
+        color: "white",
+        textAlign: "center",
+        paddingLeft: "200px",
+        paddingRight: "200px",
+      }}
+    >
       <h3>Demographics:</h3>
       <h6>
         Click on a demographic to update your information. Each of these fields
