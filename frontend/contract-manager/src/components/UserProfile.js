@@ -17,6 +17,7 @@ function UserProfile() {
           setUserName(name);
           const email = idTokenClaims?.email || "";
           const sub = idTokenClaims?.sub || "";
+          // const privateEmail = email.includes("privaterelay");
 
           // Make a GET request to fetch all users
           axios
@@ -37,14 +38,14 @@ function UserProfile() {
                 console.log("User already exists:", userWithUsername);
 
                 const updatedUser = {
-                  name: name,
+                  name: userWithUsername.name,
                   username: email,
                   password: sub,
                 };
 
                 axios
                   .patch(
-                    `https://contract-manager.aquaflare.io/creators/${userWithUsername.id}`,
+                    `https://contract-manager.aquaflare.io/creators/${userWithUsername.id}/`,
                     updatedUser,
                     {
                       withCredentials: true,
@@ -109,13 +110,12 @@ function UserProfile() {
         }
       }
     };
-
     fetchUserProfile();
   }, [getIdTokenClaims, isLoading]);
 
   return (
     <div>
-      (
+      ({/* "If !is_private_email: show this." */}
       <p style={{ color: "white", textAlign: "center" }}>
         You're currently logged in as {userName}.
         <Button
