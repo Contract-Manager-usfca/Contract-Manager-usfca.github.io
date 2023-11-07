@@ -9,7 +9,6 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
     const fetchDataAndRender = async () => {
       // Ensure that genderAverages data is available before proceeding
       if (!Object.keys(genderAverages).length) {
-        console.log("gender avg: ", genderAverages);
         return;
       }
 
@@ -111,8 +110,7 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
   }, [selectedDemographics, genderAverages]);
 
   return (
-    <div className="bar-chart" ref={svgRef}>
-    </div>
+    <div className="bar-chart" ref={svgRef}></div>
   );
 };
 
