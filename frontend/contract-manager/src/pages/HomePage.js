@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import BarGraph from "./BarGraph";
-import LollipopPlot from "./LollipopPlot";
+import BarGraph from "../components/BarGraph";
+import LollipopPlot from "../components/LollipopPlot";
 import axios from 'axios';
 import Fade from 'react-reveal/Fade';
 
@@ -14,6 +14,8 @@ function HomePage() {
   const [genderAverages, setGenderAverages] = useState({});
   const [genderCounts, setGenderCounts] = useState({});
   const [searchMade, setSearchMade] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
 
 
   // targeted genders
@@ -36,6 +38,8 @@ function HomePage() {
 
   // WILL CHANGE 
   const fetchDemographic = () => {
+    setIsLoading(true);
+    console.log("loading..");
     if (searchQuery.toLowerCase() === "gender") {
       loadGenderData();
       setSearchQuery("");
@@ -43,6 +47,7 @@ function HomePage() {
       // exit the function early if it's a gender search
       return;
     }
+    setIsLoading(false);
 
     // FETCH DEMOGRAPHICS LIST
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
@@ -116,10 +121,12 @@ function HomePage() {
         })
         .catch(error => {
           console.error("Error fetching creator demographics:", error);
+          setIsLoading(false);
         });
     } else {
       // Gender data has already been loaded so don't fetch it again
       setSelectedDemographics(targetGenders);
+      setIsLoading(false);
     }
   };
 
@@ -169,8 +176,10 @@ function HomePage() {
           // set average
           genderAverages[demographic] = Math.round(average);
         });
-        console.log("GAs:", genderAverages);
+        console.log("GAaaaas:", genderAverages);
         setGenderAverages(genderAverages);
+        setIsLoading(false);
+        console.log("Not loading..");
       })
       .catch(error => {
         console.error("Error fetching follower counts:", error);
@@ -194,6 +203,7 @@ function HomePage() {
   const clearSelectedDemographics = () => {
     setSelectedDemographics([]);
     setSearchMade(false);
+    setIsLoading(false); 
   };
 
   function Chip({ label, onRemove }) {
@@ -273,13 +283,16 @@ function HomePage() {
 
   // Render the graphs only if a search has been made
   const renderGraphs = () => {
+    if (isLoading) {
+      return <div>Loading...</div>; // or any other loading indicator
+    }
     if (searchMade && selectedDemographics.length > 0) {
       return (
         <div>
           <Fade bottom>
           <div style={styles.chartContainer}>
             <div style={styles.barGraph}>
-              <h2 style={styles.chartTitle}>Total Follow Count</h2>
+              <h2 style={styles.chartTitle}>Average Follow Count</h2>
               {/* <Fade bottom> */}
               <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
               {/* </Fade> */}
@@ -301,7 +314,7 @@ function HomePage() {
           <div style={styles.chartContainer}>
             <div className="first-graph-trigger">
               <div style={styles.barGraph}>
-              <h2 style={styles.chartTitle}>Total Follow Count</h2>
+              <h2 style={styles.chartTitle}>Average Follow Count</h2>
                 <LollipopPlot selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
                 <p style={styles.chartText}>
                   This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
@@ -363,4 +376,3 @@ function HomePage() {
   );
 }
 export default HomePage;
-
