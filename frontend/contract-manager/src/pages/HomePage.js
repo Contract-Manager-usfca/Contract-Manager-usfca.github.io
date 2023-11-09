@@ -40,7 +40,7 @@ function HomePage() {
   const fetchDemographic = () => {
     setIsLoading(true);
     console.log("loading..");
-    if (searchQuery.toLowerCase() === "gender") {
+    if (searchQuery.toLowerCase() === "gender", "race") {
       loadGenderData();
       setSearchQuery("");
       setSearchMade(true);
