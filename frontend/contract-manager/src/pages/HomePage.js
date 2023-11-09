@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import BarGraph from "./BarGraph";
-import LollipopPlot from "./LollipopPlot";
+import BarGraph from "../components/BarGraph";
+import LollipopPlot from "../components/LollipopPlot";
 import axios from 'axios';
 import Fade from 'react-reveal/Fade';
+import loadingGif from '../imgs/loading2.gif';
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -14,6 +15,7 @@ function HomePage() {
   const [genderAverages, setGenderAverages] = useState({});
   const [genderCounts, setGenderCounts] = useState({});
   const [searchMade, setSearchMade] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   // targeted genders
@@ -36,13 +38,16 @@ function HomePage() {
 
   // WILL CHANGE 
   const fetchDemographic = () => {
-    if (searchQuery.toLowerCase() === "gender") {
+    setIsLoading(true);
+    console.log("loading..");
+    if (searchQuery.toLowerCase() === "gender", "race") {
       loadGenderData();
       setSearchQuery("");
       setSearchMade(true);
       // exit the function early if it's a gender search
       return;
     }
+    setIsLoading(false);
 
     // FETCH DEMOGRAPHICS LIST
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
@@ -116,10 +121,14 @@ function HomePage() {
         })
         .catch(error => {
           console.error("Error fetching creator demographics:", error);
+          setIsLoading(false);
+          console.log("20");
         });
     } else {
       // Gender data has already been loaded so don't fetch it again
       setSelectedDemographics(targetGenders);
+      setIsLoading(false);
+      console.log("30");
     }
   };
 
@@ -169,8 +178,13 @@ function HomePage() {
           // set average
           genderAverages[demographic] = Math.round(average);
         });
-        console.log("GAs:", genderAverages);
+        console.log("GAaaaas:", genderAverages);
         setGenderAverages(genderAverages);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 3000);
+        // setIsLoading(false);
+        console.log("Not loading..");
       })
       .catch(error => {
         console.error("Error fetching follower counts:", error);
@@ -194,6 +208,8 @@ function HomePage() {
   const clearSelectedDemographics = () => {
     setSelectedDemographics([]);
     setSearchMade(false);
+    setIsLoading(false);
+    console.log("50");
   };
 
   function Chip({ label, onRemove }) {
@@ -269,42 +285,54 @@ function HomePage() {
       color: '#C188FB',
       fontWeight: 'bold'
     },
+    chipContainerStyle: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: 'auto',
+      marginBottom: '10px',
+      color: 'white'
+    },
+    loadingTitle: {
+      color: 'white',
+      paddingRight: '5%',
+      paddingTop: '1.5%',
+    },
+    loadingCard: {
+      display: 'flex',
+      alignItems: 'center',
+      margin: 'auto',
+      textAlign: 'center',
+    },
   };
 
   // Render the graphs only if a search has been made
   const renderGraphs = () => {
+    if (isLoading) {
+      return (
+        <div style={styles.loadingCard}>
+          <Fade bottom>
+            <div style={styles.loadingTitle}>
+              <h2> Loading... </h2>
+            </div>
+            <img src={loadingGif} alt="Loading..." />
+          </Fade>
+        </div>
+      );
+    }
     if (searchMade && selectedDemographics.length > 0) {
       return (
         <div>
           <Fade bottom>
-          <div style={styles.chartContainer}>
-            <div style={styles.barGraph}>
-              <h2 style={styles.chartTitle}>Total Follow Count</h2>
-              {/* <Fade bottom> */}
-              <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
-              {/* </Fade> */}
-              <p style={styles.chartText}>
-                This is a <b>Bar Graph</b> generated with your selected Demographics.
-                <br /><br />
-                {selectedDemographics.length > 0 ? (
-                  <span>
-                    The Demographics currently selected are:&nbsp;
-                    <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
-                  </span>
-                ) : (
-                  <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
-                )}
-              </p>
-            </div>
-          </div>
-
-          <div style={styles.chartContainer}>
-            <div className="first-graph-trigger">
+            <div style={styles.chartContainer}>
               <div style={styles.barGraph}>
-              <h2 style={styles.chartTitle}>Total Follow Count</h2>
-                <LollipopPlot selectedDemographics={selectedDemographics} genderAverages={genderAverages}/>
+                <h2 style={styles.chartTitle}>Average Follow Count</h2>
+                <Fade bottom>
+                  <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages} />
+                </Fade>
                 <p style={styles.chartText}>
-                  This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
+                  This is a <b>Bar Graph</b> generated with your selected Demographics.
                   <br /><br />
                   {selectedDemographics.length > 0 ? (
                     <span>
@@ -317,7 +345,29 @@ function HomePage() {
                 </p>
               </div>
             </div>
-          </div>
+
+            <div style={styles.chartContainer}>
+              <div className="first-graph-trigger">
+                <div style={styles.barGraph}>
+                  <h2 style={styles.chartTitle}>Average Follow Count</h2>
+                  <Fade bottom>
+                    <LollipopPlot selectedDemographics={selectedDemographics} genderAverages={genderAverages} />
+                  </Fade>
+                  <p style={styles.chartText}>
+                    This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
+                    <br /><br />
+                    {selectedDemographics.length > 0 ? (
+                      <span>
+                        The Demographics currently selected are:&nbsp;
+                        <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                      </span>
+                    ) : (
+                      <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
           </Fade>
         </div>
       );
@@ -329,38 +379,39 @@ function HomePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#252525', paddingBottom: '100px' }}>
       <Fade bottom>
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>Search Demographic</h2>
-        <div style={styles.searchBar}>
-          <input
-            type="text"
-            style={styles.searchInput}
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            list="demographics-list"
-          />
-          <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
-          <button onClick={clearSelectedDemographics} style={styles.searchBtn}>Clear</button>
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>Search Demographic</h2>
+          <div style={styles.searchBar}>
+            <input
+              type="text"
+              style={styles.searchInput}
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              list="demographics-list"
+            />
+            <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
+            <button onClick={clearSelectedDemographics} style={styles.searchBtn}>Clear</button>
+          </div>
+          {/* Create the datalist with all available demographics */}
+          <datalist id="demographics-list">
+            {allDemographics.map((option, index) => (
+              <option key={index} value={option} />
+            ))}
+          </datalist>
         </div>
-        {/* Create the datalist with all available demographics */}
-        <datalist id="demographics-list">
-          {allDemographics.map((option, index) => (
-            <option key={index} value={option} />
-          ))}
-        </datalist>
-      </div>
       </Fade>
       <Fade bottom>
-      <div style={{ color: 'white', alignContent: 'center', margin: 'auto', marginBottom: '4px' }}>
-        {selectedDemographics.map(demo => (
-          <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
-        ))}
-      </div>
+        <div style={styles.chipContainerStyle}>
+          {!isLoading && selectedDemographics.map(demo => (
+            <Fade left>
+              <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
+            </Fade>
+          ))}
+        </div>
       </Fade>
       {renderGraphs()}
     </div>
   );
 }
 export default HomePage;
-
