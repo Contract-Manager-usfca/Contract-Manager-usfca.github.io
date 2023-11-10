@@ -211,7 +211,7 @@ function PlatformInput() {
 
         // Fetch all creator-platform relationships for the logged-in user
         const relationshipsResponse = await axios.get(
-          "http://contract-manager.aquaflare.io/creator-platforms/"
+          "https://contract-manager.aquaflare.io/creator-platforms/"
         );
         const relationships = relationshipsResponse.data;
 
@@ -258,7 +258,7 @@ function PlatformInput() {
     try {
       // Fetch all creator-platform relationships
       const relationshipsResponse = await axios.get(
-        "http://contract-manager.aquaflare.io/creator-platforms/"
+        "https://contract-manager.aquaflare.io/creator-platforms/"
       );
 
       // Find the specific relationship based on creator and platform IDs
@@ -390,7 +390,7 @@ function PlatformInput() {
 
       // Fetch all creator-platform relationships
       axios
-        .get("http://contract-manager.aquaflare.io/creator-platforms/")
+        .get("https://contract-manager.aquaflare.io/creator-platforms/")
         .then((response) => {
           const relationships = response.data;
 

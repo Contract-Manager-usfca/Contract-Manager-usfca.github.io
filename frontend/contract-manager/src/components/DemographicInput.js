@@ -195,7 +195,7 @@ function DemographicInput() {
 
         // Fetch all creator-demographic relationships for the logged-in user
         const relationshipsResponse = await axios.get(
-          "http://contract-manager.aquaflare.io/creator-demographics/"
+          "https://contract-manager.aquaflare.io/creator-demographics/"
         );
         const relationships = relationshipsResponse.data;
 
@@ -238,7 +238,7 @@ function DemographicInput() {
     try {
       // Fetch all creator-demographic relationships
       const relationshipsResponse = await axios.get(
-        "http://contract-manager.aquaflare.io/creator-demographics/"
+        "https://contract-manager.aquaflare.io/creator-demographics/"
       );
 
       // Find the specific relationship based on creator and demographic IDs
@@ -357,7 +357,7 @@ function DemographicInput() {
 
       // Fetch all creator-platform relationships
       axios
-        .get("http://contract-manager.aquaflare.io/creator-demographics/")
+        .get("https://contract-manager.aquaflare.io/creator-demographics/")
         .then((response) => {
           const relationships = response.data;
 
