@@ -33,44 +33,7 @@ function UserProfile() {
                 (user) => user.username === email
               );
 
-              if (userWithUsername) {
-                // User already exists, proceed with a PATCH request
-                console.log("User already exists:", userWithUsername);
-
-                const updatedUser = {
-                  name: userWithUsername.name,
-                  username: email,
-                  password: sub,
-                };
-
-                axios
-                  .patch(
-                    `https://contract-manager.aquaflare.io/creators/${userWithUsername.id}/`,
-                    updatedUser,
-                    {
-                      withCredentials: true,
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                    }
-                  )
-                  .then((patchResponse) => {
-                    console.log(
-                      "User updated successfully:",
-                      patchResponse.data
-                    );
-                  })
-                  .catch((patchError) => {
-                    console.error("Error updating user:", patchError);
-                    // Log the complete error response for debugging
-                    if (patchError.response) {
-                      console.error(
-                        "Error response data:",
-                        patchError.response.data
-                      );
-                    }
-                  });
-              } else {
+              if (!userWithUsername) {
                 // User doesn't exist, proceed to create a new user with a POST request
                 console.log("User not found, creating a new user.");
 
