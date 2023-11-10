@@ -11,6 +11,7 @@ const styles = {
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
+
   },
   submitBtn: {
     padding: "5px 15px",
@@ -137,11 +138,13 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           Cancel
         </button>
       </div>
+
     </div>
   );
 }
 
 function DemographicInput() {
+
   const { getIdTokenClaims, isLoading } = useAuth0();
   const [creatorId, setCreatorId] = useState(null);
   const [demographics, setDemographics] = useState([]);
@@ -348,6 +351,7 @@ function DemographicInput() {
 
   const handleDelete = (saveId, input1Id, cancelId, elementId, deleteId) => {
     CancelAdd(saveId, input1Id, cancelId, deleteId);
+
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 
@@ -422,6 +426,7 @@ function DemographicInput() {
           key={demographic.demographic}
           element={demographic.demographic}
           savedText={demographic.savedText}
+
           onSave={handleInputAndSave}
           onCancel={CancelAdd}
           onDelete={handleDelete}
