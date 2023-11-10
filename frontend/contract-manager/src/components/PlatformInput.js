@@ -272,11 +272,11 @@ function PlatformInput() {
       if (existingRelationship) {
         const relationshipId = existingRelationship.id;
 
-        // Send a PATCH/PUT request to update the existing relationship
-        await axios.patch(
+        // Send a PUT request to update the existing relationship
+        await axios.put(
           `https://contract-manager.aquaflare.io/creator-platforms/${relationshipId}/`,
           {
-            followerCount: inputValue2,
+            follower_count: parseInt(inputValue2),
             handle: inputValue1,
             last_update: new Date().toISOString(),
             creator: creatorId,

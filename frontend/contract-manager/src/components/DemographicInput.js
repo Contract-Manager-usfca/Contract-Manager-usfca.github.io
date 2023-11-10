@@ -252,8 +252,8 @@ function DemographicInput() {
       if (existingRelationship) {
         const relationshipId = existingRelationship.id;
 
-        // Send a PATCH/PUT request to update the existing relationship
-        await axios.patch(
+        // Send a PUT request to update the existing relationship
+        await axios.put(
           `https://contract-manager.aquaflare.io/creator-demographics/${relationshipId}/`,
           {
             demo: inputValue1,
