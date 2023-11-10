@@ -1,5 +1,5 @@
 import React from "react";
-import './App.css';
+import "./App.css";
 // Import HashRouter
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Homepage from './pages/HomePage';
@@ -9,7 +9,9 @@ import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       {/* Use HashRouter instead of BrowserRouter */}
       <Router basename="/">
         <div className="flex-column justify-center align-center min-100-vh bg-primary">
