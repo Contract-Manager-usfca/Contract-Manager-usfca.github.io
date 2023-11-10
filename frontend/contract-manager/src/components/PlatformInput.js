@@ -61,10 +61,9 @@ function CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId) {
   }
 }
 
+//TODO Remove SaveAdd and refactor accordingly:)
 function SaveAdd(saveId, input1Id, input2Id, cancelId, elementId, deleteId) {
   CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId);
-  var p = document.getElementById(elementId);
-  p.style.color = "green";
 }
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
@@ -363,7 +362,6 @@ function PlatformInput() {
         } else {
           console.error("Platform not found");
         }
-        //addPlatformInfo(elementId, inputValue1, inputValue2);
 
         //On save, match current user with user id in platform table. Update information.
       } else {
@@ -383,7 +381,6 @@ function PlatformInput() {
     deleteId
   ) => {
     CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId);
-    var p = document.getElementById(elementId);
     // Find the platformId based on the selected platform name
     const platform = platforms.find((p) => p.name === elementId);
 
