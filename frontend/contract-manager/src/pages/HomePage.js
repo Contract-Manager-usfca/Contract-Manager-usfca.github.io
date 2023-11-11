@@ -32,7 +32,14 @@ function HomePage() {
   }, []);
 
 
-// Fetch data based on user input or selected demographics
+// Add a new useEffect to listen for changes in selectedDemographics
+useEffect(() => {
+  if (selectedDemographics.length > 0) {
+    loadDemographicData(selectedDemographics);
+  }
+}, [selectedDemographics]);
+
+// Modify your fetchDemographicData function
 const fetchDemographicData = () => {
   setIsLoading(true);
   console.log("loading..");
@@ -47,21 +54,15 @@ const fetchDemographicData = () => {
       if (filteredData.length > 0) {
         const demographicName = filteredData[0].demographic;
 
-        // if (selectedDemographics.includes(demographicName)) {
-        //   console.warn(`${demographicName} has already been selected!`);
-        //   alert(`${demographicName} has already been selected!`);
-        // } else {
+        if (!selectedDemographics.includes(demographicName)) {
           // Add the selected demographic to the state
           selectDemographic(demographicName);
-          console.log('selected: ', selectedDemographics);
-          // Clear the searchQuery
-          setSearchQuery("");
-          
-          // Move loadDemographicData inside the .then block
-          loadDemographicData(selectedDemographics);
-        // }
-      // } else {
-      //   alert("Demographic not found!");
+        }
+        console.log('selected: ', selectedDemographics);
+        // Clear the searchQuery
+        setSearchQuery("");
+        
+        // No need to call loadDemographicData here, useEffect will handle it
       }
     })
     .catch(error => {
