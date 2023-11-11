@@ -9,26 +9,21 @@ function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
   const [selectedDemographics, setSelectedDemographics] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [maleCount, setMaleCount] = useState(0);
-  const [femaleCount, setFemaleCount] = useState(0);
-  const [nonBinaryCount, setNonBinaryCount] = useState(0);
   const [genderAverages, setGenderAverages] = useState({});
   const [genderCounts, setGenderCounts] = useState({});
   const [searchMade, setSearchMade] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-
-  // targeted genders
-  // need to figure out how to make this universal later
-  const targetGenders = ['Male', 'Female', 'Nonbinary'];
-
 
   // Fetch and set all available demographics from database
   useEffect(() => {
     // Getting demographics list
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
       .then(response => {
-        const demographicsArray = response.data.map(demographic => demographic.demographic);
+        // grabbing Demographic name and its ID
+        const demographicsArray = response.data.map(demographic => ({
+          id: demographic.id,
+          name: demographic.demographic,
+        }));
         setAllDemographics(demographicsArray);
       })
       .catch(error => {
@@ -36,101 +31,111 @@ function HomePage() {
       });
   }, []);
 
-  // WILL CHANGE 
-  const fetchDemographic = () => {
-    setIsLoading(true);
-    console.log("loading..");
-    if (searchQuery.toLowerCase() === "gender", "race") {
-      loadGenderData();
-      setSearchQuery("");
-      setSearchMade(true);
-      // exit the function early if it's a gender search
-      return;
-    }
-    setIsLoading(false);
 
-    // FETCH DEMOGRAPHICS LIST
-    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
-      .then(response => {
-        const filteredData = response.data.filter(demographic => {
-          return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
-        });
+// Fetch data based on user input or selected demographics
+const fetchDemographicData = () => {
+  setIsLoading(true);
+  console.log("loading..");
 
-        if (filteredData.length > 0) {
-          const demographicName = filteredData[0].demographic;
-
-          // checks to see if a demographic has already been selected
-          // most likely will change because user shouldn't be able to 
-          // select multiple demographics at the same time
-          if (selectedDemographics.includes(demographicName)) {
-            console.warn(`${demographicName} has already been selected!`);
-            alert(`${demographicName} has already been selected!`);
-          } else {
-            selectDemographic(demographicName);
-            setSearchQuery("");
-          }
-        } else {
-          alert("Demographic not found!");
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching demographics:", error);
+  // FETCH DEMOGRAPHICS LIST
+  axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
+    .then(response => {
+      const filteredData = response.data.filter(demographic => {
+        return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
       });
-  };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
+      if (filteredData.length > 0) {
+        const demographicName = filteredData[0].demographic;
 
-  // FETCH GENDERS
-  const loadGenderData = () => {
-    // Check if gender data has already been loaded
-    if (maleCount === 0 && femaleCount === 0 && nonBinaryCount === 0) {
-      axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
-        .then(response => {
-          const genderDemos = response.data;
-          const userData = [];
-          let newMaleCount = 0;
-          let newFemaleCount = 0;
-          let newNonBinaryCount = 0;
+        // if (selectedDemographics.includes(demographicName)) {
+        //   console.warn(`${demographicName} has already been selected!`);
+        //   alert(`${demographicName} has already been selected!`);
+        // } else {
+          // Add the selected demographic to the state
+          selectDemographic(demographicName);
+          console.log('selected: ', selectedDemographics);
+          // Clear the searchQuery
+          setSearchQuery("");
+          
+          // Move loadDemographicData inside the .then block
+          loadDemographicData(selectedDemographics);
+        // }
+      // } else {
+      //   alert("Demographic not found!");
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching demographics:", error);
+    });
 
-          genderDemos.forEach(demo => {
-            const gender = demo.demo;
+  // Check if the user input is "gender" or "race"
+  if (searchQuery.toLowerCase() === "gender" || searchQuery.toLowerCase() === "race" || searchQuery.toLowerCase() === "sexuality" || searchQuery.toLowerCase() === "age" || searchQuery.toLowerCase() === "residence" || searchQuery.toLowerCase() === "language" || searchQuery.toLowerCase() === "genre") {
+    // Clear the searchQuery
+    setSearchQuery("");
+    setSearchMade(true);
+    return;
+  }
+  setIsLoading(false);
+};
 
-            if (targetGenders.includes(gender)) {
-              if (gender === "Male") {
-                newMaleCount++;
-              } else if (gender === "Female") {
-                newFemaleCount++;
-              } else if (gender === "Nonbinary") {
-                newNonBinaryCount++;
+// Load demographic data function now accepts selectedDemographics as an argument
+const loadDemographicData = (selectedDemographics) => {
+  setIsLoading(true);
+  // Create an array to store promises for fetching demographic data
+  const fetchPromises = [];
+
+  // Iterate through selected demographics and fetch data for each one
+  selectedDemographics.forEach((selectedDemo) => {
+    // Find the corresponding demographic ID for the selected demographic
+    const selectedDemoID = allDemographics.find((demo) => demo.name === selectedDemo)?.id;
+    console.log(selectedDemoID);
+    if (selectedDemoID) {
+      // Fetch demo categories that have the same demographic ID
+      fetchPromises.push(
+        axios.get(`https://contract-manager.aquaflare.io/creator-demographics/?demographic=${selectedDemoID}`, { withCredentials: true })
+          .then((response) => {
+            const demoData = response.data;
+            console.log(demoData);
+
+            // Filter demo data based on the matching demographic ID
+            const filteredDemoData = demoData.filter((demo) => demo.demographic === selectedDemoID);
+
+            // Initialize an object to store the counts for the current demographic
+            const demographicCounts = {};
+
+            // Count users in each demographic category
+            filteredDemoData.forEach((demo) => {
+              const category = demo.demo;
+              console.log(category);
+
+              if (category in demographicCounts) {
+                demographicCounts[category]++;
+              } else {
+                demographicCounts[category] = 1;
               }
-            }
+            });
 
-            // push data to array
-            userData.push({ demographic: gender, userID: demo.creator, });
-          });
-
-          setMaleCount(newMaleCount);
-          setFemaleCount(newFemaleCount);
-          setNonBinaryCount(newNonBinaryCount);
-          setSelectedDemographics(targetGenders);
-
-          // Fetch follower counts and calculate averages
-          fetchFollowerCounts(userData);
-        })
-        .catch(error => {
-          console.error("Error fetching creator demographics:", error);
-          setIsLoading(false);
-          console.log("20");
-        });
-    } else {
-      // Gender data has already been loaded so don't fetch it again
-      setSelectedDemographics(targetGenders);
-      setIsLoading(false);
-      console.log("30");
+            // Update your state or do other processing with the counts here
+            console.log(`Counts for ${selectedDemo}:`, demographicCounts);
+          })
+          .catch((error) => {
+            console.error(`Error fetching ${selectedDemo} demographics:`, error);
+          })
+      );
     }
-  };
+  });
+
+  // Once all promises are resolved, you can set isLoading to false
+  Promise.all(fetchPromises)
+    .then(() => {
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      console.error("Error fetching demographic data:", error);
+      setIsLoading(false);
+    });
+};
+
 
   // FETCHING FOLLOW COUNTS
   const fetchFollowerCounts = (userData) => {
@@ -169,7 +174,7 @@ function HomePage() {
         setGenderCounts(genderCounts);
 
         // Calculating Average number of followers per gender
-        targetGenders.forEach(demographic => {
+        selectedDemographics.forEach(demographic => {
           // grab total follower count for the current gender or else 0
           const totalFollowerCount = genderCounts[demographic] || 0;
           // grab number of users in the current gender group:
@@ -191,6 +196,10 @@ function HomePage() {
       });
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   const selectDemographic = (demographic) => {
     if (!selectedDemographics.includes(demographic)) {
       setSelectedDemographics(prev => [...prev, demographic]);
@@ -198,7 +207,7 @@ function HomePage() {
   };
 
   const deselectDemographic = (demographic) => {
-    if (targetGenders.includes(demographic)) {
+    if (selectedDemographics.includes(demographic)) {
       setSelectedDemographics(prev => prev.filter(item => item !== demographic));
     } else {
       setSelectedDemographics(prev => prev.filter(item => item !== demographic));
@@ -390,25 +399,27 @@ function HomePage() {
               onChange={handleSearchChange}
               list="demographics-list"
             />
-            <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
+            <button onClick={fetchDemographicData} style={styles.searchBtn}>Search</button>
             <button onClick={clearSelectedDemographics} style={styles.searchBtn}>Clear</button>
           </div>
           {/* Create the datalist with all available demographics */}
           <datalist id="demographics-list">
-            {allDemographics.map((option, index) => (
-              <option key={index} value={option} />
+            {allDemographics.map((option) => (
+              <option key={option.id} value={option.name} />
             ))}
           </datalist>
         </div>
       </Fade>
       <Fade bottom>
         <div style={styles.chipContainerStyle}>
-          {!isLoading && selectedDemographics.map(demo => (
-            <Fade left>
-              <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
-            </Fade>
-          ))}
+          {!isLoading &&
+            selectedDemographics.map((demo, index) => (
+              <Fade left key={index}>
+                <Chip label={demo} onRemove={() => deselectDemographic(demo)} />
+              </Fade>
+            ))}
         </div>
+
       </Fade>
       {renderGraphs()}
     </div>
