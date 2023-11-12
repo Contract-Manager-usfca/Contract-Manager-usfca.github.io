@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -212,7 +211,7 @@ function PlatformInput() {
 
         // Fetch all creator-platform relationships for the logged-in user
         const relationshipsResponse = await axios.get(
-          "http://contract-manager.aquaflare.io/creator-platforms/"
+          "https://contract-manager.aquaflare.io/creator-platforms/"
         );
         const relationships = relationshipsResponse.data;
 
@@ -259,7 +258,7 @@ function PlatformInput() {
     try {
       // Fetch all creator-platform relationships
       const relationshipsResponse = await axios.get(
-        "http://contract-manager.aquaflare.io/creator-platforms/"
+        "https://contract-manager.aquaflare.io/creator-platforms/"
       );
 
       // Find the specific relationship based on creator and platform IDs
@@ -273,11 +272,11 @@ function PlatformInput() {
       if (existingRelationship) {
         const relationshipId = existingRelationship.id;
 
-        // Send a PATCH/PUT request to update the existing relationship
-        await axios.patch(
+        // Send a PUT request to update the existing relationship
+        await axios.put(
           `https://contract-manager.aquaflare.io/creator-platforms/${relationshipId}/`,
           {
-            followerCount: inputValue2,
+            follower_count: parseInt(inputValue2),
             handle: inputValue1,
             last_update: new Date().toISOString(),
             creator: creatorId,
@@ -391,7 +390,7 @@ function PlatformInput() {
 
       // Fetch all creator-platform relationships
       axios
-        .get("http://contract-manager.aquaflare.io/creator-platforms/")
+        .get("https://contract-manager.aquaflare.io/creator-platforms/")
         .then((response) => {
           const relationships = response.data;
 

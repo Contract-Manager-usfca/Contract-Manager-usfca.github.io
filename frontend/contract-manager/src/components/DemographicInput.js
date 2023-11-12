@@ -11,7 +11,6 @@ const styles = {
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
-
   },
   submitBtn: {
     padding: "5px 15px",
@@ -138,13 +137,11 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           Cancel
         </button>
       </div>
-
     </div>
   );
 }
 
 function DemographicInput() {
-
   const { getIdTokenClaims, isLoading } = useAuth0();
   const [creatorId, setCreatorId] = useState(null);
   const [demographics, setDemographics] = useState([]);
@@ -198,7 +195,8 @@ function DemographicInput() {
 
         // Fetch all creator-demographic relationships for the logged-in user
         const relationshipsResponse = await axios.get(
-          "http://contract-manager.aquaflare.io/creator-demographics/"
+          "https://contract-manager.aquaflare.io/creator-demographics/"
+
         );
         const relationships = relationshipsResponse.data;
 
@@ -241,7 +239,7 @@ function DemographicInput() {
     try {
       // Fetch all creator-demographic relationships
       const relationshipsResponse = await axios.get(
-        "http://contract-manager.aquaflare.io/creator-demographics/"
+        "https://contract-manager.aquaflare.io/creator-demographics/"
       );
 
       // Find the specific relationship based on creator and demographic IDs
@@ -255,8 +253,8 @@ function DemographicInput() {
       if (existingRelationship) {
         const relationshipId = existingRelationship.id;
 
-        // Send a PATCH/PUT request to update the existing relationship
-        await axios.patch(
+        // Send a PUT request to update the existing relationship
+        await axios.put(
           `https://contract-manager.aquaflare.io/creator-demographics/${relationshipId}/`,
           {
             demo: inputValue1,
@@ -351,7 +349,6 @@ function DemographicInput() {
 
   const handleDelete = (saveId, input1Id, cancelId, elementId, deleteId) => {
     CancelAdd(saveId, input1Id, cancelId, deleteId);
-
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 
@@ -361,7 +358,7 @@ function DemographicInput() {
 
       // Fetch all creator-platform relationships
       axios
-        .get("http://contract-manager.aquaflare.io/creator-demographics/")
+        .get("https://contract-manager.aquaflare.io/creator-demographics/")
         .then((response) => {
           const relationships = response.data;
 
@@ -426,7 +423,6 @@ function DemographicInput() {
           key={demographic.demographic}
           element={demographic.demographic}
           savedText={demographic.savedText}
-
           onSave={handleInputAndSave}
           onCancel={CancelAdd}
           onDelete={handleDelete}
