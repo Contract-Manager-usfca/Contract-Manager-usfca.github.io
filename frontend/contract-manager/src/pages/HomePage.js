@@ -13,6 +13,7 @@ function HomePage() {
   const [genderCounts, setGenderCounts] = useState({});
   const [searchMade, setSearchMade] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDemoCategories, setSelectedDemoCategories] = useState(new Set());
 
   // Fetch and set all available demographics from database
   useEffect(() => {
@@ -32,110 +33,118 @@ function HomePage() {
   }, []);
 
 
-// Add a new useEffect to listen for changes in selectedDemographics
-useEffect(() => {
-  if (selectedDemographics.length > 0) {
-    loadDemographicData(selectedDemographics);
-  }
-}, [selectedDemographics]);
+  // Add a new useEffect to listen for changes in selectedDemographics
+  useEffect(() => {
+    if (selectedDemographics.length > 0) {
+      loadDemographicData(selectedDemographics);
+    }
+  }, [selectedDemographics]);
 
-// Modify your fetchDemographicData function
-const fetchDemographicData = () => {
-  setIsLoading(true);
-  console.log("loading..");
+  // Modify your fetchDemographicData function
+  const fetchDemographicData = () => {
+    setIsLoading(true);
+    console.log("loading..");
 
-  // FETCH DEMOGRAPHICS LIST
-  axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
-    .then(response => {
-      const filteredData = response.data.filter(demographic => {
-        return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
+    // FETCH DEMOGRAPHICS LIST
+    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
+      .then(response => {
+        const filteredData = response.data.filter(demographic => {
+          return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
+        });
+
+        if (filteredData.length > 0) {
+          const demographicName = filteredData[0].demographic;
+
+          if (!selectedDemographics.includes(demographicName)) {
+            // Add the selected demographic to the state
+            selectDemographic(demographicName);
+          }
+          console.log('selected: ', selectedDemographics);
+          // Clear the searchQuery
+          setSearchQuery("");
+
+          // No need to call loadDemographicData here, useEffect will handle it
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching demographics:", error);
       });
 
-      if (filteredData.length > 0) {
-        const demographicName = filteredData[0].demographic;
-
-        if (!selectedDemographics.includes(demographicName)) {
-          // Add the selected demographic to the state
-          selectDemographic(demographicName);
-        }
-        console.log('selected: ', selectedDemographics);
-        // Clear the searchQuery
-        setSearchQuery("");
-        
-        // No need to call loadDemographicData here, useEffect will handle it
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching demographics:", error);
-    });
-
-  // Check if the user input is "gender" or "race"
-  if (searchQuery.toLowerCase() === "gender" || searchQuery.toLowerCase() === "race" || searchQuery.toLowerCase() === "sexuality" || searchQuery.toLowerCase() === "age" || searchQuery.toLowerCase() === "residence" || searchQuery.toLowerCase() === "language" || searchQuery.toLowerCase() === "genre") {
-    // Clear the searchQuery
-    setSearchQuery("");
-    setSearchMade(true);
-    return;
-  }
-  setIsLoading(false);
-};
-
-// Load demographic data function now accepts selectedDemographics as an argument
-const loadDemographicData = (selectedDemographics) => {
-  setIsLoading(true);
-  // Create an array to store promises for fetching demographic data
-  const fetchPromises = [];
-
-  // Iterate through selected demographics and fetch data for each one
-  selectedDemographics.forEach((selectedDemo) => {
-    // Find the corresponding demographic ID for the selected demographic
-    const selectedDemoID = allDemographics.find((demo) => demo.name === selectedDemo)?.id;
-    console.log(selectedDemoID);
-    if (selectedDemoID) {
-      // Fetch demo categories that have the same demographic ID
-      fetchPromises.push(
-        axios.get(`https://contract-manager.aquaflare.io/creator-demographics/?demographic=${selectedDemoID}`, { withCredentials: true })
-          .then((response) => {
-            const demoData = response.data;
-            console.log(demoData);
-
-            // Filter demo data based on the matching demographic ID
-            const filteredDemoData = demoData.filter((demo) => demo.demographic === selectedDemoID);
-
-            // Initialize an object to store the counts for the current demographic
-            const demographicCounts = {};
-
-            // Count users in each demographic category
-            filteredDemoData.forEach((demo) => {
-              const category = demo.demo;
-              console.log(category);
-
-              if (category in demographicCounts) {
-                demographicCounts[category]++;
-              } else {
-                demographicCounts[category] = 1;
-              }
-            });
-
-            // Update your state or do other processing with the counts here
-            console.log(`Counts for ${selectedDemo}:`, demographicCounts);
-          })
-          .catch((error) => {
-            console.error(`Error fetching ${selectedDemo} demographics:`, error);
-          })
-      );
+    // Check if the user input is "gender" or "race"
+    if (searchQuery.toLowerCase() === "gender" || searchQuery.toLowerCase() === "race" || searchQuery.toLowerCase() === "sexuality" || searchQuery.toLowerCase() === "age" || searchQuery.toLowerCase() === "residence" || searchQuery.toLowerCase() === "language" || searchQuery.toLowerCase() === "genre") {
+      // Clear the searchQuery
+      setSearchQuery("");
+      setSearchMade(true);
+      return;
     }
-  });
+    setIsLoading(false);
+  };
 
-  // Once all promises are resolved, you can set isLoading to false
-  Promise.all(fetchPromises)
-    .then(() => {
-      setIsLoading(false);
-    })
-    .catch((error) => {
-      console.error("Error fetching demographic data:", error);
-      setIsLoading(false);
+  // Load demographic data function now accepts selectedDemographics as an argument
+  const loadDemographicData = (selectedDemographics) => {
+    setIsLoading(true);
+    // Create an array to store promises for fetching demographic data
+    const fetchPromises = [];
+
+    // Iterate through selected demographics and fetch data for each one
+    selectedDemographics.forEach((selectedDemo) => {
+      // Find the corresponding demographic ID for the selected demographic
+      const selectedDemoID = allDemographics.find((demo) => demo.name === selectedDemo)?.id;
+      console.log(selectedDemoID);
+      if (selectedDemoID) {
+        // Fetch demo categories that have the same demographic ID
+        fetchPromises.push(
+          axios.get(`https://contract-manager.aquaflare.io/creator-demographics/?demographic=${selectedDemoID}`, { withCredentials: true })
+            .then((response) => {
+              const demoData = response.data;
+              console.log(demoData);
+
+              // Filter demo data based on the matching demographic ID
+              const filteredDemoData = demoData.filter((demo) => demo.demographic === selectedDemoID);
+
+              // Extract and store the categories in selectedDemoCategories
+              const categories = filteredDemoData.map((demo) => demo.demo);
+
+              // Use a Set to ensure only unique categories are added
+              categories.forEach((category) => {
+                setSelectedDemoCategories((prev) => new Set([...prev, category]));
+              });
+
+              // Initialize an object to store the counts for the current demographic
+              const demographicCounts = {};
+
+              // Count users in each demographic category
+              filteredDemoData.forEach((demo) => {
+                const category = demo.demo;
+                console.log(category);
+
+                if (category in demographicCounts) {
+                  demographicCounts[category]++;
+                } else {
+                  demographicCounts[category] = 1;
+                }
+              });
+
+              // Update your state or do other processing with the counts here
+              console.log(`Counts for ${selectedDemo}:`, demographicCounts);
+            })
+            .catch((error) => {
+              console.error(`Error fetching ${selectedDemo} demographics:`, error);
+            })
+        );
+      }
     });
-};
+
+    // Once all promises are resolved, you can set isLoading to false
+    Promise.all(fetchPromises)
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching demographic data:", error);
+        setIsLoading(false);
+      });
+  };
 
 
   // FETCHING FOLLOW COUNTS
@@ -165,13 +174,7 @@ const loadDemographicData = (selectedDemographics) => {
           }
         });
 
-        // follower counts for each user 
-        // THIS IS CORRECT
-        // console.log("follwer counts: ", followerCounts);
 
-        // gender-specific follower counts
-        // THIS IS ALSO CORRECT
-        // console.log("gender counts", genderCounts);
         setGenderCounts(genderCounts);
 
         // Calculating Average number of followers per gender
@@ -208,19 +211,26 @@ const loadDemographicData = (selectedDemographics) => {
   };
 
   const deselectDemographic = (demographic) => {
-    if (selectedDemographics.includes(demographic)) {
-      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
-    } else {
-      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
-    }
+    setSelectedDemographics((prev) => prev.filter(item => item !== demographic));
+  
+    // Remove the deselected demographic from selectedDemoCategories
+    setSelectedDemoCategories((prev) => {
+      const updatedCategories = new Set(prev);
+      updatedCategories.delete(demographic);
+      console.log("updated cats:", updatedCategories);
+      return updatedCategories;
+    });
+
   };
+  
 
   const clearSelectedDemographics = () => {
     setSelectedDemographics([]);
     setSearchMade(false);
     setIsLoading(false);
-    console.log("50");
+    setSelectedDemoCategories(new Set());
   };
+
 
   function Chip({ label, onRemove }) {
     return (
@@ -331,7 +341,7 @@ const loadDemographicData = (selectedDemographics) => {
         </div>
       );
     }
-    if (searchMade && selectedDemographics.length > 0) {
+    if (searchMade && selectedDemoCategories.size > 0) {
       return (
         <div>
           <Fade bottom>
@@ -414,11 +424,12 @@ const loadDemographicData = (selectedDemographics) => {
       <Fade bottom>
         <div style={styles.chipContainerStyle}>
           {!isLoading &&
-            selectedDemographics.map((demo, index) => (
+            Array.from(selectedDemoCategories).map((category, index) => (
               <Fade left key={index}>
-                <Chip label={demo} onRemove={() => deselectDemographic(demo)} />
+                <Chip label={category} onRemove={() => deselectDemographic(category)} />
               </Fade>
-            ))}
+            ))
+          }
         </div>
 
       </Fade>
