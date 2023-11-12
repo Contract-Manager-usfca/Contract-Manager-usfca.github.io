@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import BarGraph from "../components/bargraph";
+import BarGraph from "../components/BarGraph";
 import LollipopPlot from "../components/LollipopPlot";
 import axios from 'axios';
 import Fade from 'react-reveal/Fade';

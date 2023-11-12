@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const styles = {
     container: {
@@ -17,8 +18,16 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '10 20px',
+        padding: '10px 20px',
         backgroundColor: '#3E3E3E',
+    },
+    credits: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        paddingTop: '1%',
+        color: 'white',
     },
     link: (isHovered) => ({
         color: isHovered ? '#9487E4' : 'white',
@@ -35,13 +44,42 @@ export default function Footer() {
     return (
         <div style={styles.container}>
             <div style={styles.footer}>
-                {['Home', 'About Us', 'Help', 'Contact Us'].map((text) => (
-                    <a key={text} href="#" style={styles.link(hoveredLink === text)}
-                    onMouseEnter={() => setHoveredLink(text)}
-                    onMouseLeave={() => setHoveredLink(null)}>
-                    {text}
-                    </a>
-                ))}
+                {/* Use the Link component to navigate to different routes */}
+                <Link
+                    to="/"
+                    style={styles.link(hoveredLink === 'Home')}
+                    onMouseEnter={() => setHoveredLink('Home')}
+                    onMouseLeave={() => setHoveredLink(null)}
+                >
+                    Home
+                </Link>
+                <Link
+                    to="/AboutUs"
+                    style={styles.link(hoveredLink === 'About Us')}
+                    onMouseEnter={() => setHoveredLink('About Us')}
+                    onMouseLeave={() => setHoveredLink(null)}
+                >
+                    About Us
+                </Link>
+                <Link
+                    to="/"
+                    style={styles.link(hoveredLink === 'Help')}
+                    onMouseEnter={() => setHoveredLink('Help')}
+                    onMouseLeave={() => setHoveredLink(null)}
+                >
+                    Help
+                </Link>
+                <Link
+                    to="/contact"
+                    style={styles.link(hoveredLink === 'Contact Us')}
+                    onMouseEnter={() => setHoveredLink('Contact Us')}
+                    onMouseLeave={() => setHoveredLink(null)}
+                >
+                    Contact Us
+                </Link>
+            </div>
+            <div style={styles.credits}>
+                <p>&copy; 2023 Contract Manager. All rights reserved.</p>
             </div>
         </div>
     );
