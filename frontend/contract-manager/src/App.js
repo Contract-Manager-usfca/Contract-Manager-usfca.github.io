@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 // Import HashRouter
+
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./components/HomePage";
 import NavBar from "./components/Navbar";
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/Dashboard" element={<Dashboard />} />
+
           </Routes>
         </div>
         <Footer />
