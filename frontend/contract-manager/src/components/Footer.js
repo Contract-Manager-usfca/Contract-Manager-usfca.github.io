@@ -13,11 +13,11 @@ const styles = {
     },
     footer: {
         maxWidth: '1200px',
-        width: '100%',
-        margin: '0 auto',
+        width: '75%',
+        margin: 'auto',
         display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '60px',
         padding: '10px 20px',
         backgroundColor: '#3E3E3E',
     },
@@ -62,15 +62,7 @@ export default function Footer() {
                     About Us
                 </Link>
                 <Link
-                    to="/"
-                    style={styles.link(hoveredLink === 'Help')}
-                    onMouseEnter={() => setHoveredLink('Help')}
-                    onMouseLeave={() => setHoveredLink(null)}
-                >
-                    Help
-                </Link>
-                <Link
-                    to="/contact"
+                    to="/ContactUs"
                     style={styles.link(hoveredLink === 'Contact Us')}
                     onMouseEnter={() => setHoveredLink('Contact Us')}
                     onMouseLeave={() => setHoveredLink(null)}

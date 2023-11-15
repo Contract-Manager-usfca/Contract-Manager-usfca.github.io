@@ -36,15 +36,6 @@ const styles = {
     color: '#CBE1AE',
     marginLeft: '5%'
   },
-  footer: {
-    backgroundColor: '#222',
-    color: 'white',
-    textAlign: 'center',
-    padding: '10px 0',
-    position: 'absolute',
-    bottom: '0',
-    width: '100%'
-  },
   img: {
     maxWidth: "600px",
     maxHeight: "300px",
@@ -55,7 +46,6 @@ const styles = {
     marginRight: 'auto'
   },
 };
-
 
 function AboutUs() {
   return (
