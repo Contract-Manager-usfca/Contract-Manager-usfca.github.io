@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   contractBtn: {
     padding: "5px 15px",
+    margin: "20px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
@@ -14,19 +15,21 @@ const styles = {
   },
   submitBtn: {
     padding: "5px 15px",
+    margin: "20px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
-    visibility: "hidden",
+    display: "none",
   },
   // Style for input box
 };
 
-function testResults() {
-  const form = document.getElementById("myForm");
+//TODO remove once done testing
+function testResults(form) {
+  // const form = document.getElementById("myForm");
   const p = form.elements["partner"];
   let partner = p.value;
   const a = form.elements["amount"];
@@ -47,6 +50,31 @@ function testResults() {
   );
 }
 
+function ElementInput({ ahnClick }) {
+  console.log("*click*");
+  return (
+    <form id="myForm" name="myForm">
+      <input type="text" id="partner" placeholder="Partner" />
+      <br></br>
+      <label htmlFor="amount">$</label>
+      <input type="text" id="amount" placeholder="Amount Paid" />
+      <br></br>
+      <label htmlFor="start">Contract start date— </label>
+      <input type="date" id="start" />
+      <br></br>
+      <label htmlFor="end">Contract end date— </label>
+      <input type="date" id="end" />
+      <br></br>
+      <input
+        type="button"
+        name="button"
+        value="Click"
+        onClick={() => ahnClick(document.getElementById("myForm"))}
+      />
+    </form>
+  );
+}
+
 function ContractInput() {
   return (
     <div
@@ -62,25 +90,13 @@ function ContractInput() {
         Here you can input your contract information to compare against other
         content creators.
       </h6>
-      <form id="myForm">
-        <input type="text" id="partner" placeholder="Partner" />
-        <br></br>
-        <label htmlFor="amount">$</label>
-        <input type="text" id="amount" placeholder="Amount Paid" />
-        <br></br>
-        <label htmlFor="start">Contract start date— </label>
-        <input type="date" id="start" />
-        <br></br>
-        <label htmlFor="end">Contract end date— </label>
-        <input type="date" id="end" />
-        <br></br>
-        <input
-          type="button"
-          name="button"
-          value="Click"
-          onClick={() => testResults()}
-        />
-      </form>
+      <button
+        onClick={() => ElementInput(testResults)}
+        id="NewContract"
+        style={styles.contractBtn}
+      >
+        + New Contract
+      </button>
     </div>
   );
 }

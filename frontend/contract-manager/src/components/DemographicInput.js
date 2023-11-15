@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   platformBtn: {
     padding: "5px 15px",
+    margin: "20px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
@@ -14,13 +15,14 @@ const styles = {
   },
   submitBtn: {
     padding: "5px 15px",
+    margin: "20px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
-    visibility: "hidden",
+    display: "none",
   },
 };
 
@@ -29,11 +31,11 @@ function AddInput(saveId, input1Id, cancelId, deleteId) {
   var i1 = document.getElementById(input1Id);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
-  if (s.style.visibility === "hidden") {
-    s.style.visibility = "visible";
-    i1.style.visibility = "visible";
-    c.style.visibility = "visible";
-    d.style.visibility = "visible";
+  if (s.style.display === "none") {
+    s.style.display = "inline-block";
+    i1.style.display = "inline-block";
+    c.style.display = "inline-block";
+    d.style.display = "inline-block";
   }
 }
 
@@ -42,11 +44,11 @@ function CancelAdd(saveId, input1Id, cancelId, deleteId) {
   var i1 = document.getElementById(input1Id);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
-  if (s.style.visibility === "visible") {
-    s.style.visibility = "hidden";
-    i1.style.visibility = "hidden";
-    c.style.visibility = "hidden";
-    d.style.visibility = "hidden";
+  if (s.style.display === "inline-block") {
+    s.style.display = "none";
+    i1.style.display = "none";
+    c.style.display = "none";
+    d.style.display = "none";
 
     // Reset the input field to empty
     if (i1 && i1.tagName === "INPUT") {
@@ -86,7 +88,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           type="text"
           placeholder="Demographic..."
           id={`${element}Input1`}
-          style={{ visibility: "hidden" }}
+          style={{ display: "none" }}
         />
         <button
           onClick={() =>
