@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Homepage from './pages/HomePage';
+import Homepage from './pages/homePage';
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import Dashboard from "./components/Dashboard";
-import AboutUs from "./pages/AboutUs";
+import AboutUs from "./pages/aboutUs";
+import ContactUs from "./pages/contactUs";
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/contactus" element={<ContactUs />} />
           </Routes>
         </div>
         <Footer />
