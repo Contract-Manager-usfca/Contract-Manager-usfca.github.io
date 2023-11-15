@@ -61,11 +61,6 @@ function CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId) {
   }
 }
 
-//TODO Remove SaveAdd and refactor accordingly:)
-function SaveAdd(saveId, input1Id, input2Id, cancelId, elementId, deleteId) {
-  CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId);
-}
-
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
     color: savedText ? "green" : "white",
@@ -358,17 +353,12 @@ function PlatformInput() {
             inputValue2,
             elementId
           );
-          SaveAdd(saveId, input1Id, input2Id, cancelId, elementId, deleteId);
         } else {
           console.error("Platform not found");
         }
-
         //On save, match current user with user id in platform table. Update information.
-      } else {
-        // Handle empty input or other conditions
-        // For example, you can display an error message
-        CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId);
       }
+      CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId);
     }
   };
 

@@ -4,7 +4,7 @@ import Button from "react-bootstrap/esm/Button";
 import axios from "axios";
 
 function UserProfile() {
-  const { getIdTokenClaims, isLoading, loginWithRedirect, logout } = useAuth0();
+  const { getIdTokenClaims, isLoading, logout } = useAuth0();
   const [userName, setUserName] = useState("");
   const [users, setUsers] = useState([]);
 

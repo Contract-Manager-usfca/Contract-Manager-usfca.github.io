@@ -55,10 +55,6 @@ function CancelAdd(saveId, input1Id, cancelId, deleteId) {
   }
 }
 
-function SaveAdd(saveId, input1Id, cancelId, elementId, deleteId) {
-  CancelAdd(saveId, input1Id, cancelId, deleteId);
-}
-
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
     color: savedText ? "green" : "white",
@@ -196,7 +192,6 @@ function DemographicInput() {
         // Fetch all creator-demographic relationships for the logged-in user
         const relationshipsResponse = await axios.get(
           "https://contract-manager.aquaflare.io/creator-demographics/"
-
         );
         const relationships = relationshipsResponse.data;
 
@@ -335,15 +330,11 @@ function DemographicInput() {
             inputValue1,
             elementId
           );
-          SaveAdd(saveId, input1Id, cancelId, elementId, deleteId);
         } else {
           console.error("Demographic not found");
         }
-      } else {
-        // Handle empty input or other conditions
-        // For example, you can display an error message
-        CancelAdd(saveId, input1Id, cancelId, deleteId);
       }
+      CancelAdd(saveId, input1Id, cancelId, deleteId);
     }
   };
 
@@ -352,17 +343,17 @@ function DemographicInput() {
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 
-    // Check if the platform exists
+    // Check if the demographic exists
     if (demographic) {
       const demographicId = demographic.id;
 
-      // Fetch all creator-platform relationships
+      // Fetch all creator-demographic relationships
       axios
         .get("https://contract-manager.aquaflare.io/creator-demographics/")
         .then((response) => {
           const relationships = response.data;
 
-          // Find the specific relationship based on creator and platform IDs
+          // Find the specific relationship based on creator and demographic IDs
           const existingRelationship = relationships.find(
             (relationship) =>
               relationship.creator === creatorId &&
@@ -381,7 +372,7 @@ function DemographicInput() {
               .then(() => {
                 console.log("Relationship deleted successfully!");
 
-                // Update the state for platforms, setting savedText to an empty string
+                // Update the state for demographics, setting savedText to an empty string
                 setDemographics((prevDemographics) =>
                   prevDemographics.map((d) =>
                     d.demographic === elementId ? { ...d, savedText: "" } : d
