@@ -26,33 +26,33 @@ const styles = {
   },
 };
 
-function AddInput(saveId, input1Id, cancelId, deleteId) {
+function AddInput(saveId, inputId, cancelId, deleteId) {
   var s = document.getElementById(saveId);
-  var i1 = document.getElementById(input1Id);
+  var i = document.getElementById(inputId);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
   if (s.style.display === "none") {
     s.style.display = "inline-block";
-    i1.style.display = "inline-block";
+    i.style.display = "inline-block";
     c.style.display = "inline-block";
     d.style.display = "inline-block";
   }
 }
 
-function CancelAdd(saveId, input1Id, cancelId, deleteId) {
+function CancelAdd(saveId, inputId, cancelId, deleteId) {
   var s = document.getElementById(saveId);
-  var i1 = document.getElementById(input1Id);
+  var i = document.getElementById(inputId);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
   if (s.style.display === "inline-block") {
     s.style.display = "none";
-    i1.style.display = "none";
+    i.style.display = "none";
     c.style.display = "none";
     d.style.display = "none";
 
     // Reset the input field to empty
-    if (i1 && i1.tagName === "INPUT") {
-      i1.value = "";
+    if (i && i.tagName === "INPUT") {
+      i.value = "";
     }
   }
 }
@@ -68,8 +68,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           onClick={() =>
             AddInput(
               `${element}Save`,
-              //TODO Make Input not Input1
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               `${element}Delete`
             )
@@ -87,14 +86,14 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
         <input
           type="text"
           placeholder="Demographic..."
-          id={`${element}Input1`}
+          id={`${element}Input`}
           style={{ display: "none" }}
         />
         <button
           onClick={() =>
             onSave(
               `${element}Save`,
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               element,
               `${element}Delete`
@@ -109,7 +108,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           onClick={() =>
             onDelete(
               `${element}Save`,
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               element,
               `${element}Delete`
@@ -124,7 +123,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           onClick={() =>
             onCancel(
               `${element}Save`,
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               `${element}Delete`
             )
@@ -220,14 +219,14 @@ function DemographicInput() {
   const handleUpdateRelationship = async (
     creatorId,
     demographicId,
-    inputValue1,
+    inputValue,
     elementId
   ) => {
     // Get the current date and time
     const currentDate = new Date().toISOString(); // Format the date to a string
 
     const creatorDemographic = {
-      demo: inputValue1,
+      demo: inputValue,
       last_update: currentDate,
       creator: creatorId,
       demographic: demographicId,
@@ -254,7 +253,7 @@ function DemographicInput() {
         await axios.put(
           `https://contract-manager.aquaflare.io/creator-demographics/${relationshipId}/`,
           {
-            demo: inputValue1,
+            demo: inputValue,
             last_update: currentDate,
             creator: creatorId,
             demographic: demographicId,
@@ -269,7 +268,7 @@ function DemographicInput() {
             d.demographic === elementId
               ? {
                   ...d,
-                  savedText: `${inputValue1}`,
+                  savedText: `${inputValue}`,
                 }
               : d
           )
@@ -291,7 +290,7 @@ function DemographicInput() {
                 d.demographic === elementId
                   ? {
                       ...d,
-                      savedText: `${inputValue1}`,
+                      savedText: `${inputValue}`,
                     }
                   : d
               )
@@ -311,15 +310,15 @@ function DemographicInput() {
 
   const handleInputAndSave = (
     saveId,
-    input1Id,
+    inputId,
     cancelId,
     elementId,
     deleteId
   ) => {
-    var inputElement1 = document.getElementById(input1Id);
-    if (inputElement1) {
-      const inputValue1 = inputElement1.value;
-      if (inputValue1) {
+    var inputElement = document.getElementById(inputId);
+    if (inputElement) {
+      const inputValue = inputElement.value;
+      if (inputValue) {
         const demographic = demographics.find(
           (d) => d.demographic === elementId
         );
@@ -329,19 +328,19 @@ function DemographicInput() {
           handleUpdateRelationship(
             creatorId,
             demographicId,
-            inputValue1,
+            inputValue,
             elementId
           );
         } else {
           console.error("Demographic not found");
         }
       }
-      CancelAdd(saveId, input1Id, cancelId, deleteId);
+      CancelAdd(saveId, inputId, cancelId, deleteId);
     }
   };
 
-  const handleDelete = (saveId, input1Id, cancelId, elementId, deleteId) => {
-    CancelAdd(saveId, input1Id, cancelId, deleteId);
+  const handleDelete = (saveId, inputId, cancelId, elementId, deleteId) => {
+    CancelAdd(saveId, inputId, cancelId, deleteId);
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 

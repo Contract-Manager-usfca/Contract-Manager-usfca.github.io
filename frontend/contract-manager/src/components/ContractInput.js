@@ -27,52 +27,38 @@ const styles = {
   // Style for input box
 };
 
-//TODO remove once done testing
-function testResults(form) {
-  // const form = document.getElementById("myForm");
-  const p = form.elements["partner"];
-  let partner = p.value;
-  const a = form.elements["amount"];
-  let amount = a.value;
-  const s = form.elements["start"];
-  let start = s.value;
-  const e = form.elements["end"];
-  let end = e.value;
-  console.log(
-    "PARTNER: ",
-    partner,
-    " AMOUNT: ",
-    amount,
-    " START: ",
-    start,
-    " END: ",
-    end
-  );
+function saveResult(form) {
+  //TODO remove once done testing
+  {
+    console.log("*click*");
+    const p = form.elements["partner"];
+    let partner = p.value;
+    const a = form.elements["amount"];
+    let amount = a.value;
+    const s = form.elements["start"];
+    let start = s.value;
+    const e = form.elements["end"];
+    let end = e.value;
+    console.log(
+      "PARTNER: ",
+      partner,
+      " AMOUNT: ",
+      amount,
+      " START: ",
+      start,
+      " END: ",
+      end
+    );
+  }
+  //SavedText to screen, edit button
+  //OnEdit: generate new form with the saved result info already input?
 }
 
-function ElementInput({ ahnClick }) {
-  console.log("*click*");
-  return (
-    <form id="myForm" name="myForm">
-      <input type="text" id="partner" placeholder="Partner" />
-      <br></br>
-      <label htmlFor="amount">$</label>
-      <input type="text" id="amount" placeholder="Amount Paid" />
-      <br></br>
-      <label htmlFor="start">Contract start date— </label>
-      <input type="date" id="start" />
-      <br></br>
-      <label htmlFor="end">Contract end date— </label>
-      <input type="date" id="end" />
-      <br></br>
-      <input
-        type="button"
-        name="button"
-        value="Click"
-        onClick={() => ahnClick(document.getElementById("myForm"))}
-      />
-    </form>
-  );
+function ShowForm() {
+  var f = document.getElementById("myForm");
+  var ncb = document.getElementById("newContract");
+  f.style.display = "block";
+  ncb.style.display = "none";
 }
 
 function ContractInput() {
@@ -90,9 +76,28 @@ function ContractInput() {
         Here you can input your contract information to compare against other
         content creators.
       </h6>
+      <form id="myForm" name="myForm" style={{ display: "none" }}>
+        <input type="text" id="partner" placeholder="Partner" />
+        <br></br>
+        <label htmlFor="amount">$</label>
+        <input type="text" id="amount" placeholder="Amount Paid" />
+        <br></br>
+        <label htmlFor="start">Contract start date— </label>
+        <input type="date" id="start" />
+        <br></br>
+        <label htmlFor="end">Contract end date— </label>
+        <input type="date" id="end" />
+        <br></br>
+        <input
+          type="button"
+          name="button"
+          value="Save"
+          onClick={() => saveResult(document.getElementById("myForm"))}
+        />
+      </form>
       <button
-        onClick={() => ElementInput(testResults)}
-        id="NewContract"
+        onClick={() => ShowForm()}
+        id="newContract"
         style={styles.contractBtn}
       >
         + New Contract
