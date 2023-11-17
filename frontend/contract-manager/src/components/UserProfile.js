@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import Button from "react-bootstrap/esm/Button";
 import axios from "axios";
 
 function UserProfile() {
@@ -81,7 +80,7 @@ function UserProfile() {
       ({/* "If !is_private_email: show this." */}
       <p style={{ color: "white", textAlign: "center" }}>
         You're currently logged in as {userName}.
-        <Button
+        <button
           className="btn-margin"
           style={{
             color: "#C188FB",
@@ -95,7 +94,7 @@ function UserProfile() {
           }}
         >
           Not you?
-        </Button>
+        </button>
       </p>
     </div>
   );
