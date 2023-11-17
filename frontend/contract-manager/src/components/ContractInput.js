@@ -36,6 +36,85 @@ function ContractInput() {
     start: "",
     end: "",
   });
+  const { getIdTokenClaims, isLoading } = useAuth0();
+  const [creatorId, setCreatorId] = useState(null);
+  const [partners, setPartners] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchCreatorId = async () => {
+      try {
+        if (!isLoading) {
+          const idTokenClaims = await getIdTokenClaims();
+          const email = idTokenClaims?.email || "";
+
+          // Make a GET request to fetch all users
+          axios
+            .get("https://contract-manager.aquaflare.io/creators/", {
+              withCredentials: true,
+            })
+            .then((response) => {
+              const allUsers = response.data;
+              setUsers(allUsers);
+
+              // Filter the users to find the user with the desired username
+              const userWithUsername = allUsers.find(
+                (user) => user.username === email
+              );
+
+              setCreatorId(userWithUsername.id);
+            })
+            .catch((error) => {
+              console.error("Error fetching users:", error);
+            });
+        }
+      } catch (error) {
+        console.error("Error fetching/creating creator ID:", error);
+      }
+    };
+
+    // Call the fetchCreatorId function when the component mounts or when getIdTokenClaims changes
+    fetchCreatorId();
+  }, [getIdTokenClaims, isLoading]);
+
+  useEffect(() => {
+    const fetchContracts = async () => {
+      try {
+        const response = await axios.get(
+          "https://contract-manager.aquaflare.io/partners/"
+        );
+        const fetchedPartners = response.data;
+        setPartners(fetchedPartners);
+
+        //Fetch all contracts, filter for the logged in user
+        const contractsResponse = await axios.get(
+          "https://contract-manager.aquaflare.io/contracts/"
+        );
+        const allContracts = contractsResponse.data;
+
+        const creatorContracts = allContracts.filter(
+          (c) => c.user === creatorId
+        );
+
+        // Accumulate contracts in a separate array
+        const updatedContracts = creatorContracts.map((c) => ({
+          partner: fetchedPartners.find((p) => p.id === c.partner).name,
+          amount: c.amount_paid,
+          start: c.start_date,
+          end: c.end_date,
+        }));
+
+        // Update the state once after the loop
+        setContracts((prevContracts) => [
+          ...prevContracts,
+          ...updatedContracts,
+        ]);
+      } catch (error) {
+        console.error("Error fetching contracts:", error);
+      }
+    };
+    fetchContracts();
+  }, [creatorId]); //creatorId is a dependency
 
   const saveResult = () => {
     const newContract = {
@@ -45,7 +124,17 @@ function ContractInput() {
       end: formData.end,
     };
 
-    setContracts([...contracts, newContract]);
+    const partnerId = partners.find((p) => p.name === newContract.partner).id;
+
+    if (
+      newContract.partner !== "" &&
+      newContract.amount !== "" &&
+      newContract.start !== "" &&
+      newContract.end !== ""
+    ) {
+      setContracts((prevContracts) => [...prevContracts, newContract]);
+      //TODO: Need to POST. How to know partner id from parter input? Need dropdown? Methinks maybe but gross but okay.
+    }
 
     //Clear form data
     setFormData({
@@ -60,6 +149,26 @@ function ContractInput() {
     form.style.display = "none";
     var ncb = document.getElementById("newContract");
     ncb.style.display = "block";
+
+    try {
+      axios
+        .post("https://contract-manager.aquaflare.io/contracts/", {
+          amount_paid: newContract.amount,
+          start_date: newContract.start,
+          end_date: newContract.end,
+          user: creatorId,
+          partner: partnerId,
+        })
+        .then(() => {
+          console.log("Saved successfully!");
+        })
+        .catch((error) => {
+          console.error("Error saving contract info:", error);
+          console.log("Server Response:", error.response.data);
+        });
+    } catch (error) {
+      console.log("Error POSTing contract: ", error);
+    }
   };
 
   const ShowForm = () => {
@@ -111,17 +220,23 @@ function ContractInput() {
         </ul>
       </div>
       <form id="myForm" name="myForm" style={{ display: "none" }}>
-        <input
-          type="text"
+        <label htmlFor="partner">Who'd you partner with?</label>
+        <select
           id="partner"
-          placeholder="Partner"
           value={formData.partner}
           onChange={handleInputChange}
-        />
+        >
+          <option>Select...</option>
+          {partners.map((partner) => (
+            <option key={partner.id} value={partner.name}>
+              {partner.name}
+            </option>
+          ))}
+        </select>
         <br></br>
-        <label htmlFor="amount">$</label>
+        <label htmlFor="amount">Amount Paid (in US Dollars): </label>
         <input
-          type="text"
+          type="number"
           id="amount"
           placeholder="Amount Paid"
           value={formData.amount}
