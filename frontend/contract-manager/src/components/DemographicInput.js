@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   platformBtn: {
     padding: "5px 15px",
+    margin: "20px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
@@ -14,49 +15,46 @@ const styles = {
   },
   submitBtn: {
     padding: "5px 15px",
+    margin: "20px",
     fontSize: "20px",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "transparent",
     color: "white",
-    visibility: "hidden",
+    display: "none",
   },
 };
 
-function AddInput(saveId, input1Id, cancelId, deleteId) {
+function AddInput(saveId, inputId, cancelId, deleteId) {
   var s = document.getElementById(saveId);
-  var i1 = document.getElementById(input1Id);
+  var i = document.getElementById(inputId);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
-  if (s.style.visibility === "hidden") {
-    s.style.visibility = "visible";
-    i1.style.visibility = "visible";
-    c.style.visibility = "visible";
-    d.style.visibility = "visible";
+  if (s.style.display === "none") {
+    s.style.display = "inline-block";
+    i.style.display = "inline-block";
+    c.style.display = "inline-block";
+    d.style.display = "inline-block";
   }
 }
 
-function CancelAdd(saveId, input1Id, cancelId, deleteId) {
+function CancelAdd(saveId, inputId, cancelId, deleteId) {
   var s = document.getElementById(saveId);
-  var i1 = document.getElementById(input1Id);
+  var i = document.getElementById(inputId);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
-  if (s.style.visibility === "visible") {
-    s.style.visibility = "hidden";
-    i1.style.visibility = "hidden";
-    c.style.visibility = "hidden";
-    d.style.visibility = "hidden";
+  if (s.style.display === "inline-block") {
+    s.style.display = "none";
+    i.style.display = "none";
+    c.style.display = "none";
+    d.style.display = "none";
 
     // Reset the input field to empty
-    if (i1 && i1.tagName === "INPUT") {
-      i1.value = "";
+    if (i && i.tagName === "INPUT") {
+      i.value = "";
     }
   }
-}
-
-function SaveAdd(saveId, input1Id, cancelId, elementId, deleteId) {
-  CancelAdd(saveId, input1Id, cancelId, deleteId);
 }
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
@@ -70,8 +68,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           onClick={() =>
             AddInput(
               `${element}Save`,
-              //TODO Make Input not Input1
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               `${element}Delete`
             )
@@ -89,14 +86,14 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
         <input
           type="text"
           placeholder="Demographic..."
-          id={`${element}Input1`}
-          style={{ visibility: "hidden" }}
+          id={`${element}Input`}
+          style={{ display: "none" }}
         />
         <button
           onClick={() =>
             onSave(
               `${element}Save`,
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               element,
               `${element}Delete`
@@ -111,7 +108,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           onClick={() =>
             onDelete(
               `${element}Save`,
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               element,
               `${element}Delete`
@@ -126,7 +123,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           onClick={() =>
             onCancel(
               `${element}Save`,
-              `${element}Input1`,
+              `${element}Input`,
               `${element}Cancel`,
               `${element}Delete`
             )
@@ -196,7 +193,6 @@ function DemographicInput() {
         // Fetch all creator-demographic relationships for the logged-in user
         const relationshipsResponse = await axios.get(
           "https://contract-manager.aquaflare.io/creator-demographics/"
-
         );
         const relationships = relationshipsResponse.data;
 
@@ -223,14 +219,14 @@ function DemographicInput() {
   const handleUpdateRelationship = async (
     creatorId,
     demographicId,
-    inputValue1,
+    inputValue,
     elementId
   ) => {
     // Get the current date and time
     const currentDate = new Date().toISOString(); // Format the date to a string
 
     const creatorDemographic = {
-      demo: inputValue1,
+      demo: inputValue,
       last_update: currentDate,
       creator: creatorId,
       demographic: demographicId,
@@ -257,7 +253,7 @@ function DemographicInput() {
         await axios.put(
           `https://contract-manager.aquaflare.io/creator-demographics/${relationshipId}/`,
           {
-            demo: inputValue1,
+            demo: inputValue,
             last_update: currentDate,
             creator: creatorId,
             demographic: demographicId,
@@ -272,7 +268,7 @@ function DemographicInput() {
             d.demographic === elementId
               ? {
                   ...d,
-                  savedText: `${inputValue1}`,
+                  savedText: `${inputValue}`,
                 }
               : d
           )
@@ -294,7 +290,7 @@ function DemographicInput() {
                 d.demographic === elementId
                   ? {
                       ...d,
-                      savedText: `${inputValue1}`,
+                      savedText: `${inputValue}`,
                     }
                   : d
               )
@@ -314,15 +310,15 @@ function DemographicInput() {
 
   const handleInputAndSave = (
     saveId,
-    input1Id,
+    inputId,
     cancelId,
     elementId,
     deleteId
   ) => {
-    var inputElement1 = document.getElementById(input1Id);
-    if (inputElement1) {
-      const inputValue1 = inputElement1.value;
-      if (inputValue1) {
+    var inputElement = document.getElementById(inputId);
+    if (inputElement) {
+      const inputValue = inputElement.value;
+      if (inputValue) {
         const demographic = demographics.find(
           (d) => d.demographic === elementId
         );
@@ -332,37 +328,33 @@ function DemographicInput() {
           handleUpdateRelationship(
             creatorId,
             demographicId,
-            inputValue1,
+            inputValue,
             elementId
           );
-          SaveAdd(saveId, input1Id, cancelId, elementId, deleteId);
         } else {
           console.error("Demographic not found");
         }
-      } else {
-        // Handle empty input or other conditions
-        // For example, you can display an error message
-        CancelAdd(saveId, input1Id, cancelId, deleteId);
       }
+      CancelAdd(saveId, inputId, cancelId, deleteId);
     }
   };
 
-  const handleDelete = (saveId, input1Id, cancelId, elementId, deleteId) => {
-    CancelAdd(saveId, input1Id, cancelId, deleteId);
+  const handleDelete = (saveId, inputId, cancelId, elementId, deleteId) => {
+    CancelAdd(saveId, inputId, cancelId, deleteId);
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 
-    // Check if the platform exists
+    // Check if the demographic exists
     if (demographic) {
       const demographicId = demographic.id;
 
-      // Fetch all creator-platform relationships
+      // Fetch all creator-demographic relationships
       axios
         .get("https://contract-manager.aquaflare.io/creator-demographics/")
         .then((response) => {
           const relationships = response.data;
 
-          // Find the specific relationship based on creator and platform IDs
+          // Find the specific relationship based on creator and demographic IDs
           const existingRelationship = relationships.find(
             (relationship) =>
               relationship.creator === creatorId &&
@@ -381,7 +373,7 @@ function DemographicInput() {
               .then(() => {
                 console.log("Relationship deleted successfully!");
 
-                // Update the state for platforms, setting savedText to an empty string
+                // Update the state for demographics, setting savedText to an empty string
                 setDemographics((prevDemographics) =>
                   prevDemographics.map((d) =>
                     d.demographic === elementId ? { ...d, savedText: "" } : d

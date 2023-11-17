@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import BarGraph from "../components/BarGraph";
 import LollipopPlot from "../components/LollipopPlot";
-import axios from 'axios';
-import Fade from 'react-reveal/Fade';
-import loadingGif from '../imgs/loading2.gif';
+import axios from "axios";
+import Fade from "react-reveal/Fade";
+import loadingGif from "../imgs/loading2.gif";
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -17,30 +17,33 @@ function HomePage() {
   const [searchMade, setSearchMade] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
   // targeted genders
   // need to figure out how to make this universal later
-  const targetGenders = ['Male', 'Female', 'Nonbinary'];
-
+  const targetGenders = ["Male", "Female", "Nonbinary"];
 
   // Fetch and set all available demographics from database
   useEffect(() => {
     // Getting demographics list
-    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
-      .then(response => {
-        const demographicsArray = response.data.map(demographic => demographic.demographic);
+    axios
+      .get("https://contract-manager.aquaflare.io/demographics/", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        const demographicsArray = response.data.map(
+          (demographic) => demographic.demographic
+        );
         setAllDemographics(demographicsArray);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching demographics:", error);
       });
   }, []);
 
-  // WILL CHANGE 
+  // WILL CHANGE
   const fetchDemographic = () => {
     setIsLoading(true);
     console.log("loading..");
-    if (searchQuery.toLowerCase() === "gender", "race") {
+    if ((searchQuery.toLowerCase() === "gender", "race")) {
       loadGenderData();
       setSearchQuery("");
       setSearchMade(true);
@@ -50,17 +53,22 @@ function HomePage() {
     setIsLoading(false);
 
     // FETCH DEMOGRAPHICS LIST
-    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
-      .then(response => {
-        const filteredData = response.data.filter(demographic => {
-          return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
+    axios
+      .get("https://contract-manager.aquaflare.io/demographics/", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        const filteredData = response.data.filter((demographic) => {
+          return demographic.demographic
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
         });
 
         if (filteredData.length > 0) {
           const demographicName = filteredData[0].demographic;
 
           // checks to see if a demographic has already been selected
-          // most likely will change because user shouldn't be able to 
+          // most likely will change because user shouldn't be able to
           // select multiple demographics at the same time
           if (selectedDemographics.includes(demographicName)) {
             console.warn(`${demographicName} has already been selected!`);
@@ -73,7 +81,7 @@ function HomePage() {
           alert("Demographic not found!");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching demographics:", error);
       });
   };
@@ -86,15 +94,18 @@ function HomePage() {
   const loadGenderData = () => {
     // Check if gender data has already been loaded
     if (maleCount === 0 && femaleCount === 0 && nonBinaryCount === 0) {
-      axios.get('https://contract-manager.aquaflare.io/creator-demographics/', { withCredentials: true })
-        .then(response => {
+      axios
+        .get("https://contract-manager.aquaflare.io/creator-demographics/", {
+          withCredentials: true,
+        })
+        .then((response) => {
           const genderDemos = response.data;
           const userData = [];
           let newMaleCount = 0;
           let newFemaleCount = 0;
           let newNonBinaryCount = 0;
 
-          genderDemos.forEach(demo => {
+          genderDemos.forEach((demo) => {
             const gender = demo.demo;
 
             if (targetGenders.includes(gender)) {
@@ -108,7 +119,7 @@ function HomePage() {
             }
 
             // push data to array
-            userData.push({ demographic: gender, userID: demo.creator, });
+            userData.push({ demographic: gender, userID: demo.creator });
           });
 
           setMaleCount(newMaleCount);
@@ -119,7 +130,7 @@ function HomePage() {
           // Fetch follower counts and calculate averages
           fetchFollowerCounts(userData);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error fetching creator demographics:", error);
           setIsLoading(false);
           console.log("20");
@@ -134,12 +145,15 @@ function HomePage() {
 
   // FETCHING FOLLOW COUNTS
   const fetchFollowerCounts = (userData) => {
-    axios.get('https://contract-manager.aquaflare.io/creator-platforms/', { withCredentials: true })
-      .then(response => {
+    axios
+      .get("https://contract-manager.aquaflare.io/creator-platforms/", {
+        withCredentials: true,
+      })
+      .then((response) => {
         const followerData = response.data;
         const followerCounts = {};
 
-        followerData.forEach(user => {
+        followerData.forEach((user) => {
           const userID = user.creator;
           const followerCount = user.follower_count;
 
@@ -150,7 +164,7 @@ function HomePage() {
           }
 
           // Check the gender of the user and add the follower count to the respective gender count
-          const gender = userData.find(u => u.userID === userID)?.demographic;
+          const gender = userData.find((u) => u.userID === userID)?.demographic;
           if (gender) {
             if (!(gender in genderCounts)) {
               genderCounts[gender] = 0;
@@ -159,7 +173,7 @@ function HomePage() {
           }
         });
 
-        // follower counts for each user 
+        // follower counts for each user
         // THIS IS CORRECT
         // console.log("follwer counts: ", followerCounts);
 
@@ -169,12 +183,15 @@ function HomePage() {
         setGenderCounts(genderCounts);
 
         // Calculating Average number of followers per gender
-        targetGenders.forEach(demographic => {
+        targetGenders.forEach((demographic) => {
           // grab total follower count for the current gender or else 0
           const totalFollowerCount = genderCounts[demographic] || 0;
           // grab number of users in the current gender group:
-          const numberOfUsers = userData.filter(user => user.demographic === demographic).length;
-          const average = numberOfUsers > 0 ? totalFollowerCount / numberOfUsers : 0;
+          const numberOfUsers = userData.filter(
+            (user) => user.demographic === demographic
+          ).length;
+          const average =
+            numberOfUsers > 0 ? totalFollowerCount / numberOfUsers : 0;
           // set average
           genderAverages[demographic] = Math.round(average);
         });
@@ -186,22 +203,26 @@ function HomePage() {
         // setIsLoading(false);
         console.log("Not loading..");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching follower counts:", error);
       });
   };
 
   const selectDemographic = (demographic) => {
     if (!selectedDemographics.includes(demographic)) {
-      setSelectedDemographics(prev => [...prev, demographic]);
+      setSelectedDemographics((prev) => [...prev, demographic]);
     }
   };
 
   const deselectDemographic = (demographic) => {
     if (targetGenders.includes(demographic)) {
-      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+      setSelectedDemographics((prev) =>
+        prev.filter((item) => item !== demographic)
+      );
     } else {
-      setSelectedDemographics(prev => prev.filter(item => item !== demographic));
+      setSelectedDemographics((prev) =>
+        prev.filter((item) => item !== demographic)
+      );
     }
   };
 
@@ -214,96 +235,115 @@ function HomePage() {
 
   function Chip({ label, onRemove }) {
     return (
-      <div style={{ display: 'inline-flex', padding: '5px 10px', border: '1px solid #9487E4', borderRadius: '20px', marginRight: '10px', backgroundColor: '#303030' }}>
+      <div
+        style={{
+          display: "inline-flex",
+          padding: "5px 10px",
+          border: "1px solid #9487E4",
+          borderRadius: "20px",
+          marginRight: "10px",
+          backgroundColor: "#303030",
+        }}
+      >
         <span>{label}</span>
-        <button onClick={onRemove} style={{ margin: 'auto', cursor: 'pointer', background: 'none', border: 'none', color: '#9487E4' }}>x</button>
+        <button
+          onClick={onRemove}
+          style={{
+            margin: "auto",
+            cursor: "pointer",
+            background: "none",
+            border: "none",
+            color: "#9487E4",
+          }}
+        >
+          x
+        </button>
       </div>
     );
   }
 
   const styles = {
     card: {
-      display: 'flex',
-      alignItems: 'center',
-      margin: '20px 300px',
-      textAlign: 'center',
-      borderRadius: '40%',
+      display: "flex",
+      alignItems: "center",
+      margin: "20px 300px",
+      textAlign: "center",
+      borderRadius: "40%",
     },
     cardTitle: {
-      color: 'white',
-      paddingRight: '5%',
-      paddingTop: '1.5%',
+      color: "white",
+      paddingRight: "5%",
+      paddingTop: "1.5%",
     },
     chartContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '70%',
-      margin: '10px 250px 20px',
-      background: '#202020',
-      padding: '20px',
-      border: 'solid #CBE1AE 1px',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "70%",
+      margin: "10px 250px 20px",
+      background: "#202020",
+      padding: "20px",
+      border: "solid #CBE1AE 1px",
     },
     chartTitle: {
-      color: 'white',
-      marginBottom: '20px',
-      textAlign: 'center',
-      fontSize: '25px',
-      color: '#C188FB'
+      marginBottom: "20px",
+      textAlign: "center",
+      fontSize: "25px",
+      color: "#C188FB",
     },
     chartText: {
-      color: 'white',
-      maxWidth: '100%',
-      fontSize: '17px',
-      marginTop: '20px',
-      textAlign: 'center',
+      color: "white",
+      maxWidth: "100%",
+      fontSize: "17px",
+      marginTop: "20px",
+      textAlign: "center",
     },
     searchBar: {
-      display: 'flex',
-      gap: '10px',
-      backgroundColor: 'white',
-      padding: '.5%',
-      width: '500px',
+      display: "flex",
+      gap: "10px",
+      backgroundColor: "white",
+      padding: ".5%",
+      width: "500px",
     },
     searchInput: {
-      padding: '5px',
-      fontSize: '16px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
+      padding: "5px",
+      fontSize: "16px",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
       flexGrow: 1,
-      textColor: '#CBE1AE',
+      textColor: "#CBE1AE",
     },
     searchBtn: {
-      padding: '5px 15px',
-      fontSize: '16px',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      backgroundColor: '#CBE1AE',
+      padding: "5px 15px",
+      fontSize: "16px",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      backgroundColor: "#CBE1AE",
     },
     boldTextColor: {
-      color: '#C188FB',
-      fontWeight: 'bold'
+      color: "#C188FB",
+      fontWeight: "bold",
     },
     chipContainerStyle: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'center',
-      margin: 'auto',
-      marginBottom: '10px',
-      color: 'white'
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
+      margin: "auto",
+      marginBottom: "10px",
+      color: "white",
     },
     loadingTitle: {
-      color: 'white',
-      paddingRight: '5%',
-      paddingTop: '1.5%',
+      color: "white",
+      paddingRight: "5%",
+      paddingTop: "1.5%",
     },
     loadingCard: {
-      display: 'flex',
-      alignItems: 'center',
-      margin: 'auto',
-      textAlign: 'center',
+      display: "flex",
+      alignItems: "center",
+      margin: "auto",
+      textAlign: "center",
     },
   };
 
@@ -329,18 +369,27 @@ function HomePage() {
               <div style={styles.barGraph}>
                 <h2 style={styles.chartTitle}>Average Follow Count</h2>
                 <Fade bottom>
-                  <BarGraph selectedDemographics={selectedDemographics} genderAverages={genderAverages} />
+                  <BarGraph
+                    selectedDemographics={selectedDemographics}
+                    genderAverages={genderAverages}
+                  />
                 </Fade>
                 <p style={styles.chartText}>
-                  This is a <b>Bar Graph</b> generated with your selected Demographics.
-                  <br /><br />
+                  This is a <b>Bar Graph</b> generated with your selected
+                  Demographics.
+                  <br />
+                  <br />
                   {selectedDemographics.length > 0 ? (
                     <span>
                       The Demographics currently selected are:&nbsp;
-                      <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                      <span style={styles.boldTextColor}>
+                        {selectedDemographics.join(", ")}
+                      </span>
                     </span>
                   ) : (
-                    <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                    <span style={styles.boldTextColor}>
+                      Make a Selection above to see the generated results
+                    </span>
                   )}
                 </p>
               </div>
@@ -351,18 +400,27 @@ function HomePage() {
                 <div style={styles.barGraph}>
                   <h2 style={styles.chartTitle}>Average Follow Count</h2>
                   <Fade bottom>
-                    <LollipopPlot selectedDemographics={selectedDemographics} genderAverages={genderAverages} />
+                    <LollipopPlot
+                      selectedDemographics={selectedDemographics}
+                      genderAverages={genderAverages}
+                    />
                   </Fade>
                   <p style={styles.chartText}>
-                    This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
-                    <br /><br />
+                    This is a <b>Lollipop Plot Graph</b> generated with your
+                    selected Demographics.
+                    <br />
+                    <br />
                     {selectedDemographics.length > 0 ? (
                       <span>
                         The Demographics currently selected are:&nbsp;
-                        <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                        <span style={styles.boldTextColor}>
+                          {selectedDemographics.join(", ")}
+                        </span>
                       </span>
                     ) : (
-                      <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                      <span style={styles.boldTextColor}>
+                        Make a Selection above to see the generated results
+                      </span>
                     )}
                   </p>
                 </div>
@@ -377,7 +435,15 @@ function HomePage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#252525', paddingBottom: '100px' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#252525",
+        paddingBottom: "100px",
+      }}
+    >
       <Fade bottom>
         <div style={styles.card}>
           <h2 style={styles.cardTitle}>Search Demographic</h2>
@@ -390,8 +456,15 @@ function HomePage() {
               onChange={handleSearchChange}
               list="demographics-list"
             />
-            <button onClick={fetchDemographic} style={styles.searchBtn}>Search</button>
-            <button onClick={clearSelectedDemographics} style={styles.searchBtn}>Clear</button>
+            <button onClick={fetchDemographic} style={styles.searchBtn}>
+              Search
+            </button>
+            <button
+              onClick={clearSelectedDemographics}
+              style={styles.searchBtn}
+            >
+              Clear
+            </button>
           </div>
           {/* Create the datalist with all available demographics */}
           <datalist id="demographics-list">
@@ -403,11 +476,16 @@ function HomePage() {
       </Fade>
       <Fade bottom>
         <div style={styles.chipContainerStyle}>
-          {!isLoading && selectedDemographics.map(demo => (
-            <Fade left>
-              <Chip key={demo} label={demo} onRemove={() => deselectDemographic(demo)} />
-            </Fade>
-          ))}
+          {!isLoading &&
+            selectedDemographics.map((demo) => (
+              <Fade left>
+                <Chip
+                  key={demo}
+                  label={demo}
+                  onRemove={() => deselectDemographic(demo)}
+                />
+              </Fade>
+            ))}
         </div>
       </Fade>
       {renderGraphs()}

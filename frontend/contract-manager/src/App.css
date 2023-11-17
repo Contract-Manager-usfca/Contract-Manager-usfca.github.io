@@ -45,3 +45,11 @@ h1, h2, h3, h4, h5, h6 {
 p {
   font-family: 'Inria Serif', serif;
 }
+
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  border: none;
+}

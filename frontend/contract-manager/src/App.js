@@ -24,9 +24,11 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       <Router basename="/">
-        <ScrollToTop /> 
+        <ScrollToTop />
         <div className="flex-column justify-center align-center min-100-vh bg-primary">
           <NavBar />
           <Routes>
