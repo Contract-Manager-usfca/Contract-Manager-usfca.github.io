@@ -116,7 +116,8 @@ function ContractInput() {
     fetchContracts();
   }, [creatorId]); //creatorId is a dependency
 
-  const saveResult = () => {
+  const saveResult = (maybeId) => {
+    console.log(maybeId);
     const newContract = {
       partner: formData.partner,
       amount: formData.amount,
@@ -124,15 +125,62 @@ function ContractInput() {
       end: formData.end,
     };
 
-    const partnerId = partners.find((p) => p.name === newContract.partner).id;
-
     if (
       newContract.partner !== "" &&
       newContract.amount !== "" &&
       newContract.start !== "" &&
       newContract.end !== ""
     ) {
+      const partnerId = partners.find((p) => p.name === newContract.partner).id;
       setContracts((prevContracts) => [...prevContracts, newContract]);
+
+      console.log(maybeId);
+      //This is a new save, so we POST
+      if (maybeId === null) {
+        try {
+          axios
+            .post("https://contract-manager.aquaflare.io/contracts/", {
+              amount_paid: newContract.amount,
+              start_date: newContract.start,
+              end_date: newContract.end,
+              user: creatorId,
+              partner: partnerId,
+            })
+            .then(() => {
+              console.log("Saved successfully!");
+            })
+            .catch((error) => {
+              console.error("Error saving contract info:", error);
+              console.log("Server Response:", error.response.data);
+            });
+        } catch (error) {
+          console.log("Error POSTing contract: ", error);
+        }
+      } else {
+        //else, maybeId has a value, so we can PUT
+        try {
+          axios
+            .put(
+              `https://contract-manager.aquaflare.io/contracts/${maybeId}/`,
+              {
+                amount_paid: newContract.amount,
+                start_date: newContract.start,
+                end_date: newContract.end,
+                user: creatorId,
+                partner: partnerId,
+              }
+            )
+            .then(() => {
+              console.log("Saved successfully!");
+            })
+            .catch((error) => {
+              console.error("Error saving contract info:", error);
+              console.log("Server Response:", error.response.data);
+            });
+        } catch (error) {
+          console.log("Error PUTTING contract: ", error);
+        }
+      }
     }
 
     //Clear form data
@@ -148,38 +196,63 @@ function ContractInput() {
     form.style.display = "none";
     var ncb = document.getElementById("newContract");
     ncb.style.display = "block";
-
-    try {
-      axios
-        .post("https://contract-manager.aquaflare.io/contracts/", {
-          amount_paid: newContract.amount,
-          start_date: newContract.start,
-          end_date: newContract.end,
-          user: creatorId,
-          partner: partnerId,
-        })
-        .then(() => {
-          console.log("Saved successfully!");
-        })
-        .catch((error) => {
-          console.error("Error saving contract info:", error);
-          console.log("Server Response:", error.response.data);
-        });
-    } catch (error) {
-      console.log("Error POSTing contract: ", error);
-    }
   };
 
-  const ShowForm = () => {
+  const ShowForm = (edit, contract, id) => {
     var f = document.getElementById("myForm");
     var ncb = document.getElementById("newContract");
     f.style.display = "block";
     ncb.style.display = "none";
+    if (edit) {
+      f.partner.value = contract.partner;
+      f.amount.value = contract.amount;
+      var startDate = contract.start.slice(0, 10);
+      f.start.value = startDate;
+      var endDate = contract.end.slice(0, 10);
+      f.end.value = endDate;
+      setFormData({
+        partner: contract.partner,
+        amount: contract.amount,
+        start: startDate,
+        end: endDate,
+      });
+
+      document.getElementById("save").onclick = () => saveResult(id);
+    }
   };
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
+  const handleInputChange = (elem) => {
+    const { id, value } = elem.target;
     setFormData({ ...formData, [id]: value });
+  };
+
+  const handleEdit = async (index) => {
+    const contract = contracts[index];
+
+    //show form
+    //update contracts array
+    //update database
+
+    try {
+      //Fetch all contracts, filter for the logged in user
+      const contractsResponse = await axios.get(
+        "https://contract-manager.aquaflare.io/contracts/"
+      );
+      const allContracts = contractsResponse.data;
+
+      //TODO: This is ugly.
+      const contractToEdit = allContracts.find(
+        (c) =>
+          c.user === creatorId &&
+          c.partner === partners.find((p) => p.name === contract.partner).id &&
+          c.amount_paid === contract.amount &&
+          c.start === contract.start_date &&
+          c.end === contract.end_date
+      );
+      ShowForm(true, contract, contractToEdit.id);
+    } catch (error) {
+      console.log("Error fetching contracts: ", error);
+    }
   };
 
   const handleDelete = async (index) => {
@@ -259,7 +332,7 @@ function ContractInput() {
               {contract.partner}: {formatDate(contract.start)} -{" "}
               {formatDate(contract.end)}. ${contract.amount}
               {/* TODO: OnClick */}
-              <button
+              {/* <button
                 className="btn-margin"
                 style={{
                   color: "#C188FB",
@@ -268,10 +341,10 @@ function ContractInput() {
                   fontStyle: "italic",
                   textDecoration: "underline",
                 }}
+                onClick={() => handleEdit(index)}
               >
                 Edit
-              </button>
-              {/* TODO: OnClick */}
+              </button> */}
               <button
                 className="btn-margin"
                 style={{
@@ -331,14 +404,14 @@ function ContractInput() {
         <br></br>
         <input
           type="button"
-          name="button"
+          id="save"
           value="Save"
-          onClick={() => saveResult(document.getElementById("myForm"))}
+          onClick={() => saveResult(null)}
         />
       </form>
       <div class="center">
         <button
-          onClick={() => ShowForm()}
+          onClick={() => ShowForm(false, null, null)}
           id="newContract"
           style={styles.contractBtn}
         >
