@@ -48,9 +48,22 @@ export default function Navbar() {
                 style={{ color: "black" }}
                 href="/#/Dashboard"
               >
+                Edit Profile
+              </NavDropdown.Item>
+            )}
+
+              {isAuthenticated && (
+              <NavDropdown.Item
+                className="nav-item"
+                style={{ color: "black" }}
+                href="/#/userprofile"
+              >
                 Profile
               </NavDropdown.Item>
             )}
+            
+
+
             {/* If not already authenticated, generate a login button. Otherwise, logout. */}
             {!isAuthenticated ? (
               <NavDropdown.Item
