@@ -133,7 +133,6 @@ function ContractInput() {
       newContract.end !== ""
     ) {
       setContracts((prevContracts) => [...prevContracts, newContract]);
-      //TODO: Need to POST. How to know partner id from parter input? Need dropdown? Methinks maybe but gross but okay.
     }
 
     //Clear form data
@@ -183,6 +182,52 @@ function ContractInput() {
     setFormData({ ...formData, [id]: value });
   };
 
+  const handleDelete = async (index) => {
+    // Create a copy of the contracts array
+    const updatedContracts = [...contracts];
+    // Remove the contract at the specified index
+    updatedContracts.splice(index, 1);
+    // Update the state with the new array
+    setContracts(updatedContracts);
+
+    try {
+      //Fetch all contracts, filter for the logged in user
+      const contractsResponse = await axios.get(
+        "https://contract-manager.aquaflare.io/contracts/"
+      );
+      const allContracts = contractsResponse.data;
+
+      const contract = contracts[index];
+
+      //TODO: This is ugly.
+      const contractToDelete = allContracts.find(
+        (c) =>
+          c.user === creatorId &&
+          c.partner === partners.find((p) => p.name === contract.partner).id &&
+          c.amount_paid === contract.amount &&
+          c.start === contract.start_date &&
+          c.end === contract.end_date
+      );
+
+      try {
+        await axios
+          .delete(
+            `https://contract-manager.aquaflare.io/contracts/${contractToDelete.id}/`
+          )
+          .then(() => {
+            console.log("Deleted successfully!");
+          })
+          .catch((error) => {
+            console.error("Error deleting contract:", error);
+          });
+      } catch (error) {
+        console.log("Error deleting contract: ", error);
+      }
+    } catch (error) {
+      console.log("Error fetching contracts: ", error);
+    }
+  };
+
   // Function to format date as dd Month yyyy, e.g. 3 October 2019
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -214,7 +259,32 @@ function ContractInput() {
               {contract.partner}: {formatDate(contract.start)} -{" "}
               {formatDate(contract.end)}. ${contract.amount}
               {/* TODO: OnClick */}
-              <button>Edit</button>
+              <button
+                className="btn-margin"
+                style={{
+                  color: "#C188FB",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  fontStyle: "italic",
+                  textDecoration: "underline",
+                }}
+              >
+                Edit
+              </button>
+              {/* TODO: OnClick */}
+              <button
+                className="btn-margin"
+                style={{
+                  color: "#C188FB",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  fontStyle: "italic",
+                  textDecoration: "underline",
+                }}
+                onClick={() => handleDelete(index)}
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>
