@@ -27,4 +27,40 @@ img {
   body {
     background-color: #eeeeee;
   }
+
+  /* Social media icons styling */
+.social-icon {
+  font-size: 24px; /* Larger icon size */
+  margin: 0 12px; /* More space between icons */
+  color: #fff; /* White color for icons */
+}
+
+/* Earnings card styling */
+.earnings-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.earnings-header {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.earnings-amount {
+  font-size: 36px;
+  font-weight: bold;
+  color: #000;
+}
+
+.earnings-description {
+  font-size: 16px;
+  color: #666;
+}
+
   

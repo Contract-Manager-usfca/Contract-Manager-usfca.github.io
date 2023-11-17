@@ -34,7 +34,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/aboutus" element={<AboutUs />} />
             <Route path="/contactus" element={<ContactUs />} />
-            <Route path="/userprofile" element={<UserProfilePage />} /> {/* New route for user profile */}
+            <Route path="/userprofile" element={<UserProfilePage />} />
           </Routes>
         </div>
         <Footer />
