@@ -85,15 +85,16 @@ function HomePage() {
     setIsLoading(false);
   };
 
-  // Load demographic data function now accepts selectedDemographics as an argument
+  // Load demographic data
   const loadDemographicData = (selectedDemographics) => {
     console.log("running...");
     setIsLoading(true);
-    // Create an array to store promises for fetching demographic data
+    // array to store promises for fetching demographic data
     const fetchPromises = [];
     let userData = [];
-    // Initialize an object to store the counts for the current demographic
+    // object to store the counts for the current demographic
     const demographicCounts = {};
+
     // Iterate through selected demographics and fetch data for each one
     selectedDemographics.forEach((selectedDemo) => {
       // Find the corresponding demographic ID for the selected demographic
@@ -161,44 +162,36 @@ function HomePage() {
       .then(response => {
         const followerData = response.data;
         let categoryAverages = {};
-  
+
         // Loop over each category in the demographicCounts
         Object.keys(demographicCounts).forEach(category => {
           const numberOfUsersInCategory = demographicCounts[category];
           let totalFollowerCount = 0;
-  
-          console.log(`Processing category: ${category}`);
-          console.log(`Number of users in ${category}: ${numberOfUsersInCategory}`);
-  
+
           // Sum up the follower count for each user in the category
           userData.forEach(user => {
             if (user.demographic === category) {
               // Get all follower counts for this user across different platforms
               const userFollowerCounts = followerData.filter(follower => follower.creator === user.userID)
-                                                      .map(follower => follower.follower_count);
-  
+                .map(follower => follower.follower_count);
+
               // Sum up all follower counts for this user
               const userTotalFollowerCount = userFollowerCounts.reduce((sum, count) => sum + count, 0);
-              
-              console.log(`User ID ${user.userID} in ${category} has a total of ${userTotalFollowerCount} followers across all platforms.`);
-              
               // Add this user's total follower count to the total for the category
               totalFollowerCount += userTotalFollowerCount;
             }
           });
-  
-          console.log(`Total follower count for ${category}: ${totalFollowerCount}`);
-  
+
           // Calculate the average follower count for the category
           categoryAverages[category] = numberOfUsersInCategory > 0 ? Math.round(totalFollowerCount / numberOfUsersInCategory) : 0;
         });
-  
+
         setDemographicCounts(demographicCounts);
         setDemographicAverages(categoryAverages);
-  
+
         console.log("Category counts:", demographicCounts);
         console.log("Category averages:", categoryAverages);
-  
+
         setTimeout(() => {
           setIsLoading(false);
         }, 3000);
@@ -208,7 +201,6 @@ function HomePage() {
         console.error("Error fetching follower counts:", error);
       });
   };
-  
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -366,7 +358,8 @@ function HomePage() {
               <div style={styles.barGraph}>
                 <h2 style={styles.chartTitle}>Average Follow Count</h2>
                 <Fade bottom>
-                  <BarGraph selectedDemographics={selectedDemographics} demographicAverages={demographicAverages} />
+                  <BarGraph selectedDemoCategories={selectedDemoCategories}
+                    demographicAverages={demographicAverages} />
                 </Fade>
                 <p style={styles.chartText}>
                   This is a <b>Bar Graph</b> generated with your selected Demographics.
@@ -388,7 +381,8 @@ function HomePage() {
                 <div style={styles.barGraph}>
                   <h2 style={styles.chartTitle}>Average Follow Count</h2>
                   <Fade bottom>
-                    <LollipopPlot selectedDemographics={selectedDemographics} demographicAverages={demographicAverages} />
+                    <LollipopPlot selectedDemoCategories={selectedDemoCategories}
+                    demographicAverages={demographicAverages} />
                   </Fade>
                   <p style={styles.chartText}>
                     This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.

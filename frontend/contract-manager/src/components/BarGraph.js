@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import '../styles/bargraph.css';
 
-const BarGraph = ({ selectedDemographics, demographicAverages }) => {
+const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -22,7 +22,11 @@ const BarGraph = ({ selectedDemographics, demographicAverages }) => {
       const svgContainer = d3.select(svgRef.current);
       svgContainer.selectAll("*").remove();
 
-      const updatedData = selectedDemographics.map(gender => ({ name: gender, value: demographicAverages[gender] || 0 }));
+      const categories = Array.from(selectedDemoCategories);
+      const updatedData = categories.map(category => ({
+        name: category,
+        value: demographicAverages[category] || 0
+      }));
 
       x.domain(updatedData.map(d => d.name));
       y.domain([0, d3.max(updatedData, d => d.value)]);
@@ -107,7 +111,7 @@ const BarGraph = ({ selectedDemographics, demographicAverages }) => {
     };
 
     fetchDataAndRender();
-  }, [selectedDemographics, demographicAverages]);
+  }, [selectedDemoCategories, demographicAverages]);
 
   return (
     <div className="bar-chart" ref={svgRef}></div>
