@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Homepage from './pages/HomePage';
+import Homepage from './pages/homePage';
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import Dashboard from "./components/Dashboard";

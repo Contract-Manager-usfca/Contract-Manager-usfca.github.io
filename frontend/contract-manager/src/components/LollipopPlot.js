@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import * as d3 from "d3";
 import '../styles/bargraph.css';
 
-const LollipopGraph = ({ selectedDemographics, genderAverages }) => {
+const LollipopGraph = ({ selectedDemographics, demographicAverages }) => {
 
   useEffect(() => {
     const margin = { top: 20, right: 40, bottom: 60, left: 100 };
@@ -16,7 +16,7 @@ const LollipopGraph = ({ selectedDemographics, genderAverages }) => {
     const svgContainer = d3.select(".lollipop-chart");
     svgContainer.selectAll("*").remove();
 
-    const updatedData = selectedDemographics.map(gender => ({ name: gender, value: genderAverages[gender] }));
+    const updatedData = selectedDemographics.map(gender => ({ name: gender, value: demographicAverages[gender] }));
 
     x.domain([0, d3.max(updatedData, d => d.value)]);
     y.domain(updatedData.map(d => d.name));
@@ -108,7 +108,7 @@ const LollipopGraph = ({ selectedDemographics, genderAverages }) => {
       .attr("fill", "white")
       .text("Follower Count");
 
-  }, [selectedDemographics]);
+  }, [selectedDemographics, demographicAverages]);
 
   return <div className="lollipop-chart"></div>;
 };

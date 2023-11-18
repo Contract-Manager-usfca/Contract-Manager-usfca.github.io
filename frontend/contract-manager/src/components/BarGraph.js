@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import '../styles/bargraph.css';
 
-const BarGraph = ({ selectedDemographics, genderAverages }) => {
+const BarGraph = ({ selectedDemographics, demographicAverages }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
     const fetchDataAndRender = async () => {
       // Ensure that genderAverages data is available before proceeding
-      if (!Object.keys(genderAverages).length) {
+      if (!Object.keys(demographicAverages).length) {
         return;
       }
 
@@ -22,7 +22,7 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
       const svgContainer = d3.select(svgRef.current);
       svgContainer.selectAll("*").remove();
 
-      const updatedData = selectedDemographics.map(gender => ({ name: gender, value: genderAverages[gender] || 0 }));
+      const updatedData = selectedDemographics.map(gender => ({ name: gender, value: demographicAverages[gender] || 0 }));
 
       x.domain(updatedData.map(d => d.name));
       y.domain([0, d3.max(updatedData, d => d.value)]);
@@ -107,7 +107,7 @@ const BarGraph = ({ selectedDemographics, genderAverages }) => {
     };
 
     fetchDataAndRender();
-  }, [selectedDemographics, genderAverages]);
+  }, [selectedDemographics, demographicAverages]);
 
   return (
     <div className="bar-chart" ref={svgRef}></div>
