@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import "../styles/BarGraph.css";
+import "../styles/bargraph.css";
 
 const LollipopGraph = ({ selectedDemographics, genderAverages }) => {
   useEffect(() => {

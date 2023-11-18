@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
-import "../styles/BarGraph.css";
+import "../styles/bargraph.css";
 
 const BarGraph = ({ selectedDemographics, genderAverages }) => {
   const svgRef = useRef(null);
