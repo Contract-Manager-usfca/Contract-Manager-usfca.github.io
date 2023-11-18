@@ -3,6 +3,22 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = {
+  container: {
+    color: 'white',
+    fontFamily: 'Inria Serif',
+    backgroundColor: '#333',
+    padding: '3%',
+    paddingLeft: '6%',
+    borderRadius: '5px',
+    width: '80%',
+    margin: '35px auto',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
+  header: {
+    paddingBottom: '10px',
+    textAlign: 'left',
+    color: '#CBE1AE',
+  },
   platformBtn: {
     padding: "5px 15px",
     margin: "20px",
@@ -24,7 +40,6 @@ const styles = {
     color: "white",
     display: "none",
   },
-  // Style for input box
 };
 
 function AddInput(saveId, input1Id, input2Id, cancelId, deleteId) {
@@ -65,7 +80,7 @@ function CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "green" : "white",
+    color: savedText ? "#8AD97F" : "#ffff",
   };
   return (
     <div>
@@ -81,11 +96,10 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
             )
           }
           id={element}
-          style={{ ...styles.platformBtn, ...platformStyle }}
-        >
+          style={{ ...styles.platformBtn, ...platformStyle }}>
           {element}
         </button>
-        <p style={{ display: "inline-block", marginBottom: "-15px" }}>
+        <p style={{ display: "inline-block", marginBottom: "-15px", marginLeft:'2%'}}>
           {savedText}
         </p>
       </div>
@@ -94,7 +108,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           type="text"
           placeholder="@your_handle"
           id={`${element}Input1`}
-          style={{ display: "none" }}
+          style={{ display: "none"}}
         />
         <input
           type="text"
@@ -288,9 +302,9 @@ function PlatformInput() {
           prevPlatforms.map((p) =>
             p.name === elementId
               ? {
-                  ...p,
-                  savedText: `${inputValue1}: ${inputValue2} followers.`,
-                }
+                ...p,
+                savedText: `${inputValue1}: ${inputValue2} followers.`,
+              }
               : p
           )
         );
@@ -310,9 +324,9 @@ function PlatformInput() {
               prevPlatforms.map((p) =>
                 p.name === elementId
                   ? {
-                      ...p,
-                      savedText: `${inputValue1}: ${inputValue2} followers.`,
-                    }
+                    ...p,
+                    savedText: `${inputValue1}: ${inputValue2} followers.`,
+                  }
                   : p
               )
             );
@@ -429,16 +443,8 @@ function PlatformInput() {
   };
 
   return (
-    <div
-      style={{
-        color: "white",
-        textAlign: "center",
-        paddingLeft: "200px",
-        paddingRight: "200px",
-      }}
-    >
-      <h3>Platforms:</h3>
-      <h6>Click on a platform to update your handle.</h6>
+    <div style={styles.container}>
+      <h3 style={styles.header}>Platforms:</h3>
       {platforms.map((platform) => (
         <ElementInput
           key={platform.name}

@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import Dashboard from "./pages/Dashboard";
 import AboutUs from "./pages/aboutUs";
 import ContactUs from "./pages/contactUs";
-import UserProfilePage from "./pages/UserProfilePage"; // Import the new page
+import UserProfilePage from "./pages/UserProfilePage";
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 

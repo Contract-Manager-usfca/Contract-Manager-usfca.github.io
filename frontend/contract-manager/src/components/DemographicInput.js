@@ -3,6 +3,22 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = {
+  container: {
+    color: 'white',
+    fontFamily: 'Inria Serif',
+    backgroundColor: '#333',
+    padding: '3%',
+    paddingLeft: '6%',
+    borderRadius: '5px',
+    width: '80%',
+    margin: '35px auto',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
+  header: {
+    paddingBottom: '10px',
+    textAlign: 'left',
+    color: '#CBE1AE',
+  },
   platformBtn: {
     padding: "5px 15px",
     margin: "20px",
@@ -59,7 +75,7 @@ function CancelAdd(saveId, inputId, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "green" : "white",
+    color: savedText ? "#8AD97F" : "#ffff",
   };
   return (
     <div>
@@ -267,9 +283,9 @@ function DemographicInput() {
           prevDemographics.map((d) =>
             d.demographic === elementId
               ? {
-                  ...d,
-                  savedText: `${inputValue}`,
-                }
+                ...d,
+                savedText: `${inputValue}`,
+              }
               : d
           )
         );
@@ -289,9 +305,9 @@ function DemographicInput() {
               prevDemographics.map((d) =>
                 d.demographic === elementId
                   ? {
-                      ...d,
-                      savedText: `${inputValue}`,
-                    }
+                    ...d,
+                    savedText: `${inputValue}`,
+                  }
                   : d
               )
             );
@@ -397,19 +413,8 @@ function DemographicInput() {
   };
 
   return (
-    <div
-      style={{
-        color: "white",
-        textAlign: "center",
-        paddingLeft: "200px",
-        paddingRight: "200px",
-      }}
-    >
-      <h3>Demographics:</h3>
-      <h6>
-        Click on a demographic to update your information. Each of these fields
-        are optional, and demographic information is always anonymous.
-      </h6>
+    <div style={styles.container}>
+      <h3 style={styles.header}>Demographics:</h3>
       {demographics.map((demographic) => (
         <ElementInput
           key={demographic.demographic}

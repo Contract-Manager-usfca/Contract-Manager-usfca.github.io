@@ -6,6 +6,17 @@ function UserProfile() {
   const { getIdTokenClaims, isLoading, logout } = useAuth0();
   const [userName, setUserName] = useState("");
   const [users, setUsers] = useState([]);
+  const [isHovering, setIsHovering] = useState(false);
+
+  // Handle the mouse entering the button
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  // Handle the mouse leaving the button
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -75,27 +86,43 @@ function UserProfile() {
     fetchUserProfile();
   }, [getIdTokenClaims, isLoading]);
 
+  const styles = {
+    container: {
+      display: 'flex',
+      textAlign: 'center',
+      justifyContent: 'space-between',
+      padding: '2% 5% 0% 6%',
+    },
+    logoutButton: {
+      color: isHovering ? "#C188FB" : "#ffff",
+      transition: 'color 0.3s ease, color 0.3s ease',
+      backgroundColor: "transparent",
+      border: "none",
+      fontStyle: "italic",
+      textDecoration: "underline",
+      cursor: "pointer",
+      fontSize: '1em',
+    },
+    h1: {
+      color: "#9487E4",
+      textAlign: 'left',
+      fontSize: '2.5em',
+    },
+  };
+
   return (
-    <div>
-      ({/* "If !is_private_email: show this." */}
-      <p style={{ color: "white", textAlign: "center" }}>
-        You're currently logged in as {userName}.
+    <div style={styles.container}>
+      <h1 style={styles.h1}>{userName}</h1>
+      {userName && (
         <button
-          className="btn-margin"
-          style={{
-            color: "#C188FB",
-            backgroundColor: "transparent",
-            border: "none",
-            fontStyle: "italic",
-            textDecoration: "underline",
-          }}
-          onClick={async () => {
-            logout();
-          }}
+          onClick={() => logout()}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={styles.logoutButton}
         >
           Not you?
         </button>
-      </p>
+      )}
     </div>
   );
 }
