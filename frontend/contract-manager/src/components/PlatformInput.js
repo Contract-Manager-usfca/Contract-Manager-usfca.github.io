@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   container: {
     color: 'white',
-    fontFamily: 'Inria Serif',
+    fontFamily: 'Ubuntu',
     backgroundColor: '#333',
     padding: '3%',
     paddingLeft: '6%',

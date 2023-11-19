@@ -8,7 +8,7 @@ import Fade from 'react-reveal/Fade';
 const styles = {
   container: {
     color: 'white',
-    fontFamily: 'Inria Serif',
+    fontFamily: 'Ubuntu',
     backgroundColor: '#333',
     minHeight: '100vh',
   },

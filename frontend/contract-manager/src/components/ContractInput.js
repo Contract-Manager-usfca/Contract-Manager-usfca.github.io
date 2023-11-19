@@ -12,14 +12,20 @@ const styles = {
     padding: "5px 10px",
     margin: "10px",
     fontSize: "18px",
-    border: "1px solid #CBE1AE",
-    borderRadius: "4px",
     cursor: "pointer",
-    backgroundColor: "#444",
-    color: "#CBE1AE",
-    // Add hover effect
     transition: "background-color 0.3s ease",
   },
+  contractBtn: (isHovered) => ({
+    padding: '10px 20px',
+    margin: '10px 0',
+    borderRadius: '4px',
+    border: 'none',
+    backgroundColor: isHovered ? '#889674' : '#444',
+    color: isHovered ? '#F3FBE9' : '#ffffff',
+    cursor: 'pointer',
+    justifyContent: 'end',
+    transition: 'background-color 0.3s ease, color 0.3s ease',
+  }),
   submitBtn: {
     padding: "5px 10px",
     margin: "10px",
@@ -44,7 +50,7 @@ const styles = {
   },
   container: {
     color: 'white',
-    fontFamily: 'Inria Serif',
+    fontFamily: 'Ubuntu',
     backgroundColor: '#333',
     padding: '3%',
     paddingLeft: '6%',
@@ -103,6 +109,7 @@ function ContractInput() {
   const [creatorId, setCreatorId] = useState(null);
   const [partners, setPartners] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchCreatorId = async () => {
@@ -464,7 +471,9 @@ function ContractInput() {
         <button
           onClick={() => ShowForm(false, null, null)}
           id="newContract"
-          style={styles.contractBtn}
+          style={styles.contractBtn(isHovered)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           + New Contract
         </button>
