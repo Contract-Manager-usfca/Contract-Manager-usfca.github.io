@@ -392,7 +392,7 @@ function ContractInput() {
   return (
     <div style={styles.container}>
       <h3 style={styles.header}>Contracts:</h3>
-      <h6 style={styles.header}>
+      <h6 styles={{ paddingBottom: '2%', textAlign: 'left', }}>
         Input contract information
       </h6>
       <div>

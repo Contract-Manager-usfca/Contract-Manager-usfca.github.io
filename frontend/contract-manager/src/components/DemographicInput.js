@@ -30,15 +30,40 @@ const styles = {
     color: "white",
   },
   submitBtn: {
-    padding: "5px 15px",
-    margin: "20px",
-    fontSize: "20px",
-    border: "none",
+    padding: "5px 10px",
+    margin: "10px",
+    fontSize: "18px",
+    border: "1px solid #ffffff",
     borderRadius: "4px",
     cursor: "pointer",
-    backgroundColor: "transparent",
-    color: "white",
+    backgroundColor: "#444",
+    color: "#ffffff",
+    transition: "background-color 0.3s ease",
     display: "none",
+  },
+  inputBox: {
+    width: '80%',
+    padding: '10px',
+    margin: '5px 0 15px 0',
+    marginLeft: '2%',
+    border: '1px solid #8EAA6A',
+    borderRadius: '4px',
+    backgroundColor: '#444',
+    color: 'white',
+    fontSize: '16px',
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  btnContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '83%',
+    marginTop: '10px',
   },
 };
 
@@ -99,56 +124,60 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
         </p>
       </div>
       <div>
-        <input
-          type="text"
-          placeholder="Demographic..."
-          id={`${element}Input`}
-          style={{ display: "none" }}
-        />
-        <button
-          onClick={() =>
-            onSave(
-              `${element}Save`,
-              `${element}Input`,
-              `${element}Cancel`,
-              element,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Save`}
-          style={styles.submitBtn}
-        >
-          Save
-        </button>
-        <button
-          onClick={() =>
-            onDelete(
-              `${element}Save`,
-              `${element}Input`,
-              `${element}Cancel`,
-              element,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Delete`}
-          style={styles.submitBtn}
-        >
-          Delete
-        </button>
-        <button
-          onClick={() =>
-            onCancel(
-              `${element}Save`,
-              `${element}Input`,
-              `${element}Cancel`,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Cancel`}
-          style={styles.submitBtn}
-        >
-          Cancel
-        </button>
+        <div style={styles.inputContainer}>
+          <input
+            type="text"
+            placeholder="Demographic..."
+            id={`${element}Input`}
+            style={{ ...styles.inputBox, display: "none" }}
+          />
+        </div>
+        <div style={styles.btnContainer}>
+          <button
+            onClick={() =>
+              onSave(
+                `${element}Save`,
+                `${element}Input`,
+                `${element}Cancel`,
+                element,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Save`}
+            style={styles.submitBtn}
+          >
+            Save
+          </button>
+          <button
+            onClick={() =>
+              onDelete(
+                `${element}Save`,
+                `${element}Input`,
+                `${element}Cancel`,
+                element,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Delete`}
+            style={styles.submitBtn}
+          >
+            Delete
+          </button>
+          <button
+            onClick={() =>
+              onCancel(
+                `${element}Save`,
+                `${element}Input`,
+                `${element}Cancel`,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Cancel`}
+            style={styles.submitBtn}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -30,15 +30,40 @@ const styles = {
     color: "white",
   },
   submitBtn: {
-    padding: "5px 15px",
-    margin: "20px",
-    fontSize: "20px",
-    border: "none",
+    padding: "5px 10px",
+    margin: "10px",
+    fontSize: "18px",
+    border: "1px solid #ffffff",
     borderRadius: "4px",
     cursor: "pointer",
-    backgroundColor: "transparent",
-    color: "white",
+    backgroundColor: "#444",
+    color: "#ffffff",
+    transition: "background-color 0.3s ease",
     display: "none",
+  },
+  inputBox: {
+    width: '80%',
+    padding: '10px',
+    margin: '5px 0 15px 0',
+    marginLeft: '2%',
+    border: '1px solid #8EAA6A',
+    borderRadius: '4px',
+    backgroundColor: '#444',
+    color: 'white',
+    fontSize: '16px',
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  btnContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '83%',
+    marginTop: '10px',
   },
 };
 
@@ -99,23 +124,26 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           style={{ ...styles.platformBtn, ...platformStyle }}>
           {element}
         </button>
-        <p style={{ display: "inline-block", marginBottom: "-15px", marginLeft:'2%'}}>
+        <p style={{ display: "inline-block", marginBottom: "-15px", marginLeft: '2%' }}>
           {savedText}
         </p>
       </div>
       <div>
-        <input
-          type="text"
-          placeholder="@your_handle"
-          id={`${element}Input1`}
-          style={{ display: "none"}}
-        />
-        <input
-          type="text"
-          placeholder="Follower Count..."
-          id={`${element}Input2`}
-          style={{ display: "none" }}
-        />
+        <div style={styles.inputContainer}>
+          <input
+            type="text"
+            placeholder="@your_handle"
+            id={`${element}Input1`}
+            style={{ ...styles.inputBox, display: "none" }}
+          />
+          <input
+            type="text"
+            placeholder="Follower Count..."
+            id={`${element}Input2`}
+            style={{ ...styles.inputBox, display: "none" }}
+          />
+        </div>
+        <div style={styles.btnContainer}>
         <button
           onClick={() =>
             onSave(
@@ -163,6 +191,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
         >
           Cancel
         </button>
+        </div>
       </div>
     </div>
   );
