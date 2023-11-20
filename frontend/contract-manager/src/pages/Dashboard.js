@@ -4,27 +4,27 @@ import DemographicInput from "../components/DemographicInput";
 import ContractInput from "../components/ContractInput";
 import Fade from 'react-reveal/Fade';
 
-// Reuse the styles from AboutUs for consistency
 const styles = {
   container: {
     color: 'white',
     fontFamily: 'Ubuntu',
-    backgroundColor: '#333',
     minHeight: '100vh',
   },
   main: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: '#222222',
     padding: '20px',
     borderRadius: '5px',
     minHeight: 'calc(100vh - 40px)',
   },
   dashboardSection: {
-    backgroundColor: '#444',
+    borderTop: 'solid 1px #CBE1AE',
+    backgroundColor: '#404040',
     borderRadius: '5px',
     width: '75%',
+    marginBottom: '2%',
   },
   h1: {
     paddingBottom: '10px',
@@ -34,20 +34,22 @@ const styles = {
 
 function Dashboard() {
   return (
-    <div style={styles.container}>
-      <Fade bottom>
+    <div style={{ backgroundColor: "#252525" }}>
+      <div style={styles.container}>
         <main style={styles.main}>
           <header style={styles.header}>
             <h1>Edit Profile</h1>
           </header>
+          <Fade bottom>
             <section style={styles.dashboardSection}>
-            <UserProfile />
-            <PlatformInput />
-            <DemographicInput />
-            <ContractInput />
+              <UserProfile />
+              <PlatformInput />
+              <DemographicInput />
+              <ContractInput />
             </section>
+          </Fade>
         </main>
-      </Fade>
+      </div>
     </div>
   );
 }

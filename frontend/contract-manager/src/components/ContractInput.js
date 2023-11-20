@@ -109,6 +109,7 @@ function ContractInput() {
   const [creatorId, setCreatorId] = useState(null);
   const [partners, setPartners] = useState([]);
   const [users, setUsers] = useState([]);
+  // for hover effect
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {

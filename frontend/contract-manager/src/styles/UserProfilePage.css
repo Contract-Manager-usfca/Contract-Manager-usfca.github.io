@@ -1,16 +1,8 @@
 /* UserProfilePage.css */
-img {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .bg-black {
-    background: #000;
-  }
-  
-  .skill-block {
-    width: 30%;
-  }
+
+* {
+  background-color: '#333',
+}
   
   @media (min-width: 991px) and (max-width:1200px) {
     .skill-block {
@@ -45,22 +37,4 @@ img {
   align-items: center;
   justify-content: center;
 }
-
-.earnings-header {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.earnings-amount {
-  font-size: 36px;
-  font-weight: bold;
-  color: #000;
-}
-
-.earnings-description {
-  font-size: 16px;
-  color: #666;
-}
-
   

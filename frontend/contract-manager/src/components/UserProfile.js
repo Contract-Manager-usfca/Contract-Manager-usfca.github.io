@@ -105,7 +105,7 @@ function UserProfile() {
       fontSize: '1em',
     },
     h1: {
-      color: "#9487E4",
+      color: "#C188FB",
       textAlign: 'left',
       fontSize: '2.5em',
     },

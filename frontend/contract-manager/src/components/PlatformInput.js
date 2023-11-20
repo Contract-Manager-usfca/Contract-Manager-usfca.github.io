@@ -105,7 +105,7 @@ function CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "#8AD97F" : "#ffff",
+    color: savedText ? "#ACD575" : "#ffff",
   };
   return (
     <div>
