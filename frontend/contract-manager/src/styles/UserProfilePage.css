@@ -1,7 +1,14 @@
-/* UserProfilePage.css */
 
-* {
-  background-color: '#333',
+.social-icon {
+  font-size: 2.5em;
+  color: #fff;
+
+}
+
+.social-icon:hover {
+  color: #C188FB;
+  transition: color 0.3s ease;
+  
 }
   
   @media (min-width: 991px) and (max-width:1200px) {
@@ -15,26 +22,4 @@
       padding: 56px !important;
     }
   }
-  
-  body {
-    background-color: #eeeeee;
-  }
-
-  /* Social media icons styling */
-.social-icon {
-  font-size: 24px; /* Larger icon size */
-  margin: 0 12px; /* More space between icons */
-  color: #fff; /* White color for icons */
-}
-
-/* Earnings card styling */
-.earnings-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-top: 20px;
-  align-items: center;
-  justify-content: center;
-}
   

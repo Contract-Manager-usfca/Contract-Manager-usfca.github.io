@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
-// import '../styles/UserProfilePage.css';
+import '../styles/UserProfilePage.css';
 
 const styles = {
     container: {
@@ -36,8 +36,7 @@ const styles = {
     name: {
         color: '#CBE1AE',
         fontSize: '2.5em',
-        paddingBottom: '10px',
-        margin: '3% 0 2% 10%',
+        margin: '0% 0% 8% 20%',
     },
     row: {
         display: 'flex',
@@ -61,9 +60,7 @@ const styles = {
         borderRadius: '5px',
     },
     socialIcon: {
-        fontSize: '24px',
-        margin: '0 12px',
-        color: '#fff',
+        margin: 'auto',
     },
     earningsCard: {
         backgroundColor: '#404040',
@@ -224,15 +221,29 @@ function UserProfilePage() {
     return (
         <div style={{ backgroundColor: "#252525" }}>
             <div style={styles.container}>
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: '20px' }}>
-                        <img src="https://i.imgur.com/tdi3NGa.png" alt="Profile" style={styles.img} />
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: '20px',
+                }}>
+                    <img src="https://i.imgur.com/tdi3NGa.png" alt="Profile" style={styles.img} />
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
                         <h3 style={styles.name}>{profileData?.name}</h3>
-                    </div>
-                    <div>
-                        {generateSocialLinks().map((icon, index) => (
-                            <span key={index} style={styles.socialIcon}>{icon}</span>
-                        ))}
+                        <div>
+                            <div style={{ marginTop: '10px' }}>
+                                {generateSocialLinks().map((icon, index) => (
+                                    <span key={index} style={styles.socialIcon}>{icon}</span>
+                                ))}
+
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div style={styles.section}>
