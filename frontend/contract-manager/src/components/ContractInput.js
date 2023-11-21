@@ -1,29 +1,98 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+import Fade from 'react-reveal/Fade';
 
 const styles = {
-  contractBtn: {
-    padding: "5px 15px",
-    margin: "20px",
-    fontSize: "20px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "transparent",
-    color: "white",
-    display: "block",
+  buttonContainer: {
+    textAlign: 'right',
+    marginRight: '17%',
   },
+  contractBtn: {
+    padding: "5px 10px",
+    margin: "10px",
+    fontSize: "18px",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+  },
+  contractBtn: (isHovered) => ({
+    padding: '10px 20px',
+    margin: '10px 0',
+    borderRadius: '4px',
+    border: 'none',
+    backgroundColor: isHovered ? '#889674' : '#444',
+    color: isHovered ? '#F3FBE9' : '#ffffff',
+    cursor: 'pointer',
+    justifyContent: 'end',
+    transition: 'background-color 0.3s ease, color 0.3s ease',
+  }),
   submitBtn: {
-    padding: "5px 15px",
-    margin: "20px",
-    fontSize: "20px",
-    border: "none",
+    padding: "5px 10px",
+    margin: "10px",
+    fontSize: "18px",
+    border: "1px solid #ffffff",
     borderRadius: "4px",
     cursor: "pointer",
-    backgroundColor: "transparent",
-    color: "white",
-    display: "none",
+    backgroundColor: "#444",
+    color: "#ffffff",
+    transition: "background-color 0.3s ease",
+  },
+  deleteBtn: {
+    padding: ".8%",
+    margin: "2%",
+    fontSize: "18px",
+    border: "1px solid #ffffff",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: "#444",
+    color: "#ffffff",
+    transition: "background-color 0.3s ease",
+  },
+  container: {
+    color: 'white',
+    fontFamily: 'Ubuntu',
+    backgroundColor: '#333',
+    padding: '3%',
+    paddingLeft: '6%',
+    borderRadius: '5px',
+    width: '80%',
+    margin: '35px auto',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
+  header: {
+    paddingBottom: '10px',
+    textAlign: 'left',
+    color: '#CBE1AE',
+  },
+  formLabel: {
+    display: 'block',
+    textAlign: 'left',
+    marginBottom: '5px',
+    color: 'white',
+  },
+  formInput: {
+    width: '80%',
+    padding: '10px',
+    margin: '5px 0 15px 0',
+    marginLeft: '2%',
+    border: '1px solid #8EAA6A',
+    borderRadius: '4px',
+    backgroundColor: '#444',
+    color: 'white',
+    fontSize: '16px',
+  },
+  formSelect: {
+    width: '100%',
+    padding: '10px',
+    margin: '5px 0 15px 0',
+    marginLeft: '2%',
+    border: '1px solid #8EAA6A',
+    borderRadius: '4px',
+    backgroundColor: '#444',
+    color: 'white',
+    fontSize: '16px',
+    appearance: 'none',
+    width: '80%',
   },
   // Style for input box
 };
@@ -40,6 +109,8 @@ function ContractInput() {
   const [creatorId, setCreatorId] = useState(null);
   const [partners, setPartners] = useState([]);
   const [users, setUsers] = useState([]);
+  // for hover effect
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchCreatorId = async () => {
@@ -311,109 +382,99 @@ function ContractInput() {
     });
   };
 
+  // Function to hide the form
+  const hideForm = () => {
+    var form = document.getElementById("myForm");
+    var ncb = document.getElementById("newContract");
+    form.style.display = "none";
+    ncb.style.display = "block";
+  };
+
   return (
-    <div
-      style={{
-        color: "white",
-        textAlign: "center",
-        paddingLeft: "200px",
-        paddingRight: "200px",
-      }}
-    >
-      <h3>Contracts:</h3>
-      <h6>
-        Here you can input your contract information to compare against other
-        content creators.
+    <div style={styles.container}>
+      <h3 style={styles.header}>Contracts:</h3>
+      <h6 styles={{ paddingBottom: '2%', textAlign: 'left', }}>
+        Input contract information
       </h6>
       <div>
-        <ul style={{ fontFamily: "Inria Serif" }}>
+        <ul style={{ listStyleType: 'none', padding: 0 }}>
           {contracts.map((contract, index) => (
-            <li key={index}>
-              {contract.partner}: {formatDate(contract.start)} -{" "}
-              {formatDate(contract.end)}. ${contract.amount}
-              {/* TODO: OnClick */}
-              {/* <button
-                className="btn-margin"
-                style={{
-                  color: "#C188FB",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  fontStyle: "italic",
-                  textDecoration: "underline",
-                }}
-                onClick={() => handleEdit(index)}
-              >
-                Edit
-              </button> */}
-              <button
-                className="btn-margin"
-                style={{
-                  color: "#C188FB",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  fontStyle: "italic",
-                  textDecoration: "underline",
-                }}
-                onClick={() => handleDelete(index)}
-              >
-                Delete
-              </button>
+            <li key={index} style={styles.listItem}>
+              {contract.partner}: {formatDate(contract.start)} - {formatDate(contract.end)}. ${contract.amount}
+              {/* TODO: Implement handleEdit functionality */}
+              {/* <button style={styles.button} onClick={() => handleEdit(index)}>Edit</button> */}
+              <button style={styles.deleteBtn} onClick={() => handleDelete(index)}>Delete</button>
             </li>
           ))}
         </ul>
       </div>
+      <Fade bottom>
       <form id="myForm" name="myForm" style={{ display: "none" }}>
-        <label htmlFor="partner">Who'd you partner with?</label>
+        <label style={styles.formLabel} htmlFor="partner">Partner: </label>
         <select
           id="partner"
           value={formData.partner}
           onChange={handleInputChange}
+          style={styles.formSelect}
         >
           <option>Select...</option>
           {partners.map((partner) => (
-            <option key={partner.id} value={partner.name}>
-              {partner.name}
-            </option>
+            <option key={partner.id} value={partner.name}>{partner.name}</option>
           ))}
         </select>
-        <br></br>
-        <label htmlFor="amount">Amount Paid (in US Dollars): </label>
+        <br />
+        <label style={styles.formLabel} htmlFor="amount">Amount Paid (in US Dollars):</label>
         <input
           type="number"
           id="amount"
           placeholder="Amount Paid"
           value={formData.amount}
           onChange={handleInputChange}
+          style={styles.formInput}
         />
-        <br></br>
-        <label htmlFor="start">Contract start date— </label>
+        <br />
+        <label style={styles.formLabel} htmlFor="start">Contract start date—</label>
         <input
           type="date"
           id="start"
           value={formData.start}
           onChange={handleInputChange}
+          style={styles.formInput}
         />
-        <br></br>
-        <label htmlFor="end">Contract end date— </label>
+        <br />
+        <label style={styles.formLabel} htmlFor="end">Contract end date—</label>
         <input
           type="date"
           id="end"
           value={formData.end}
           onChange={handleInputChange}
+          style={styles.formInput}
         />
-        <br></br>
-        <input
-          type="button"
-          id="save"
-          value="Save"
-          onClick={() => saveResult(null)}
-        />
+        <br />
+        <div style={styles.buttonContainer}>
+          <input
+            type="button"
+            id="save"
+            value="Save"
+            onClick={() => saveResult(null)}
+            style={styles.submitBtn}
+          />
+          <input
+            type="button"
+            value="Cancel"
+            onClick={hideForm}
+            style={styles.submitBtn}
+          />
+        </div>
       </form>
-      <div class="center">
+      </Fade>
+      <div>
         <button
           onClick={() => ShowForm(false, null, null)}
           id="newContract"
-          style={styles.contractBtn}
+          style={styles.contractBtn(isHovered)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           + New Contract
         </button>

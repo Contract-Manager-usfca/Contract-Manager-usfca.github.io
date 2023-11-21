@@ -3,6 +3,22 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = {
+  container: {
+    color: 'white',
+    fontFamily: 'Ubuntu',
+    backgroundColor: '#333',
+    padding: '3%',
+    paddingLeft: '6%',
+    borderRadius: '5px',
+    width: '80%',
+    margin: '35px auto',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
+  header: {
+    paddingBottom: '10px',
+    textAlign: 'left',
+    color: '#CBE1AE',
+  },
   platformBtn: {
     padding: "5px 15px",
     margin: "20px",
@@ -14,17 +30,41 @@ const styles = {
     color: "white",
   },
   submitBtn: {
-    padding: "5px 15px",
-    margin: "20px",
-    fontSize: "20px",
-    border: "none",
+    padding: "5px 10px",
+    margin: "10px",
+    fontSize: "18px",
+    border: "1px solid #ffffff",
     borderRadius: "4px",
     cursor: "pointer",
-    backgroundColor: "transparent",
-    color: "white",
+    backgroundColor: "#444",
+    color: "#ffffff",
+    transition: "background-color 0.3s ease",
     display: "none",
   },
-  // Style for input box
+  inputBox: {
+    width: '80%',
+    padding: '10px',
+    margin: '5px 0 15px 0',
+    marginLeft: '2%',
+    border: '1px solid #8EAA6A',
+    borderRadius: '4px',
+    backgroundColor: '#444',
+    color: 'white',
+    fontSize: '16px',
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  btnContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '83%',
+    marginTop: '10px',
+  },
 };
 
 function AddInput(saveId, input1Id, input2Id, cancelId, deleteId) {
@@ -65,7 +105,7 @@ function CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "green" : "white",
+    color: savedText ? "#ACD575" : "#ffff",
   };
   return (
     <div>
@@ -81,27 +121,29 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
             )
           }
           id={element}
-          style={{ ...styles.platformBtn, ...platformStyle }}
-        >
+          style={{ ...styles.platformBtn, ...platformStyle }}>
           {element}
         </button>
-        <p style={{ display: "inline-block", marginBottom: "-15px" }}>
+        <p style={{ display: "inline-block", marginBottom: "-15px", marginLeft: '2%' }}>
           {savedText}
         </p>
       </div>
       <div>
-        <input
-          type="text"
-          placeholder="@your_handle"
-          id={`${element}Input1`}
-          style={{ display: "none" }}
-        />
-        <input
-          type="text"
-          placeholder="Follower Count..."
-          id={`${element}Input2`}
-          style={{ display: "none" }}
-        />
+        <div style={styles.inputContainer}>
+          <input
+            type="text"
+            placeholder="@your_handle"
+            id={`${element}Input1`}
+            style={{ ...styles.inputBox, display: "none" }}
+          />
+          <input
+            type="text"
+            placeholder="Follower Count..."
+            id={`${element}Input2`}
+            style={{ ...styles.inputBox, display: "none" }}
+          />
+        </div>
+        <div style={styles.btnContainer}>
         <button
           onClick={() =>
             onSave(
@@ -149,6 +191,7 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
         >
           Cancel
         </button>
+        </div>
       </div>
     </div>
   );
@@ -288,9 +331,9 @@ function PlatformInput() {
           prevPlatforms.map((p) =>
             p.name === elementId
               ? {
-                  ...p,
-                  savedText: `${inputValue1}: ${inputValue2} followers.`,
-                }
+                ...p,
+                savedText: `${inputValue1}: ${inputValue2} followers.`,
+              }
               : p
           )
         );
@@ -310,9 +353,9 @@ function PlatformInput() {
               prevPlatforms.map((p) =>
                 p.name === elementId
                   ? {
-                      ...p,
-                      savedText: `${inputValue1}: ${inputValue2} followers.`,
-                    }
+                    ...p,
+                    savedText: `${inputValue1}: ${inputValue2} followers.`,
+                  }
                   : p
               )
             );
@@ -429,16 +472,8 @@ function PlatformInput() {
   };
 
   return (
-    <div
-      style={{
-        color: "white",
-        textAlign: "center",
-        paddingLeft: "200px",
-        paddingRight: "200px",
-      }}
-    >
-      <h3>Platforms:</h3>
-      <h6>Click on a platform to update your handle.</h6>
+    <div style={styles.container}>
+      <h3 style={styles.header}>Platforms:</h3>
       {platforms.map((platform) => (
         <ElementInput
           key={platform.name}

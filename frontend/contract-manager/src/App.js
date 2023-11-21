@@ -1,14 +1,13 @@
-// App.js
 import React from "react";
 import "./App.css";
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Homepage from './pages/homepage';
+import Homepage from './pages/homePage';
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import Dashboard from "./pages/Dashboard";
 import AboutUs from "./pages/aboutUs";
 import ContactUs from "./pages/contactUs";
-import UserProfilePage from "./pages/UserProfilePage"; // Import the new page
+import UserProfilePage from "./pages/UserProfilePage";
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 

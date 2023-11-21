@@ -2,36 +2,57 @@ import UserProfile from "../components/UserProfile";
 import PlatformInput from "../components/PlatformInput";
 import DemographicInput from "../components/DemographicInput";
 import ContractInput from "../components/ContractInput";
+import Fade from 'react-reveal/Fade';
+
+const styles = {
+  container: {
+    color: 'white',
+    fontFamily: 'Ubuntu',
+    minHeight: '100vh',
+  },
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: '#222222',
+    padding: '20px',
+    borderRadius: '5px',
+    minHeight: 'calc(100vh - 40px)',
+  },
+  dashboardSection: {
+    borderTop: 'solid 1px #CBE1AE',
+    backgroundColor: '#404040',
+    borderRadius: '5px',
+    width: '75%',
+    marginBottom: '2%',
+  },
+  h1: {
+    paddingBottom: '10px',
+    textAlign: 'center',
+  },
+};
 
 function Dashboard() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        backgroundColor: "#252525",
-        paddingBottom: "100px",
-      }}
-    >
-      <h3
-        style={{
-          backgroundColor: "#C188FB",
-          textAlign: "center",
-          fontSize: "50px",
-        }}
-      >
-        
-        Welcome!
-      </h3>
-
-      {/* Include the UserProfile component to display the user's name */}
-      <UserProfile />
-      <PlatformInput />
-      <DemographicInput />
-      <ContractInput />
+    <div style={{ backgroundColor: "#252525" }}>
+      <div style={styles.container}>
+        <main style={styles.main}>
+          <header style={styles.header}>
+            <h1>Edit Profile</h1>
+          </header>
+          <Fade bottom>
+            <section style={styles.dashboardSection}>
+              <UserProfile />
+              <PlatformInput />
+              <DemographicInput />
+              <ContractInput />
+            </section>
+          </Fade>
+        </main>
+      </div>
     </div>
   );
 }
 
 export default Dashboard;
+

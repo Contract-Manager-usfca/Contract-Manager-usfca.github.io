@@ -1,12 +1,12 @@
 import React from 'react';
 import Fade from 'react-reveal/Fade';
-import usPhoto from '../imgs/aboutPhoto.png';
+import usPhoto from '../imgs/aboutPhoto2.png';
 
 const styles = {
   container: {
     color: 'white',
     fontFamily: 'sans-serif',
-    backgroundColor: '#333',
+    backgroundColor: 'rgb(37, 37, 37)',
     minHeight: '100vh',
     padding: '20px',
   },
@@ -19,18 +19,19 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: 'rgb(37, 37, 37)',
     padding: '20px',
     borderRadius: '5px',
     minHeight: 'calc(100vh - 40px)',
-  },  
+  },
   aboutSection: {
-    backgroundColor: '#444',
+    backgroundColor: '#404040',
     margin: '20px 0',
     padding: '20px',
     borderRadius: '5px',
-    width: '50%',
-  },  
+    width: '65%',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
   h2: {
     paddingBottom: '10px',
     color: '#CBE1AE',
@@ -51,21 +52,22 @@ function AboutUs() {
   return (
     <div style={styles.container}>
       <Fade bottom>
-      <main style={styles.main}>
-        <header style={styles.header}>
-          <h1>About Us</h1>
-        </header>
+        <main style={styles.main}>
+          <header style={styles.header}>
+            <h1>About Us</h1>
+          </header>
           <section style={styles.aboutSection}>
             <h2 style={styles.h2}>Our Story</h2>
             <p>
-            We are a group of devoted individuals passionate about creating innovative and efficient software. Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies. 
-            <br/> This project, Contract Manager, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
+              &emsp;&emsp;We are a group of devoted individuals passionate about <b>creating innovative and efficient software.</b> Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies.
+              <br /><br />
+              &emsp;&emsp;This project, <b>Contract Manager</b>, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
             </p>
           </section>
           <section style={styles.aboutSection}>
             <h2 style={styles.h2}>Our Team</h2>
             <p>
-              Meet our dedicated team of professionals who are working their asses off to make this project fireeeeee!
+              Meet our passionate team of professionals, each bringing <b>a unique set of skills and dedication</b> to ensure the success of this project!
             </p>
             <img src={usPhoto} alt="team" style={styles.img} />
           </section>

@@ -3,6 +3,22 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = {
+  container: {
+    color: 'white',
+    fontFamily: 'Ubuntu',
+    backgroundColor: '#333',
+    padding: '3%',
+    paddingLeft: '6%',
+    borderRadius: '5px',
+    width: '80%',
+    margin: '35px auto',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+  },
+  header: {
+    paddingBottom: '10px',
+    textAlign: 'left',
+    color: '#CBE1AE',
+  },
   platformBtn: {
     padding: "5px 15px",
     margin: "20px",
@@ -14,15 +30,40 @@ const styles = {
     color: "white",
   },
   submitBtn: {
-    padding: "5px 15px",
-    margin: "20px",
-    fontSize: "20px",
-    border: "none",
+    padding: "5px 10px",
+    margin: "10px",
+    fontSize: "18px",
+    border: "1px solid #ffffff",
     borderRadius: "4px",
     cursor: "pointer",
-    backgroundColor: "transparent",
-    color: "white",
+    backgroundColor: "#444",
+    color: "#ffffff",
+    transition: "background-color 0.3s ease",
     display: "none",
+  },
+  inputBox: {
+    width: '80%',
+    padding: '10px',
+    margin: '5px 0 15px 0',
+    marginLeft: '2%',
+    border: '1px solid #8EAA6A',
+    borderRadius: '4px',
+    backgroundColor: '#444',
+    color: 'white',
+    fontSize: '16px',
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  btnContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '83%',
+    marginTop: '10px',
   },
 };
 
@@ -59,7 +100,7 @@ function CancelAdd(saveId, inputId, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "green" : "white",
+    color: savedText ? "#ACD575" : "#ffff",
   };
   return (
     <div>
@@ -83,56 +124,60 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
         </p>
       </div>
       <div>
-        <input
-          type="text"
-          placeholder="Demographic..."
-          id={`${element}Input`}
-          style={{ display: "none" }}
-        />
-        <button
-          onClick={() =>
-            onSave(
-              `${element}Save`,
-              `${element}Input`,
-              `${element}Cancel`,
-              element,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Save`}
-          style={styles.submitBtn}
-        >
-          Save
-        </button>
-        <button
-          onClick={() =>
-            onDelete(
-              `${element}Save`,
-              `${element}Input`,
-              `${element}Cancel`,
-              element,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Delete`}
-          style={styles.submitBtn}
-        >
-          Delete
-        </button>
-        <button
-          onClick={() =>
-            onCancel(
-              `${element}Save`,
-              `${element}Input`,
-              `${element}Cancel`,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Cancel`}
-          style={styles.submitBtn}
-        >
-          Cancel
-        </button>
+        <div style={styles.inputContainer}>
+          <input
+            type="text"
+            placeholder="Demographic..."
+            id={`${element}Input`}
+            style={{ ...styles.inputBox, display: "none" }}
+          />
+        </div>
+        <div style={styles.btnContainer}>
+          <button
+            onClick={() =>
+              onSave(
+                `${element}Save`,
+                `${element}Input`,
+                `${element}Cancel`,
+                element,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Save`}
+            style={styles.submitBtn}
+          >
+            Save
+          </button>
+          <button
+            onClick={() =>
+              onDelete(
+                `${element}Save`,
+                `${element}Input`,
+                `${element}Cancel`,
+                element,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Delete`}
+            style={styles.submitBtn}
+          >
+            Delete
+          </button>
+          <button
+            onClick={() =>
+              onCancel(
+                `${element}Save`,
+                `${element}Input`,
+                `${element}Cancel`,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Cancel`}
+            style={styles.submitBtn}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -267,9 +312,9 @@ function DemographicInput() {
           prevDemographics.map((d) =>
             d.demographic === elementId
               ? {
-                  ...d,
-                  savedText: `${inputValue}`,
-                }
+                ...d,
+                savedText: `${inputValue}`,
+              }
               : d
           )
         );
@@ -289,9 +334,9 @@ function DemographicInput() {
               prevDemographics.map((d) =>
                 d.demographic === elementId
                   ? {
-                      ...d,
-                      savedText: `${inputValue}`,
-                    }
+                    ...d,
+                    savedText: `${inputValue}`,
+                  }
                   : d
               )
             );
@@ -397,19 +442,8 @@ function DemographicInput() {
   };
 
   return (
-    <div
-      style={{
-        color: "white",
-        textAlign: "center",
-        paddingLeft: "200px",
-        paddingRight: "200px",
-      }}
-    >
-      <h3>Demographics:</h3>
-      <h6>
-        Click on a demographic to update your information. Each of these fields
-        are optional, and demographic information is always anonymous.
-      </h6>
+    <div style={styles.container}>
+      <h3 style={styles.header}>Demographics:</h3>
       {demographics.map((demographic) => (
         <ElementInput
           key={demographic.demographic}
