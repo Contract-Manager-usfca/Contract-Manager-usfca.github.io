@@ -1,6 +1,7 @@
-import UserProfile from "./UserProfile";
-import PlatformInput from "./PlatformInput";
-import DemographicInput from "./DemographicInput";
+import UserProfile from "../components/UserProfile";
+import PlatformInput from "../components/PlatformInput";
+import DemographicInput from "../components/DemographicInput";
+import ContractInput from "../components/ContractInput";
 
 function Dashboard() {
   return (
@@ -20,14 +21,15 @@ function Dashboard() {
           fontSize: "50px",
         }}
       >
-        {" "}
-        Welcome!{" "}
+        
+        Welcome!
       </h3>
 
       {/* Include the UserProfile component to display the user's name */}
       <UserProfile />
       <PlatformInput />
       <DemographicInput />
+      <ContractInput />
     </div>
   );
 }

@@ -36,15 +36,6 @@ const styles = {
     color: '#CBE1AE',
     marginLeft: '5%'
   },
-  footer: {
-    backgroundColor: '#222',
-    color: 'white',
-    textAlign: 'center',
-    padding: '10px 0',
-    position: 'absolute',
-    bottom: '0',
-    width: '100%'
-  },
   img: {
     maxWidth: "600px",
     maxHeight: "300px",
@@ -55,7 +46,6 @@ const styles = {
     marginRight: 'auto'
   },
 };
-
 
 function AboutUs() {
   return (
@@ -68,7 +58,8 @@ function AboutUs() {
           <section style={styles.aboutSection}>
             <h2 style={styles.h2}>Our Story</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus ut augue congue ultrices. Vivamus at sapien in sapien lobortis hendrerit. Nulla facilisi. Fusce commodo, odio a condimentum imperdiet, metus felis fringilla odio, in vulputate mi leo id ex.
+            We are a group of devoted individuals passionate about creating innovative and efficient software. Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies. 
+            <br/> This project, Contract Manager, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
             </p>
           </section>
           <section style={styles.aboutSection}>

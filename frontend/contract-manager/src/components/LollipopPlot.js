@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import '../styles/bargraph.css';
+import "../styles/BarGraph.css";
 
 const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
-
   useEffect(() => {
     const margin = { top: 20, right: 40, bottom: 60, left: 100 };
     const width = 800 - margin.left - margin.right;
@@ -16,14 +15,15 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
     const svgContainer = d3.select(".lollipop-chart");
     svgContainer.selectAll("*").remove();
 
+
     const categories = Array.from(selectedDemoCategories);
     const updatedData = categories.map(category => ({
       name: category,
       value: demographicAverages[category] || 0
     }));
 
-    x.domain([0, d3.max(updatedData, d => d.value)]);
-    y.domain(updatedData.map(d => d.name));
+    x.domain([0, d3.max(updatedData, (d) => d.value)]);
+    y.domain(updatedData.map((d) => d.name));
 
     const svg = svgContainer
       .append("svg")
@@ -32,32 +32,35 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    const colorScale = d3.scaleOrdinal()
-      .domain(updatedData.map(d => d.name))
+    const colorScale = d3
+      .scaleOrdinal()
+      .domain(updatedData.map((d) => d.name))
       .range(["#c8e6c9", "#a5d6a7", "#81c784", "#66bb6a"]);
 
     // Drawing lines for the lollipop plot
-    const lines = svg.selectAll(".line")
+    const lines = svg
+      .selectAll(".line")
       .data(updatedData)
       .enter()
       .append("line")
       .attr("class", "line")
-      .attr("y1", d => y(d.name) + y.bandwidth() / 2) // Adjusted this line
-      .attr("y2", d => y(d.name) + y.bandwidth() / 2) // Adjusted this line
+      .attr("y1", (d) => y(d.name) + y.bandwidth() / 2) // Adjusted this line
+      .attr("y2", (d) => y(d.name) + y.bandwidth() / 2) // Adjusted this line
       .attr("x1", 0) // Start x-position
-      .attr("x2", d => x(d.value)) // End x-position
-      .attr("stroke", d => colorScale(d.name));
+      .attr("x2", (d) => x(d.value)) // End x-position
+      .attr("stroke", (d) => colorScale(d.name));
 
     // Drawing circles for the lollipop plot
-    const circles = svg.selectAll(".circle")
+    const circles = svg
+      .selectAll(".circle")
       .data(updatedData)
       .enter()
       .append("circle")
       .attr("class", "circle")
-      .attr("cy", d => y(d.name) + y.bandwidth() / 2) // Adjusted this line
-      .attr("cx", d => x(d.value)) // Horizontal position
+      .attr("cy", (d) => y(d.name) + y.bandwidth() / 2) // Adjusted this line
+      .attr("cx", (d) => x(d.value)) // Horizontal position
       .attr("r", circleRadius) // Radius
-      .attr("fill", d => colorScale(d.name));
+      .attr("fill", (d) => colorScale(d.name));
 
     // Adjusted the label positioning
     const labels = svg
@@ -71,7 +74,7 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .attr("text-anchor", "middle")
       .attr("fill", "white")
       .style("display", "none")
-      .text(d => d.value);
+      .text((d) => d.value);
 
     circles.on("mouseover", function (event, d) {
       d3.select(this)
@@ -81,9 +84,7 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
         .attr("r", 8)
         .attr("opacity", 0.7);
 
-      labels
-        .filter(labelData => labelData === d)
-        .style("display", "block");
+      labels.filter((labelData) => labelData === d).style("display", "block");
     });
 
     circles.on("mouseout", function () {
@@ -97,7 +98,8 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
       labels.style("display", "none");
     });
 
-    svg.append("g")
+    svg
+      .append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
@@ -111,7 +113,6 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .style("text-anchor", "middle")
       .attr("fill", "white")
       .text("Follower Count");
-
   }, [selectedDemoCategories, demographicAverages]);
 
   return <div className="lollipop-chart"></div>;

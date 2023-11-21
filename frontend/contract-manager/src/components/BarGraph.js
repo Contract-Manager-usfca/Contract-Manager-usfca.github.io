@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import '../styles/bargraph.css';
+import "../styles/BarGraph.css";
 
 const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
   const svgRef = useRef(null);
@@ -26,10 +26,10 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
       const updatedData = categories.map(category => ({
         name: category,
         value: demographicAverages[category] || 0
-      }));
+     }));
 
-      x.domain(updatedData.map(d => d.name));
-      y.domain([0, d3.max(updatedData, d => d.value)]);
+      x.domain(updatedData.map((d) => d.name));
+      y.domain([0, d3.max(updatedData, (d) => d.value)]);
 
       const svg = svgContainer
         .append("svg")
@@ -38,24 +38,27 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      x.domain(updatedData.map(d => d.name));
-      y.domain([0, d3.max(updatedData, d => d.value)]);
+      x.domain(updatedData.map((d) => d.name));
+      y.domain([0, d3.max(updatedData, (d) => d.value)]);
 
-      svg.append("g")
+      svg
+        .append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
-      svg.append("text")
+      svg
+        .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 12 - margin.left)
-        .attr("x", 0 - (height / 2))
+        .attr("x", 0 - height / 2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .attr("fill", "white")
         .text("Follower Count");
 
-      const colorScale = d3.scaleOrdinal()
-        .domain(updatedData.map(d => d.name))
+      const colorScale = d3
+        .scaleOrdinal()
+        .domain(updatedData.map((d) => d.name))
         .range(["#c8e6c9", "#a5d6a7", "#81c784", "#66bb6a"]);
 
       const bars = svg
@@ -64,11 +67,11 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", d => x(d.name))
+        .attr("x", (d) => x(d.name))
         .attr("width", x.bandwidth())
-        .attr("y", d => y(d.value))
-        .attr("height", d => height - y(d.value))
-        .attr("fill", d => colorScale(d.name));
+        .attr("y", (d) => y(d.value))
+        .attr("height", (d) => height - y(d.value))
+        .attr("fill", (d) => colorScale(d.name));
 
       const labels = svg
         .selectAll(".bar-label")
@@ -76,12 +79,12 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
         .enter()
         .append("text")
         .attr("class", "bar-label")
-        .attr("x", d => x(d.name) + x.bandwidth() / 2)
-        .attr("y", d => y(d.value) + (height - y(d.value)) / 2)
+        .attr("x", (d) => x(d.name) + x.bandwidth() / 2)
+        .attr("y", (d) => y(d.value) + (height - y(d.value)) / 2)
         .attr("text-anchor", "middle")
         .attr("fill", "white")
         .style("display", "none")
-        .text(d => d.value);
+        .text((d) => d.value);
 
       bars.on("mouseover", function (event, d) {
         d3.select(this)
@@ -91,7 +94,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
           .attr("opacity", 0.7);
 
         labels
-          .filter(labelData => labelData === d)
+          .filter((labelData) => labelData === d)
           .style("display", "block")
           .style("font-size", "16px")
           .style("font-weight", "bolder");
@@ -113,9 +116,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
     fetchDataAndRender();
   }, [selectedDemoCategories, demographicAverages]);
 
-  return (
-    <div className="bar-chart" ref={svgRef}></div>
-  );
+  return <div className="bar-chart" ref={svgRef}></div>;
 };
 
 export default BarGraph;

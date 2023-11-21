@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import BarGraph from "../components/BarGraph";
 import LollipopPlot from "../components/LollipopPlot";
-import axios from 'axios';
-import Fade from 'react-reveal/Fade';
-import loadingGif from '../imgs/loading2.gif';
+import axios from "axios";
+import Fade from "react-reveal/Fade";
+import loadingGif from "../imgs/loading2.gif";
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -15,6 +15,7 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDemoCategories, setSelectedDemoCategories] = useState(new Set());
   const prevSelectedDemosRef = useRef();
+
 
   useEffect(() => {
     prevSelectedDemosRef.current = selectedDemographics;
@@ -32,7 +33,7 @@ function HomePage() {
         }));
         setAllDemographics(demographicsArray);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching demographics:", error);
       });
   }, []);
@@ -52,10 +53,15 @@ function HomePage() {
     console.log("loading..");
 
     // FETCH DEMOGRAPHICS LIST
-    axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
-      .then(response => {
-        const filteredData = response.data.filter(demographic => {
-          return demographic.demographic.toLowerCase().includes(searchQuery.toLowerCase());
+    axios
+      .get("https://contract-manager.aquaflare.io/demographics/", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        const filteredData = response.data.filter((demographic) => {
+          return demographic.demographic
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
         });
 
         if (filteredData.length > 0) {
@@ -71,7 +77,7 @@ function HomePage() {
 
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching demographics:", error);
       });
 
@@ -197,7 +203,7 @@ function HomePage() {
         }, 3000);
         console.log("Completed fetching and calculating averages");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching follower counts:", error);
       });
   };
@@ -208,7 +214,7 @@ function HomePage() {
 
   const selectDemographic = (demographic) => {
     if (!selectedDemographics.includes(demographic)) {
-      setSelectedDemographics(prev => [...prev, demographic]);
+      setSelectedDemographics((prev) => [...prev, demographic]);
     }
   };
 
@@ -243,96 +249,115 @@ function HomePage() {
 
   function Chip({ label, onRemove }) {
     return (
-      <div style={{ display: 'inline-flex', padding: '5px 10px', border: '1px solid #9487E4', borderRadius: '20px', marginRight: '10px', backgroundColor: '#303030' }}>
+      <div
+        style={{
+          display: "inline-flex",
+          padding: "5px 10px",
+          border: "1px solid #9487E4",
+          borderRadius: "20px",
+          marginRight: "10px",
+          backgroundColor: "#303030",
+        }}
+      >
         <span>{label}</span>
-        <button onClick={onRemove} style={{ margin: 'auto', cursor: 'pointer', background: 'none', border: 'none', color: '#9487E4' }}>x</button>
+        <button
+          onClick={onRemove}
+          style={{
+            margin: "auto",
+            cursor: "pointer",
+            background: "none",
+            border: "none",
+            color: "#9487E4",
+          }}
+        >
+          x
+        </button>
       </div>
     );
   }
 
   const styles = {
     card: {
-      display: 'flex',
-      alignItems: 'center',
-      margin: '20px 300px',
-      textAlign: 'center',
-      borderRadius: '40%',
+      display: "flex",
+      alignItems: "center",
+      margin: "20px 300px",
+      textAlign: "center",
+      borderRadius: "40%",
     },
     cardTitle: {
-      color: 'white',
-      paddingRight: '5%',
-      paddingTop: '1.5%',
+      color: "white",
+      paddingRight: "5%",
+      paddingTop: "1.5%",
     },
     chartContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '70%',
-      margin: '10px 250px 20px',
-      background: '#202020',
-      padding: '20px',
-      border: 'solid #CBE1AE 1px',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "70%",
+      margin: "10px 250px 20px",
+      background: "#202020",
+      padding: "20px",
+      border: "solid #CBE1AE 1px",
     },
     chartTitle: {
-      color: 'white',
-      marginBottom: '20px',
-      textAlign: 'center',
-      fontSize: '25px',
-      color: '#C188FB'
+      marginBottom: "20px",
+      textAlign: "center",
+      fontSize: "25px",
+      color: "#C188FB",
     },
     chartText: {
-      color: 'white',
-      maxWidth: '100%',
-      fontSize: '17px',
-      marginTop: '20px',
-      textAlign: 'center',
+      color: "white",
+      maxWidth: "100%",
+      fontSize: "17px",
+      marginTop: "20px",
+      textAlign: "center",
     },
     searchBar: {
-      display: 'flex',
-      gap: '10px',
-      backgroundColor: 'white',
-      padding: '.5%',
-      width: '500px',
+      display: "flex",
+      gap: "10px",
+      backgroundColor: "white",
+      padding: ".5%",
+      width: "500px",
     },
     searchInput: {
-      padding: '5px',
-      fontSize: '16px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
+      padding: "5px",
+      fontSize: "16px",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
       flexGrow: 1,
-      textColor: '#CBE1AE',
+      textColor: "#CBE1AE",
     },
     searchBtn: {
-      padding: '5px 15px',
-      fontSize: '16px',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      backgroundColor: '#CBE1AE',
+      padding: "5px 15px",
+      fontSize: "16px",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      backgroundColor: "#CBE1AE",
     },
     boldTextColor: {
-      color: '#C188FB',
-      fontWeight: 'bold'
+      color: "#C188FB",
+      fontWeight: "bold",
     },
     chipContainerStyle: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'center',
-      margin: 'auto',
-      marginBottom: '10px',
-      color: 'white'
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
+      margin: "auto",
+      marginBottom: "10px",
+      color: "white",
     },
     loadingTitle: {
-      color: 'white',
-      paddingRight: '5%',
-      paddingTop: '1.5%',
+      color: "white",
+      paddingRight: "5%",
+      paddingTop: "1.5%",
     },
     loadingCard: {
-      display: 'flex',
-      alignItems: 'center',
-      margin: 'auto',
-      textAlign: 'center',
+      display: "flex",
+      alignItems: "center",
+      margin: "auto",
+      textAlign: "center",
     },
   };
 
@@ -362,15 +387,21 @@ function HomePage() {
                     demographicAverages={demographicAverages} />
                 </Fade>
                 <p style={styles.chartText}>
-                  This is a <b>Bar Graph</b> generated with your selected Demographics.
-                  <br /><br />
+                  This is a <b>Bar Graph</b> generated with your selected
+                  Demographics.
+                  <br />
+                  <br />
                   {selectedDemographics.length > 0 ? (
                     <span>
                       The Demographics currently selected are:&nbsp;
-                      <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                      <span style={styles.boldTextColor}>
+                        {selectedDemographics.join(", ")}
+                      </span>
                     </span>
                   ) : (
-                    <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                    <span style={styles.boldTextColor}>
+                      Make a Selection above to see the generated results
+                    </span>
                   )}
                 </p>
               </div>
@@ -385,15 +416,21 @@ function HomePage() {
                     demographicAverages={demographicAverages} />
                   </Fade>
                   <p style={styles.chartText}>
-                    This is a <b>Lollipop Plot Graph</b> generated with your selected Demographics.
-                    <br /><br />
+                    This is a <b>Lollipop Plot Graph</b> generated with your
+                    selected Demographics.
+                    <br />
+                    <br />
                     {selectedDemographics.length > 0 ? (
                       <span>
                         The Demographics currently selected are:&nbsp;
-                        <span style={styles.boldTextColor}>{selectedDemographics.join(", ")}</span>
+                        <span style={styles.boldTextColor}>
+                          {selectedDemographics.join(", ")}
+                        </span>
                       </span>
                     ) : (
-                      <span style={styles.boldTextColor}>Make a Selection above to see the generated results</span>
+                      <span style={styles.boldTextColor}>
+                        Make a Selection above to see the generated results
+                      </span>
                     )}
                   </p>
                 </div>
@@ -408,7 +445,15 @@ function HomePage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#252525', paddingBottom: '100px' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#252525",
+        paddingBottom: "100px",
+      }}
+    >
       <Fade bottom>
         <div style={styles.card}>
           <h2 style={styles.cardTitle}>Search Demographic</h2>
