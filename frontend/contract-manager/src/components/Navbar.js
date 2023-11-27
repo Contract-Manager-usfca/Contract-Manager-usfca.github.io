@@ -19,7 +19,7 @@ const styles = {
   },
   img: {
     height: 'auto',
-    width: '120px',
+    width: '160px',
   }
 };
 

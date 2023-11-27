@@ -27,16 +27,16 @@ const styles = {
         boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
     },
     header: {
-        color: '#CBE1AE',
-        fontSize: '1.5em',
+        color: '#9C9FFB',
+        fontSize: '22px',
         borderBottom: 'none',
         paddingBottom: '10px',
         marginBottom: '20px',
     },
     name: {
-        color: '#CBE1AE',
+        color: '#C1E9FF',
         fontSize: '2.5em',
-        margin: '0% 0% 8% 20%',
+        margin: '0% 0% 8% 15%',
     },
     row: {
         display: 'flex',
@@ -61,6 +61,13 @@ const styles = {
     },
     socialIcon: {
         margin: 'auto',
+        paddingLeft: '50%',
+    },
+    socialIconsContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     earningsCard: {
         backgroundColor: '#404040',
@@ -75,7 +82,7 @@ const styles = {
     },
     earningsHeader: {
         fontSize: '20px',
-        color: '#CBE1AE',
+        color: 'white',
         marginBottom: '10px',
     },
     earningsAmount: {
@@ -91,8 +98,8 @@ const styles = {
         margin: '10px 0',
         borderRadius: '4px',
         border: 'none',
-        backgroundColor: isHovered ? '#889674' : '#444',
-        color: isHovered ? '#F3FBE9' : '#ffffff',
+        backgroundColor: isHovered ? '#8CD5FF' : '#545AEC',
+        color: isHovered ? '#4775CD' : '#C1E9FF',
         cursor: 'pointer',
         transition: 'background-color 0.3s ease, color 0.3s ease',
     }),
@@ -235,19 +242,18 @@ function UserProfilePage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}>
-                        <h3 style={styles.name}>{profileData?.name}</h3>
+                        <h1 style={styles.name}>{profileData?.name}</h1>
                         <div>
-                            <div style={{ marginTop: '10px' }}>
+                            <div style={styles.socialIconsContainer}>
                                 {generateSocialLinks().map((icon, index) => (
                                     <span key={index} style={styles.socialIcon}>{icon}</span>
                                 ))}
-
                             </div>
                         </div>
                     </div>
                 </div>
                 <div style={styles.section}>
-                    <h6 style={styles.header}>Demographics:</h6>
+                    <h1 style={styles.header}>Demographics:</h1>
                     {demographicsData.map((demo, index) => (
                         <div key={index} style={styles.row}>
                             <span style={styles.subLabel}>{demo.demo}</span>
@@ -261,7 +267,7 @@ function UserProfilePage() {
                         alignItems: 'center',
                         marginBottom: '20px'
                     }}>
-                        <h2 style={styles.header}>Contracts</h2>
+                        <h1 style={styles.header}>Contracts</h1>
                         <button onClick={handleToggleGroupedView}
                             style={styles.viewBtn(isHovered)}
                             onMouseEnter={() => setIsHovered(true)}
@@ -296,7 +302,7 @@ function UserProfilePage() {
                     </div>
                 </div>
                 <div style={styles.section}>
-                    <h2 style={styles.header}>Platforms</h2>
+                    <h1 style={styles.header}>Platforms</h1>
                     {userPlatformsData.map((platform, index) => (
                         <div key={index} style={styles.row}>
                             <span style={styles.subLabel}>{getPlatformName(platform.platform)}:</span>

@@ -20,16 +20,18 @@ const styles = {
     minHeight: 'calc(100vh - 40px)',
   },
   dashboardSection: {
-    borderTop: 'solid 1px #CBE1AE',
+    borderTop: 'solid 1px #545AEC',
     backgroundColor: '#404040',
     borderRadius: '5px',
     width: '75%',
     marginBottom: '2%',
   },
   h1: {
-    paddingBottom: '10px',
     textAlign: 'center',
   },
+  header: {
+    marginBottom: "1%",
+  }
 };
 
 function Dashboard() {
