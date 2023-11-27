@@ -69,7 +69,7 @@ function AboutUs() {
             <p>
               Meet our passionate team of professionals, each bringing <b>a unique set of skills and dedication</b> to ensure the success of this project!
             </p>
-            <img src={usPhoto} alt="team" style={styles.img} />
+            <img src={usPhoto} alt="team photos" style={styles.img} />
           </section>
         </main>
       </Fade>
