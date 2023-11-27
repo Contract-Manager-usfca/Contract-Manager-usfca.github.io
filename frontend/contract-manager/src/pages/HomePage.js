@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import BarGraph from "../components/BarGraph";
+import StackedBarGraph from "../components/BarGraph";
 import LollipopPlot from "../components/LollipopPlot";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
@@ -384,7 +384,8 @@ function HomePage() {
               <div style={styles.barGraph}>
                 <h2 style={styles.chartTitle}>Average Follow Count</h2>
                 <Fade bottom>
-                  <BarGraph selectedDemoCategories={selectedDemoCategories}
+                  <StackedBarGraph 
+                  selectedDemoCategories={selectedDemoCategories}
                     demographicAverages={demographicAverages} />
                 </Fade>
                 <p style={styles.chartText}>
