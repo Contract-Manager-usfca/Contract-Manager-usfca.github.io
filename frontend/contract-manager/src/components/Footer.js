@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../imgs/logo.png';
 
 const styles = {
     container: {
@@ -20,6 +21,7 @@ const styles = {
         gap: '60px',
         padding: '10px 20px',
         backgroundColor: '#3E3E3E',
+        fontFamily: 'Lora',
     },
     credits: {
         display: 'flex',
@@ -29,8 +31,12 @@ const styles = {
         paddingTop: '1%',
         color: 'white',
     },
+    img: {
+        height: 'auto',
+        width: '35px',
+      },
     link: (isHovered) => ({
-        color: isHovered ? '#9487E4' : 'white',
+        color: isHovered ? '#6394F1' : 'white',
         textDecoration: 'none',
         marginLeft: '20px',
         padding: '5px 10px',
@@ -71,7 +77,7 @@ export default function Footer() {
                 </Link>
             </div>
             <div style={styles.credits}>
-                <p>&copy; 2023 Contract Manager. All rights reserved.</p>
+                <p>&copy; 2023 Zephyr <img src={logo} alt="logo" style={styles.img} /> All rights reserved.</p>
             </div>
         </div>
     );

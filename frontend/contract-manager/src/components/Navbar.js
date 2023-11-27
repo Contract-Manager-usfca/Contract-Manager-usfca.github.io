@@ -15,7 +15,7 @@ const styles = {
     color: "black",
   },
   links: {
-    color: "#210043",
+    color: "#1D1D1D",
   },
   img: {
     height: 'auto',
@@ -31,7 +31,7 @@ export default function Navbar() {
       <Link
         to="/"
       >
-      <img src={typeLogo} alt="team" style={styles.img} />
+      <img src={typeLogo} alt="type logo" style={styles.img} />
       </Link>
       <div style={styles.links}>
         <Nav class='bg-transparent'>

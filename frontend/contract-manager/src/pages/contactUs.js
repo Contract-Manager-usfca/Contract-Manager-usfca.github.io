@@ -31,8 +31,9 @@ const styles = {
     width: '50%',
   },
   h2: {
-    fontSize: '22px',
-    color: '#CBE1AE',
+    fontSize: '23px',
+    fontWeight: "bold",
+    color: '#8CD5FF',
     marginLeft: '5%'
   },
   formSection: {
@@ -68,8 +69,6 @@ const styles = {
     margin: '10px 0',
     borderRadius: '4px',
     border: 'none',
-    backgroundColor: '#CBE1AE',
-    color: '#64774B',
     cursor: 'pointer',
     justifyContent: 'end',
   },
@@ -78,8 +77,8 @@ const styles = {
     margin: '10px 0',
     borderRadius: '4px',
     border: 'none',
-    backgroundColor: isHovered ? '#889674' : '#CBE1AE',
-    color: isHovered ? '#D0E5B5' : '#748063',
+    backgroundColor: isHovered ? '#545AEC' : '#8CD5FF',
+    color: isHovered ? '#C1E9FF' : '#4775CD',
     cursor: 'pointer',
     justifyContent: 'end',
     transition: 'background-color 0.3s ease, color 0.3s ease',
