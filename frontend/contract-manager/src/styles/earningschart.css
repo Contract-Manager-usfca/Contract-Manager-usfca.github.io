@@ -1,0 +1,62 @@
+/* earningschart.css */
+
+.bar-chart {
+    display: block;
+    margin: auto;
+  }
+  
+  .bar {
+    fill: #69b3a2; /* Color for the bars */
+    /* Increased the width of the bars for better visibility */
+  }
+  
+  .bar:hover {
+    fill: #4f9a94; /* Color for bars when hovered over */
+    /* Adding a stroke to make it stand out more on hover */
+    stroke: #333;
+    stroke-width: 1px;
+  }
+  
+  .percentile-line {
+    stroke-width: 2px; /* Width of the percentile line */
+    /* Adding dashed style for better visibility */
+    stroke-dasharray: 5;
+  }
+  
+  .percentile-text {
+    font-size: 12px; /* Font size for the percentile text */
+    fill: black; /* Text color for percentile labels */
+    /* Ensuring the text does not clash with the bars */
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+  }
+  
+  .axis-label {
+    font-size: 14px; /* Font size for the axis labels */
+    fill: black; /* Text color for axis labels */
+    /* Improving legibility */
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+  }
+  
+  .axis line,
+  .axis path {
+    stroke: black; /* Color for the axis itself */
+  }
+  
+  /* Style for the axis ticks */
+  .axis text {
+    font-size: 12px; /* Adjust as necessary for your design */
+    fill: black;
+  }
+  
+  /* Enhancements for the grid lines for better visual separation */
+  .grid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+  }
+  
+  .grid path {
+    stroke-width: 0; /* Remove the path (domain line) stroke */
+  }
+  
+  

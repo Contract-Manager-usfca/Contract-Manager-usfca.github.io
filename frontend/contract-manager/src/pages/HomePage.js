@@ -4,6 +4,7 @@ import LollipopPlot from "../components/LollipopPlot";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
 import loadingGif from "../imgs/loading2.gif";
+import EarningsChart from "../components/Earnings"; // Import the new EarningsChart component
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -15,10 +16,27 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDemoCategories, setSelectedDemoCategories] = useState(new Set());
   const prevSelectedDemosRef = useRef();
+  const [contracts, setContracts] = useState([]);
+
+  useEffect(() => {
+    console.log('Fetching contracts...');
+    axios.get('https://contract-manager.aquaflare.io/contracts/')
+      .then(response => {
+        console.log('Contracts fetched:', response.data);
+        setContracts(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching contracts:", error);
+      });
+  }, []);
 
 
   useEffect(() => {
-    prevSelectedDemosRef.current = selectedDemographics;
+    if (selectedDemographics.length > 0) {
+      console.log('Selected demographics changed:', selectedDemographics);
+      loadDemographicData(selectedDemographics);
+      fetchFollowerCounts();
+    }
   }, [selectedDemographics]);
 
   // Fetch and set all available demographics from database
@@ -491,6 +509,7 @@ function HomePage() {
 
       </Fade>
       {renderGraphs()}
+      <EarningsChart contracts={contracts} /> {/* Use the EarningsChart component */}
     </div>
   );
 }
