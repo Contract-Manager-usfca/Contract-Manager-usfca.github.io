@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&family=Fira+Mono&family=Fira+Sans:ital,wght@1,300&family=Handlee&family=Inria+Serif:wght@300&family=Jost:wght@300&family=Koulen&family=Montserrat:wght@200;400&family=Roboto:wght@100&family=Smooch+Sans:wght@300&family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Michroma&family=Playfair+Display&display=swap');
+
 .App {
   text-align: center;
 }
@@ -38,12 +39,16 @@
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Koulen', sans-serif;
+h1 {
+  font-family: 'Michroma', sans-serif;
+}
+
+h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
 }
 
 p {
-  font-family: 'Ubuntu', sans-serif;
+  font-family: 'Lora', serif;
 }
 
 .center{

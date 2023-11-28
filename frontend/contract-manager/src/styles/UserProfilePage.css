@@ -2,11 +2,11 @@
 .social-icon {
   font-size: 2.5em;
   color: #fff;
-
+  align-items: flex-start;
 }
 
 .social-icon:hover {
-  color: #C188FB;
+  color: rgb(54, 108, 217);
   transition: color 0.3s ease;
   
 }

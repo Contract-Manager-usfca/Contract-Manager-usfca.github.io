@@ -2,6 +2,8 @@ import * as React from "react";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Link } from 'react-router-dom';
+import typeLogo from '../imgs/typeLogo.png';
 
 const styles = {
   nav: {
@@ -13,8 +15,12 @@ const styles = {
     color: "black",
   },
   links: {
-    color: "#210043",
+    color: "#1D1D1D",
   },
+  img: {
+    height: 'auto',
+    width: '160px',
+  }
 };
 
 export default function Navbar() {
@@ -22,10 +28,11 @@ export default function Navbar() {
 
   return (
     <div style={styles.nav}>
-      <h3
-        style={{fontSize: "17px" }}>
-        Contract Manager
-      </h3>
+      <Link
+        to="/"
+      >
+      <img src={typeLogo} alt="type logo" style={styles.img} />
+      </Link>
       <div style={styles.links}>
         <Nav class='bg-transparent'>
           <NavDropdown
@@ -33,7 +40,7 @@ export default function Navbar() {
             title="☰"
             id="basic-nav-dropdown"
             align="end"
-            style={{ fontSize: "23px"}}
+            style={{ fontSize: "23px" }}
           >
             <NavDropdown.Item
               className="nav-item"
@@ -52,7 +59,7 @@ export default function Navbar() {
               </NavDropdown.Item>
             )}
 
-              {isAuthenticated && (
+            {isAuthenticated && (
               <NavDropdown.Item
                 className="nav-item"
                 style={{ color: "black" }}
@@ -61,7 +68,7 @@ export default function Navbar() {
                 Profile
               </NavDropdown.Item>
             )}
-            
+
 
 
             {/* If not already authenticated, generate a login button. Otherwise, logout. */}

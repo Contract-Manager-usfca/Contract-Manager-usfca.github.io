@@ -17,11 +17,12 @@ const styles = {
   },
   contractBtn: (isHovered) => ({
     padding: '10px 20px',
+    fontFamily: 'Lora',
     margin: '10px 0',
     borderRadius: '4px',
     border: 'none',
-    backgroundColor: isHovered ? '#889674' : '#444',
-    color: isHovered ? '#F3FBE9' : '#ffffff',
+    backgroundColor: isHovered ? '#8CD5FF' : '#545AEC',
+    color: isHovered ? '#4775CD' : '#C1E9FF',
     cursor: 'pointer',
     justifyContent: 'end',
     transition: 'background-color 0.3s ease, color 0.3s ease',
@@ -62,7 +63,8 @@ const styles = {
   header: {
     paddingBottom: '10px',
     textAlign: 'left',
-    color: '#CBE1AE',
+    color: '#9C9FFB',
+    fontSize: '24px',
   },
   formLabel: {
     display: 'block',
@@ -75,7 +77,7 @@ const styles = {
     padding: '10px',
     margin: '5px 0 15px 0',
     marginLeft: '2%',
-    border: '1px solid #8EAA6A',
+    border: '1px solid #C1E9FF',
     borderRadius: '4px',
     backgroundColor: '#444',
     color: 'white',
@@ -86,7 +88,7 @@ const styles = {
     padding: '10px',
     margin: '5px 0 15px 0',
     marginLeft: '2%',
-    border: '1px solid #8EAA6A',
+    border: '1px solid #C1E9FF',
     borderRadius: '4px',
     backgroundColor: '#444',
     color: 'white',
@@ -392,7 +394,7 @@ function ContractInput() {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.header}>Contracts:</h3>
+      <h1 style={styles.header}>Contracts:</h1>
       <h6 styles={{ paddingBottom: '2%', textAlign: 'left', }}>
         Input contract information
       </h6>

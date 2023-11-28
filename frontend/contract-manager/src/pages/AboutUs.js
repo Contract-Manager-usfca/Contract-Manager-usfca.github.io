@@ -34,8 +34,12 @@ const styles = {
   },
   h2: {
     paddingBottom: '10px',
-    color: '#CBE1AE',
+    color: '#8CD5FF',
     marginLeft: '5%'
+  },
+  boldTextColor: {
+    color: "#6394F1",
+    fontWeight: "bold",
   },
   img: {
     maxWidth: "600px",
@@ -59,17 +63,17 @@ function AboutUs() {
           <section style={styles.aboutSection}>
             <h2 style={styles.h2}>Our Story</h2>
             <p>
-              &emsp;&emsp;We are a group of devoted individuals passionate about <b>creating innovative and efficient software.</b> Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies.
+              &emsp;&emsp;We are a group of devoted individuals passionate about <b style={styles.boldTextColor}>creating innovative</b> and <b style={styles.boldTextColor}>efficient software</b>. Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies.
               <br /><br />
-              &emsp;&emsp;This project, <b>Contract Manager</b>, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
+              &emsp;&emsp;This project, <b style={styles.boldTextColor}>Zephyr</b>, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
             </p>
           </section>
           <section style={styles.aboutSection}>
             <h2 style={styles.h2}>Our Team</h2>
             <p>
-              Meet our passionate team of professionals, each bringing <b>a unique set of skills and dedication</b> to ensure the success of this project!
+              Meet our passionate team of professionals, each bringing a unique set of skills and dedication to ensure the success of this project!
             </p>
-            <img src={usPhoto} alt="team" style={styles.img} />
+            <img src={usPhoto} alt="team photos" style={styles.img} />
           </section>
         </main>
       </Fade>

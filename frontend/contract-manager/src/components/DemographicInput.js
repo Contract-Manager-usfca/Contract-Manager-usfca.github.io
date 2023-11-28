@@ -17,7 +17,8 @@ const styles = {
   header: {
     paddingBottom: '10px',
     textAlign: 'left',
-    color: '#CBE1AE',
+    color: '#9C9FFB',
+    fontSize: '24px',
   },
   platformBtn: {
     padding: "5px 15px",
@@ -46,7 +47,7 @@ const styles = {
     padding: '10px',
     margin: '5px 0 15px 0',
     marginLeft: '2%',
-    border: '1px solid #8EAA6A',
+    border: '1px solid #C1E9FF',
     borderRadius: '4px',
     backgroundColor: '#444',
     color: 'white',
@@ -100,7 +101,7 @@ function CancelAdd(saveId, inputId, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "#ACD575" : "#ffff",
+    color: savedText ? "#67C9FF" : "#ffff",
   };
   return (
     <div>
@@ -443,7 +444,7 @@ function DemographicInput() {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.header}>Demographics:</h3>
+      <h1 style={styles.header}>Demographics:</h1>
       {demographics.map((demographic) => (
         <ElementInput
           key={demographic.demographic}

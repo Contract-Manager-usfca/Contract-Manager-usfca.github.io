@@ -225,11 +225,8 @@ function HomePage() {
     setSelectedDemoCategories((prev) => {
       const updatedCategories = new Set(prev);
       updatedCategories.delete(demographic);
-      console.log("updated cats:", updatedCategories);
       return updatedCategories;
     });
-    console.log("mmmm", selectedDemoCategories);
-    console.log("here");
   };
 
   const clearSelectedDemographics = () => {
@@ -253,7 +250,7 @@ function HomePage() {
         style={{
           display: "inline-flex",
           padding: "5px 10px",
-          border: "1px solid #9487E4",
+          border: "1px solid #8CD5FF",
           borderRadius: "20px",
           marginRight: "10px",
           backgroundColor: "#303030",
@@ -267,7 +264,7 @@ function HomePage() {
             cursor: "pointer",
             background: "none",
             border: "none",
-            color: "#9487E4",
+            color: "#8CD5FF",
           }}
         >
           x
@@ -286,8 +283,9 @@ function HomePage() {
     },
     cardTitle: {
       color: "white",
+      fontSize: '22px',
       paddingRight: "5%",
-      paddingTop: "1.5%",
+      paddingTop: "1%",
     },
     chartContainer: {
       display: "flex",
@@ -326,18 +324,19 @@ function HomePage() {
       border: "1px solid #ccc",
       borderRadius: "4px",
       flexGrow: 1,
-      textColor: "#CBE1AE",
+      textColor: "#292EB1",
     },
     searchBtn: {
+      color: '#E3E4FF',
       padding: "5px 15px",
       fontSize: "16px",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
-      backgroundColor: "#CBE1AE",
+      backgroundColor: "#545AEC",
     },
     boldTextColor: {
-      color: "#C188FB",
+      color: "#8CD5FF",
       fontWeight: "bold",
     },
     chipContainerStyle: {
@@ -346,8 +345,9 @@ function HomePage() {
       justifyContent: "center",
       alignItems: "center",
       margin: "auto",
-      marginBottom: "10px",
+      marginBottom: "15px",
       color: "white",
+      marginTop: '10px',
     },
     loadingTitle: {
       color: "white",
@@ -457,7 +457,7 @@ function HomePage() {
     >
       <Fade bottom>
         <div style={styles.card}>
-          <h2 style={styles.cardTitle}>Search Demographic</h2>
+          <h1 style={styles.cardTitle}>Search Demographic:</h1>
           <div style={styles.searchBar}>
             <input
               type="text"

@@ -35,7 +35,7 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
     const colorScale = d3
       .scaleOrdinal()
       .domain(updatedData.map((d) => d.name))
-      .range(["#c8e6c9", "#a5d6a7", "#81c784", "#66bb6a"]);
+      .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
 
     // Drawing lines for the lollipop plot
     const lines = svg
