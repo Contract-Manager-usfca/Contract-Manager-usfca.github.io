@@ -1,20 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import "../styles/bargraph.css";
 
 const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
-  useEffect(() => {
+  const svgRef = useRef(null);
+
+  const drawChart = () => {
+    // Ensure that demographicAverages data is available before proceeding
+    if (!Object.keys(demographicAverages).length) {
+      return;
+    }
+
+    const svgContainer = d3.select(svgRef.current);
+    const containerWidth = svgContainer.node().getBoundingClientRect().width;
+
     const margin = { top: 20, right: 40, bottom: 60, left: 100 };
-    const width = 800 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
+    const width = containerWidth - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
     const circleRadius = 5;
 
     const x = d3.scaleLinear().range([0, width]);
     const y = d3.scaleBand().range([0, height]).padding(0.1);
 
-    const svgContainer = d3.select(".lollipop-chart");
     svgContainer.selectAll("*").remove();
-
 
     const categories = Array.from(selectedDemoCategories);
     const updatedData = categories.map(category => ({
@@ -113,9 +121,23 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .style("text-anchor", "middle")
       .attr("fill", "white")
       .text("Follower Count");
+  };
+  
+  useEffect(() => {
+    drawChart();
+
+    const handleResize = () => {
+      drawChart();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [selectedDemoCategories, demographicAverages]);
 
-  return <div className="lollipop-chart"></div>;
+  return <div className="lollipop-chart" ref={svgRef}></div>;
 };
 
 export default LollipopGraph;
