@@ -4,6 +4,7 @@ import LollipopPlot from "../components/LollipopPlot";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
 import loadingGif from "../imgs/loading2.gif";
+import '../styles/homePage.css';
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -208,7 +209,7 @@ function HomePage() {
       });
   };
 
-  const handleSearchChange = (e) => {
+  const handleDropdownChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
@@ -244,58 +245,25 @@ function HomePage() {
   }, [selectedDemographics]);
 
 
-  function Chip({ label, onRemove }) {
-    return (
-      <div
-        style={{
-          display: "inline-flex",
-          padding: "5px 10px",
-          border: "1px solid #8CD5FF",
-          borderRadius: "20px",
-          marginRight: "10px",
-          backgroundColor: "#303030",
-        }}
-      >
-        <span>{label}</span>
-        <button
-          onClick={onRemove}
-          style={{
-            margin: "auto",
-            cursor: "pointer",
-            background: "none",
-            border: "none",
-            color: "#8CD5FF",
-          }}
-        >
-          x
-        </button>
-      </div>
-    );
-  }
-
+  // for main content graphs
   const styles = {
-    card: {
-      display: "flex",
-      alignItems: "center",
-      margin: "20px 300px",
-      textAlign: "center",
-      borderRadius: "40%",
-    },
-    cardTitle: {
-      color: "white",
-      fontSize: '22px',
-      paddingRight: "5%",
-      paddingTop: "1%",
+    mainContent: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      width: '100%',
+      padding: '20px',
+      flexGrow: 1,
     },
     chartContainer: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "70%",
-      margin: "10px 250px 20px",
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      padding: '20px',
+      margin: '20px 0',
       backgroundColor: '#404040',
       borderRadius: '10px',
-      padding: "20px",
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
     },
     chartTitle: {
@@ -309,45 +277,95 @@ function HomePage() {
       maxWidth: "100%",
       fontSize: "17px",
       marginTop: "20px",
-      textAlign: "center",
+      textAlign: "left",
     },
-    searchBar: {
+  };
+
+
+  // styles for aside
+  const asideStyles = {
+    container: {
+      width: "40%",
+      backgroundColor: "#303030",
+      padding: "20px",
       display: "flex",
-      gap: "10px",
-      backgroundColor: "white",
-      padding: ".5%",
-      width: "500px",
-    },
-    searchInput: {
-      padding: "5px",
-      fontSize: "16px",
-      border: "1px solid #ccc",
-      borderRadius: "4px",
+      flexDirection: "column",
+      alignItems: "center",
+      overflow: "auto",
       flexGrow: 1,
-      textColor: "#292EB1",
     },
-    searchBtn: {
-      color: '#E3E4FF',
-      padding: "5px 15px",
-      fontSize: "16px",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      backgroundColor: "#545AEC",
+    chartContainer: {
+      flexGrow: 1,
+      width: '100%',
+      maxWidth: '100%',
+      justifyContent: 'space-between',
+      overflow: 'hidden',
+      backgroundColor: '#404040',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+      padding: '20px',
+      marginBottom: '10%',
+    },
+    chartTitle: {
+      marginBottom: "20px",
+      textAlign: "center",
+      fontSize: "25px",
+      color: "white",
+    },
+    chartText: {
+      color: "white",
+      maxWidth: "100%",
+      fontSize: "15px",
+      marginTop: "20px",
+      textAlign: "left",
     },
     boldTextColor: {
       color: "#8CD5FF",
       fontWeight: "bold",
     },
-    chipContainerStyle: {
+    dropdown: {
+      width: "100%",
+      display: "flex",
+      gap: "10px",
+      marginBottom: "20px",
+    },
+    dropdownStyles: {
+      width: "100%",
+      padding: "10px",
+      borderRadius: "4px",
+      border: "1px solid #ccc",
+    },
+    searchInput: {
+      flexGrow: 1,
+      padding: "10px",
+      borderRadius: "4px",
+      border: "1px solid #ccc",
+    },
+    button: {
+      padding: "10px 15px",
+      fontSize: "16px",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      backgroundColor: "#545AEC",
+      color: '#E3E4FF',
+    },
+    chipContainer: {
       display: "flex",
       flexWrap: "wrap",
       justifyContent: "center",
-      alignItems: "center",
-      margin: "auto",
-      marginBottom: "15px",
+      gap: "10px",
+      marginTop: '2%',
+      marginBottom: "7%",
+    },
+    chip: {
+      display: "inline-flex",
+      padding: "5px 10px",
+      border: "1px solid #8CD5FF",
+      borderRadius: "20px",
+      backgroundColor: "#303030",
       color: "white",
-      marginTop: '10px',
+      cursor: "pointer",
     },
     loadingTitle: {
       color: "white",
@@ -362,13 +380,81 @@ function HomePage() {
     },
   };
 
-  // Render the graphs only if a search has been made
+  // Function to render the aside content
+  const renderAside = () => (
+    <aside style={asideStyles.container}>
+      <div style={asideStyles.dropdown}>
+        <select onChange={handleDropdownChange} style={asideStyles.dropdownStyles} value={searchQuery}>
+          <option value="">Select a Demographic</option>
+          {allDemographics.map((demographic) => (
+            <option key={demographic.id} value={demographic.name}>
+              {demographic.name}
+            </option>
+          ))}
+        </select>
+        <button onClick={fetchDemographicData} style={asideStyles.button}>Select</button>
+        <button onClick={clearSelectedDemographics} style={asideStyles.button}>Clear</button>
+      </div>
+      <div style={asideStyles.chipContainer}>
+        {!isLoading &&
+          Array.from(selectedDemoCategories).map((category, index) => (
+            <Fade left key={index}>
+              <div key={index} style={asideStyles.chip} onClick={() => deselectDemographic(category)}>
+                {category} x
+              </div>
+            </Fade>
+          ))
+        }
+      </div>
+      {renderGraphs()}
+    </aside>
+  );
+
+  // Function to render the main content
+  const renderMainContent = () => (
+    <main style={{ width: '60%', padding: '20px' }}>
+      <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Stats</h1>
+      <div>
+        <Fade bottom>
+          <div style={styles.chartContainer}>
+            <h2 style={styles.chartTitle}>Graph #1</h2>
+            <h3 style={styles.chartText}><b>will change once new graph is inputed</b></h3>
+            <Fade bottom>
+              <BarGraph style={styles.graph} selectedDemoCategories={selectedDemoCategories}
+                demographicAverages={demographicAverages} />
+            </Fade>
+            <p style={styles.chartText}>
+              <span>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+              </span>
+            </p>
+          </div>
+
+          <div style={styles.chartContainer}>
+            <h2 style={styles.chartTitle}>Graph #2</h2>
+            <Fade bottom>
+              <LollipopPlot selectedDemoCategories={selectedDemoCategories}
+                demographicAverages={demographicAverages} />
+            </Fade>
+            <p style={styles.chartText}>
+              <span>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+              </span>
+            </p>
+          </div>
+        </Fade>
+      </div>
+    </main>
+  );
+
+  // Function to render graphs
   const renderGraphs = () => {
+    // currently loading and waiting for data
     if (isLoading) {
       return (
-        <div style={styles.loadingCard}>
+        <div style={asideStyles.loadingCard}>
           <Fade bottom>
-            <div style={styles.loadingTitle}>
+            <div style={asideStyles.loadingTitle}>
               <h2> Loading... </h2>
             </div>x
             <img src={loadingGif} alt="Loading..." />
@@ -376,66 +462,54 @@ function HomePage() {
         </div>
       );
     }
+    // if a search has been made render the graph
     if (searchMade && selectedDemoCategories.size > 0) {
       return (
         <div>
           <Fade bottom>
-            <div style={styles.chartContainer}>
-              <div style={styles.barGraph}>
-                <h2 style={styles.chartTitle}>Average Follow Count</h2>
-                <Fade bottom>
-                  <BarGraph selectedDemoCategories={selectedDemoCategories}
-                    demographicAverages={demographicAverages} />
-                </Fade>
-                <p style={styles.chartText}>
-                  This is a <b>Bar Graph</b> generated with your selected
-                  Demographics.
-                  <br />
-                  <br />
-                  {selectedDemographics.length > 0 ? (
-                    <span>
-                      The Demographics currently selected are:&nbsp;
-                      <span style={styles.boldTextColor}>
-                        {selectedDemographics.join(", ")}
-                      </span>
+            <div style={asideStyles.chartContainer}>
+              <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
+              <Fade bottom>
+                <BarGraph selectedDemoCategories={selectedDemoCategories}
+                  demographicAverages={demographicAverages} />
+              </Fade>
+              <p style={asideStyles.chartText}>
+                {selectedDemographics.length > 0 ? (
+                  <span>
+                    The Demographics currently selected are:&nbsp;
+                    <span style={asideStyles.boldTextColor}>
+                      {selectedDemographics.join(", ")}
                     </span>
-                  ) : (
-                    <span style={styles.boldTextColor}>
-                      Make a Selection above to see the generated results
-                    </span>
-                  )}
-                </p>
-              </div>
+                  </span>
+                ) : (
+                  <span style={asideStyles.boldTextColor}>
+                    Make a Selection above to see the generated results
+                  </span>
+                )}
+              </p>
             </div>
 
-            <div style={styles.chartContainer}>
-              <div className="first-graph-trigger">
-                <div style={styles.barGraph}>
-                  <h2 style={styles.chartTitle}>Average Follow Count</h2>
-                  <Fade bottom>
-                    <LollipopPlot selectedDemoCategories={selectedDemoCategories}
-                    demographicAverages={demographicAverages} />
-                  </Fade>
-                  <p style={styles.chartText}>
-                    This is a <b>Lollipop Plot Graph</b> generated with your
-                    selected Demographics.
-                    <br />
-                    <br />
-                    {selectedDemographics.length > 0 ? (
-                      <span>
-                        The Demographics currently selected are:&nbsp;
-                        <span style={styles.boldTextColor}>
-                          {selectedDemographics.join(", ")}
-                        </span>
-                      </span>
-                    ) : (
-                      <span style={styles.boldTextColor}>
-                        Make a Selection above to see the generated results
-                      </span>
-                    )}
-                  </p>
-                </div>
-              </div>
+            <div style={asideStyles.chartContainer}>
+              <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
+              <Fade bottom>
+                <LollipopPlot selectedDemoCategories={selectedDemoCategories}
+                  demographicAverages={demographicAverages} />
+              </Fade>
+              <p style={asideStyles.chartText}>
+                {/* check if demographic is selected */}
+                {selectedDemographics.length > 0 ? (
+                  <span>
+                    The Demographics currently selected are:&nbsp;
+                    <span style={asideStyles.boldTextColor}>
+                      {selectedDemographics.join(", ")}
+                    </span>
+                  </span>
+                ) : (
+                  <span style={asideStyles.boldTextColor}>
+                    Make a Selection above to see the generated results
+                  </span>
+                )}
+              </p>
             </div>
           </Fade>
         </div>
@@ -446,51 +520,9 @@ function HomePage() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        backgroundColor: "#252525",
-        paddingBottom: "100px",
-      }}
-    >
-      <Fade bottom>
-        <div style={styles.card}>
-          <h1 style={styles.cardTitle}>Search Demographic:</h1>
-          <div style={styles.searchBar}>
-            <input
-              type="text"
-              style={styles.searchInput}
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              list="demographics-list"
-            />
-            <button onClick={fetchDemographicData} style={styles.searchBtn}>Search</button>
-            <button onClick={clearSelectedDemographics} style={styles.searchBtn}>Clear</button>
-          </div>
-          {/* Create the datalist with all available demographics */}
-          <datalist id="demographics-list">
-            {allDemographics.map((option) => (
-              <option key={option.id} value={option.name} />
-            ))}
-          </datalist>
-        </div>
-      </Fade>
-      <Fade bottom>
-        <div style={styles.chipContainerStyle}>
-          {!isLoading &&
-            Array.from(selectedDemoCategories).map((category, index) => (
-              <Fade left key={index}>
-                <Chip label={category} onRemove={() => deselectDemographic(category)} />
-              </Fade>
-            ))
-          }
-        </div>
-
-      </Fade>
-      {renderGraphs()}
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#252525" }}>
+      {renderAside()}
+      {renderMainContent()}
     </div>
   );
 }
