@@ -12,11 +12,10 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
     }
 
     const svgContainer = d3.select(svgRef.current);
-    const containerWidth = svgContainer.node().getBoundingClientRect().width;
-
-    const margin = { top: 20, right: 20, bottom: 30, left: 80 };
-    const width = containerWidth - margin.left - margin.right + 30 ;
+  
+    const margin = { top: 20, right: 20, bottom: 30, left: 100 };
     const height = 350 - margin.top - margin.bottom;
+    const width = 450 - margin.left - margin.right;
 
     const x = d3.scaleBand().range([0, width]).padding(0.1);
     const y = d3.scaleLinear().range([height, 0]);

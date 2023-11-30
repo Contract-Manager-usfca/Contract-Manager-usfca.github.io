@@ -4,6 +4,7 @@ import LollipopPlot from "../components/LollipopPlot";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
 import loadingGif from "../imgs/loading2.gif";
+import '../styles/homePage.css';
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -244,62 +245,40 @@ function HomePage() {
   }, [selectedDemographics]);
 
 
-  function Chip({ label, onRemove }) {
-    return (
-      <div
-        style={{
-          display: "inline-flex",
-          padding: "5px 10px",
-          border: "1px solid #8CD5FF",
-          borderRadius: "20px",
-          marginRight: "10px",
-          backgroundColor: "#303030",
-        }}
-      >
-        <span>{label}</span>
-        <button
-          onClick={onRemove}
-          style={{
-            margin: "auto",
-            cursor: "pointer",
-            background: "none",
-            border: "none",
-            color: "#8CD5FF",
-          }}
-        >
-          x
-        </button>
-      </div>
-    );
-  }
-
   // for main content graphs
   const styles = {
-    // chartContainer: {
-    //   width: 'calc(100% - 40px)',
-    //   padding: '20px',
-    //   margin: '10px 0',
-    //   backgroundColor: '#404040',
-    //   borderRadius: '10px',
-    //   boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-    // },
-    // chartTitle: {
-    //   marginBottom: "20px",
-    //   textAlign: "center",
-    //   fontSize: "25px",
-    //   color: "white",
-    // },
-    // chartText: {
-    //   color: "white",
-    //   maxWidth: "100%",
-    //   fontSize: "17px",
-    //   marginTop: "20px",
-    //   textAlign: "center",
-    // },
-    // boldTextColor: {
-    //   color: "#8CD5FF",
-    //   fontWeight: "bold",
-    // },
+    mainContent: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      width: '100%',
+      padding: '20px',
+      flexGrow: 1,
+    },
+    chartContainer: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      padding: '20px',
+      margin: '20px 0',
+      backgroundColor: '#404040',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    },
+    chartTitle: {
+      marginBottom: "20px",
+      textAlign: "center",
+      fontSize: "25px",
+      color: "white",
+    },
+    chartText: {
+      color: "white",
+      maxWidth: "100%",
+      fontSize: "17px",
+      marginTop: "20px",
+      textAlign: "left",
+    },
   };
 
 
@@ -313,16 +292,19 @@ function HomePage() {
       flexDirection: "column",
       alignItems: "center",
       overflow: "auto",
+      flexGrow: 1,
     },
     chartContainer: {
+      flexGrow: 1,
       width: '100%',
       maxWidth: '100%',
+      justifyContent: 'space-between',
       overflow: 'hidden',
       backgroundColor: '#404040',
       borderRadius: '10px',
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
       padding: '20px',
-      marginBottom: '3%',
+      marginBottom: '10%',
     },
     chartTitle: {
       marginBottom: "20px",
@@ -373,7 +355,8 @@ function HomePage() {
       flexWrap: "wrap",
       justifyContent: "center",
       gap: "10px",
-      marginBottom: "20px",
+      marginTop: '2%',
+      marginBottom: "7%",
     },
     chip: {
       display: "inline-flex",
@@ -381,7 +364,7 @@ function HomePage() {
       border: "1px solid #8CD5FF",
       borderRadius: "20px",
       backgroundColor: "#303030",
-      color: "#8CD5FF",
+      color: "white",
       cursor: "pointer",
     },
     loadingTitle: {
@@ -415,9 +398,11 @@ function HomePage() {
       <div style={asideStyles.chipContainer}>
         {!isLoading &&
           Array.from(selectedDemoCategories).map((category, index) => (
-            <div key={index} style={asideStyles.chip} onClick={() => deselectDemographic(category)}>
-              {category} x
-            </div>
+            <Fade left key={index}>
+              <div key={index} style={asideStyles.chip} onClick={() => deselectDemographic(category)}>
+                {category} x
+              </div>
+            </Fade>
           ))
         }
       </div>
@@ -427,12 +412,42 @@ function HomePage() {
 
   // Function to render the main content
   const renderMainContent = () => (
-    <main style={{ width: "60%", padding: "20px" }}>
-      {/* Main content goes here */}
+    <main style={{ width: '60%', padding: '20px' }}>
+      <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Stats</h1>
+      <div>
+        <Fade bottom>
+          <div style={styles.chartContainer}>
+            <h2 style={styles.chartTitle}>Graph #1</h2>
+            <h3 style={styles.chartText}><b>will change once new graph is inputed</b></h3>
+            <Fade bottom>
+              <BarGraph style={styles.graph} selectedDemoCategories={selectedDemoCategories}
+                demographicAverages={demographicAverages} />
+            </Fade>
+            <p style={styles.chartText}>
+              <span>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+              </span>
+            </p>
+          </div>
+
+          <div style={styles.chartContainer}>
+            <h2 style={styles.chartTitle}>Graph #2</h2>
+            <Fade bottom>
+              <LollipopPlot selectedDemoCategories={selectedDemoCategories}
+                demographicAverages={demographicAverages} />
+            </Fade>
+            <p style={styles.chartText}>
+              <span>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+              </span>
+            </p>
+          </div>
+        </Fade>
+      </div>
     </main>
   );
 
-  // Render the graphs function
+  // Function to render graphs
   const renderGraphs = () => {
     // currently loading and waiting for data
     if (isLoading) {
@@ -481,6 +496,7 @@ function HomePage() {
                   demographicAverages={demographicAverages} />
               </Fade>
               <p style={asideStyles.chartText}>
+                {/* check if demographic is selected */}
                 {selectedDemographics.length > 0 ? (
                   <span>
                     The Demographics currently selected are:&nbsp;

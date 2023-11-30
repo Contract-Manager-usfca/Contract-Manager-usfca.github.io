@@ -12,10 +12,9 @@ const LollipopGraph = ({ selectedDemoCategories, demographicAverages }) => {
     }
 
     const svgContainer = d3.select(svgRef.current);
-    const containerWidth = svgContainer.node().getBoundingClientRect().width;
 
-    const margin = { top: 20, right: 40, bottom: 60, left: 100 };
-    const width = containerWidth - margin.left - margin.right;
+    const margin = { top: 20, right: 40, bottom: 60, left: 70 };
+    const width = 450 - margin.left - margin.right;
     const height = 300 - margin.top - margin.bottom;
     const circleRadius = 5;
 

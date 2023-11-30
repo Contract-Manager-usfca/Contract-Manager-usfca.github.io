@@ -1,0 +1,22 @@
+/* Media support for different screen sizes */
+
+@media (min-width: 600px) {
+    .aside-container {
+      width: 40%;
+    }
+  
+    .main-content {
+      width: 60%;
+    }
+  }
+  
+  @media (max-width: 599px) {
+    .aside-container {
+      width: 100%;
+    }
+  
+    .main-content {
+      width: 100%;
+    }
+  }
+  
