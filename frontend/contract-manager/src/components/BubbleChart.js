@@ -36,7 +36,8 @@ const BubbleChart = () => {
   const drawChart = () => {
     const svg = d3.select(svgRef.current)
       .attr('width', 600)
-      .attr('height', 400);
+      .attr('height', 400)
+      .attr("viewBox", `0 0 600 400`); // Adjust viewBox if needed
 
     var colorScale = ['orange', 'lightblue', '#B19CD9'];
     var xCenter = [100, 300, 500];
@@ -67,6 +68,11 @@ const BubbleChart = () => {
         .attr('cy', function(d) {
           return d.y;
         });
+
+        u.each(function(d) {
+          console.log(`Node: ${d.name}, x: ${d.x}, y: ${d.y}`);
+        });
+
     }
 
     simulation.nodes(nodes).on('tick', ticked);
