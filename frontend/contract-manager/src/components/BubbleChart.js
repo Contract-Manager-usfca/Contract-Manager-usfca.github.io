@@ -56,24 +56,28 @@ const BubbleChart = () => {
     const padding = 50; // Padding to ensure bubbles don't touch the SVG edges
 
     const svg = d3.select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+    .attr('width', width)
+    .attr('height', height);
 
-    const color = d3.scaleOrdinal()
-      .domain(nodes.map(d => d.group))
-      .range(d3.schemeCategory10);
+  // Color scale remains the same
+  const color = d3.scaleOrdinal()
+    .domain(nodes.map(d => d.group))
+    .range(d3.schemeCategory10);
 
-    const x = d3.scaleOrdinal()
-      .domain(nodes.map(d => d.group))
-      .range([50, width / 2, width - 50]);
+  // Adjust the x scale for padding
+  const x = d3.scaleBand()
+    .domain(nodes.map(d => d.group))
+    .range([padding, width - padding])
+    .padding(0.1);
 
     const node = svg.append("g")
       .selectAll("circle")
       .data(nodes, d => d.id) // key function to identify each node
       .join("circle")
         .attr("r", d => d.radius)
-        .attr("cx", d => d.x)
+        .attr("cx", d => x(d.group) + x.bandwidth() / 2) // Center the circle within its band
         .attr("cy", d => d.y)
+        
         .style("fill", d => color(d.group))
         .style("fill-opacity", 0.8)
         .attr("stroke", "black")
