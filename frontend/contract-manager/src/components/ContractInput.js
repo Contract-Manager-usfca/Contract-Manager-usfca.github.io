@@ -188,6 +188,8 @@ function ContractInput() {
     fetchContracts();
   }, [creatorId, contracts]); //dependencies; every time creatorId or contracts changes, re-fetch contracts
 
+  const [errorBanner, setErrorBanner] = useState(null);
+
   const saveResult = () => {
     const newContract = {
       partner: formData.partner,
@@ -297,7 +299,23 @@ function ContractInput() {
 
   const handleInputChange = (elem) => {
     const { id, value } = elem.target;
-    setFormData({ ...formData, [id]: value });
+    //TODO: this is ugly
+    if (id === "amount" && value < 0) {
+      setErrorBanner("Amount paid must be greater than or equal to zero.");
+    } else if (id === "end") {
+      var f = document.getElementById("myForm");
+      var startDate = f.start.value;
+      console.log(value <= startDate);
+      if (value <= startDate) {
+        setErrorBanner("Start date must be before the end date.");
+      } else {
+        setErrorBanner(null);
+        setFormData({ ...formData, [id]: value });
+      }
+    } else {
+      setErrorBanner(null);
+      setFormData({ ...formData, [id]: value });
+    }
   };
 
   useEffect(() => {
@@ -382,7 +400,8 @@ function ContractInput() {
   // Function to format date as dd Month yyyy, e.g. 3 October 2019
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return utcDate.toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -391,6 +410,7 @@ function ContractInput() {
 
   // Function to hide the form
   const hideForm = () => {
+    setErrorBanner(null);
     var form = document.getElementById("myForm");
     var ncb = document.getElementById("newContract");
     form.style.display = "none";
@@ -399,6 +419,14 @@ function ContractInput() {
 
   return (
     <div style={styles.container}>
+      {/* Display the error banner if it exists */}
+      {errorBanner && (
+        <div
+          style={{ backgroundColor: "red", padding: "10px", color: "white" }}
+        >
+          {errorBanner}
+        </div>
+      )}
       <h1 style={styles.header}>Contracts:</h1>
       <h6 styles={{ paddingBottom: "2%", textAlign: "left" }}>
         Input contract information
