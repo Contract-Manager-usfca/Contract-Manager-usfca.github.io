@@ -4,21 +4,21 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = {
   container: {
-    color: 'white',
+    color: "white",
     // fontFamily: 'Ubuntu',
-    backgroundColor: '#333',
-    padding: '3%',
-    paddingLeft: '6%',
-    borderRadius: '5px',
-    width: '80%',
-    margin: '35px auto',
-    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    backgroundColor: "#333",
+    padding: "3%",
+    paddingLeft: "6%",
+    borderRadius: "5px",
+    width: "80%",
+    margin: "35px auto",
+    boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
   },
   header: {
-    paddingBottom: '10px',
-    textAlign: 'left',
-    color: '#9C9FFB',
-    fontSize: '24px',
+    paddingBottom: "10px",
+    textAlign: "left",
+    color: "#9C9FFB",
+    fontSize: "24px",
   },
   platformBtn: {
     padding: "5px 15px",
@@ -43,28 +43,28 @@ const styles = {
     display: "none",
   },
   inputBox: {
-    width: '80%',
-    padding: '10px',
-    margin: '5px 0 15px 0',
-    marginLeft: '2%',
-    border: '1px solid #C1E9FF',
-    borderRadius: '4px',
-    backgroundColor: '#444',
-    color: 'white',
-    fontSize: '16px',
+    width: "80%",
+    padding: "10px",
+    margin: "5px 0 15px 0",
+    marginLeft: "2%",
+    border: "1px solid #C1E9FF",
+    borderRadius: "4px",
+    backgroundColor: "#444",
+    color: "white",
+    fontSize: "16px",
   },
   inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    width: '100%',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "100%",
   },
   btnContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '83%',
-    marginTop: '10px',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "83%",
+    marginTop: "10px",
   },
 };
 
@@ -122,10 +122,17 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
             )
           }
           id={element}
-          style={{ ...styles.platformBtn, ...platformStyle }}>
+          style={{ ...styles.platformBtn, ...platformStyle }}
+        >
           {element}
         </button>
-        <p style={{ display: "inline-block", marginBottom: "-15px", marginLeft: '2%' }}>
+        <p
+          style={{
+            display: "inline-block",
+            marginBottom: "-15px",
+            marginLeft: "2%",
+          }}
+        >
           {savedText}
         </p>
       </div>
@@ -145,53 +152,53 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
           />
         </div>
         <div style={styles.btnContainer}>
-        <button
-          onClick={() =>
-            onSave(
-              `${element}Save`,
-              `${element}Input1`,
-              `${element}Input2`,
-              `${element}Cancel`,
-              element,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Save`}
-          style={styles.submitBtn}
-        >
-          Save
-        </button>
-        <button
-          onClick={() =>
-            onDelete(
-              `${element}Save`,
-              `${element}Input1`,
-              `${element}Input2`,
-              `${element}Cancel`,
-              element,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Delete`}
-          style={styles.submitBtn}
-        >
-          Delete
-        </button>
-        <button
-          onClick={() =>
-            onCancel(
-              `${element}Save`,
-              `${element}Input1`,
-              `${element}Input2`,
-              `${element}Cancel`,
-              `${element}Delete`
-            )
-          }
-          id={`${element}Cancel`}
-          style={styles.submitBtn}
-        >
-          Cancel
-        </button>
+          <button
+            onClick={() =>
+              onSave(
+                `${element}Save`,
+                `${element}Input1`,
+                `${element}Input2`,
+                `${element}Cancel`,
+                element,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Save`}
+            style={styles.submitBtn}
+          >
+            Save
+          </button>
+          <button
+            onClick={() =>
+              onDelete(
+                `${element}Save`,
+                `${element}Input1`,
+                `${element}Input2`,
+                `${element}Cancel`,
+                element,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Delete`}
+            style={styles.submitBtn}
+          >
+            Delete
+          </button>
+          <button
+            onClick={() =>
+              onCancel(
+                `${element}Save`,
+                `${element}Input1`,
+                `${element}Input2`,
+                `${element}Cancel`,
+                `${element}Delete`
+              )
+            }
+            id={`${element}Cancel`}
+            style={styles.submitBtn}
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
@@ -332,9 +339,9 @@ function PlatformInput() {
           prevPlatforms.map((p) =>
             p.name === elementId
               ? {
-                ...p,
-                savedText: `${inputValue1}: ${inputValue2} followers.`,
-              }
+                  ...p,
+                  savedText: `${inputValue1}: ${inputValue2} followers.`,
+                }
               : p
           )
         );
@@ -354,9 +361,9 @@ function PlatformInput() {
               prevPlatforms.map((p) =>
                 p.name === elementId
                   ? {
-                    ...p,
-                    savedText: `${inputValue1}: ${inputValue2} followers.`,
-                  }
+                      ...p,
+                      savedText: `${inputValue1}: ${inputValue2} followers.`,
+                    }
                   : p
               )
             );
@@ -373,6 +380,8 @@ function PlatformInput() {
     }
   };
 
+  const [errorBanner, setErrorBanner] = useState(null);
+
   const handleInputAndSave = (
     saveId,
     input1Id,
@@ -388,21 +397,26 @@ function PlatformInput() {
       const inputValue2 = inputElement2.value;
       if (inputValue1 && inputValue2) {
         // Find platformId based on the selected platform name
-        const platform = platforms.find((p) => p.name === elementId);
-        if (platform) {
-          const platformId = platform.id;
+        if (inputValue2 >= 0) {
+          setErrorBanner(null);
+          const platform = platforms.find((p) => p.name === elementId);
+          if (platform) {
+            const platformId = platform.id;
 
-          handleUpdateRelationship(
-            creatorId,
-            platformId,
-            inputValue1,
-            inputValue2,
-            elementId
-          );
+            handleUpdateRelationship(
+              creatorId,
+              platformId,
+              inputValue1,
+              inputValue2,
+              elementId
+            );
+          } else {
+            console.error("Platform not found");
+          }
+          //On save, match current user with user id in platform table. Update information.
         } else {
-          console.error("Platform not found");
+          setErrorBanner("Follower count must be greater than zero.");
         }
-        //On save, match current user with user id in platform table. Update information.
       }
       CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId);
     }
@@ -474,6 +488,14 @@ function PlatformInput() {
 
   return (
     <div style={styles.container}>
+      {/* Display the error banner if it exists */}
+      {errorBanner && (
+        <div
+          style={{ backgroundColor: "red", padding: "10px", color: "white" }}
+        >
+          {errorBanner}
+        </div>
+      )}
       <h1 style={styles.header}>Platforms:</h1>
       {platforms.map((platform) => (
         <ElementInput
