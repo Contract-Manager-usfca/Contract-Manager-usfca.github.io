@@ -60,9 +60,9 @@ const BubbleChart = () => {
     .attr('height', height);
 
   // Color scale remains the same
-  const color = d3.scaleOrdinal()
-    .domain(nodes.map(d => d.group))
-    .range(d3.schemeCategory10);
+  const colorScale = d3.scaleOrdinal()
+    .domain(nodes.map(d => d.partnerName)) // Assuming you want to color by partner name
+    .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
 
   // Adjust the x scale for padding
   const x = d3.scaleBand()
@@ -71,21 +71,20 @@ const BubbleChart = () => {
     .padding(0.1);
 
     const node = svg.append("g")
-      .selectAll("circle")
-      .data(nodes, d => d.id) // key function to identify each node
-      .join("circle")
-        .attr("r", d => d.radius)
-        .attr("cx", d => x(d.group) + x.bandwidth() / 2) // Center the circle within its band
-        .attr("cy", d => d.y)
-        
-        .style("fill", d => color(d.group))
-        .style("fill-opacity", 0.8)
-        .attr("stroke", "black")
-        .style("stroke-width", 4)
-        .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended));
+    .selectAll("circle")
+    .data(nodes, d => d.id)
+    .join("circle")
+      .attr("r", d => d.radius)
+      .attr("cx", d => x(d.group) + x.bandwidth() / 2)
+      .attr("cy", d => d.y)
+      .style("fill", d => colorScale(d.partnerName)) // Use the colorScale for fill color
+      .style("fill-opacity", 0.8)
+      .attr("stroke", "black")
+      .style("stroke-width", 4)
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
 
     simulationRef.current = d3.forceSimulation()
         .force("x", d3.forceX().strength(0.5).x(d => x(d.group)))
@@ -100,6 +99,7 @@ const BubbleChart = () => {
             .attr("cy", d => d.y);
         });
   };
+  
 
   // Drag event handlers
   const dragstarted = (event, d) => {
