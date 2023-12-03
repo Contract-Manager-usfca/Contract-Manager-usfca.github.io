@@ -197,18 +197,18 @@ function HomePage() {
       // Fetch contracts
       const contractResponse = await axios.get('https://contract-manager.aquaflare.io/contracts/', { withCredentials: true });
       const allContracts = contractResponse.data;
-  
+
       // Create a structure to hold the sums and counts for averages later
       const sumsAndCounts = {};
-  
+
       // Iterate over each contract to populate sumsAndCounts
       allContracts.forEach(contract => {
         const userID = contract.user;
         const partnerID = contract.partner;
         const partnerName = partners.find(p => p.id === partnerID).name;
         const userDemographic = userData.find(u => u.userID === userID)?.demographic;
-  
-        if(userDemographic) {
+
+        if (userDemographic) {
           // Initialize if not present
           if (!sumsAndCounts[userDemographic]) {
             sumsAndCounts[userDemographic] = {};
@@ -216,14 +216,14 @@ function HomePage() {
           if (!sumsAndCounts[userDemographic][partnerName]) {
             sumsAndCounts[userDemographic][partnerName] = { sum: 0, count: 0 };
           }
-  
+
           // Add to sum and increment count
           const durationDays = (new Date(contract.end_date) - new Date(contract.start_date)) / (24 * 3600 * 1000);
           sumsAndCounts[userDemographic][partnerName].sum += durationDays;
           sumsAndCounts[userDemographic][partnerName].count += 1;
         }
       });
-  
+
       // Calculate averages from sums and counts
       const averages = Object.keys(sumsAndCounts).map(demographic => {
         const partners = sumsAndCounts[demographic];
@@ -233,13 +233,13 @@ function HomePage() {
         });
         return { demographic, partners: partnerAverages };
       });
-  
+
       // Log the result
       console.log("Averages:", averages);
-  
+
       // Update state
       setAverageDuration(averages); // Ensure you have a state variable to hold this data
-  
+
     } catch (error) {
       console.error("Error fetching contracts:", error);
     }
@@ -344,7 +344,6 @@ function HomePage() {
       justifyContent: 'space-around',
       padding: '20px',
       margin: '20px 0',
-      backgroundColor: '#404040',
       borderRadius: '10px',
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
     },
@@ -499,15 +498,14 @@ function HomePage() {
       <div>
         <Fade bottom>
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}>Graph #1</h2>
-            <h3 style={styles.chartText}><b>will change once new graph is inputed</b></h3>
+            {/* New Bubble Chart Section */}
+            <h2 style={styles.chartTitle}>Contract Distribution Percentile</h2>
             <Fade bottom>
-              <BarGraph style={styles.graph} selectedDemoCategories={selectedDemoCategories}
-                demographicAverages={demographicAverages} />
+              <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
-              <span>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+            <span>
+                This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
               </span>
             </p>
           </div>
@@ -520,20 +518,6 @@ function HomePage() {
             <p style={styles.chartText}>
               <span>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
-              </span>
-            </p>
-          </div>
-        </Fade>
-        {/* New Bubble Chart Section */}
-        <Fade bottom>
-          <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}>Contract Distribution by Partner</h2>
-            <Fade bottom>
-              <BubbleChart />
-            </Fade>
-            <p style={styles.chartText}>
-              <span>
-                This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
               </span>
             </p>
           </div>
@@ -563,7 +547,7 @@ function HomePage() {
         <div>
           <Fade bottom>
             <div style={asideStyles.chartContainer}>
-              <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
+              <h2 style={asideStyles.chartTitle}>Average Follower Count</h2>
               <Fade bottom>
                 <BarGraph selectedDemoCategories={selectedDemoCategories}
                   demographicAverages={demographicAverages} />
@@ -585,7 +569,7 @@ function HomePage() {
             </div>
 
             <div style={asideStyles.chartContainer}>
-              <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
+              <h2 style={asideStyles.chartTitle}>Average Contract Duration</h2>
               <Fade bottom>
                 <MultiLineGraph averageDuration={averageDuration} />
               </Fade>

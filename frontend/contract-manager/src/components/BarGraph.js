@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import "../styles/bargraph.css";
+import { select, easeBounce } from "d3";
+import "../styles/graph.css";
 
 const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
   const svgRef = useRef(null);
@@ -12,8 +13,8 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
     }
 
     const svgContainer = d3.select(svgRef.current);
-  
-    const margin = { top: 20, right: 20, bottom: 30, left: 100 };
+
+    const margin = { top: 20, right: 20, bottom: 40, left: 100 };
     const height = 350 - margin.top - margin.bottom;
     const width = 450 - margin.left - margin.right;
 
@@ -38,31 +39,48 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    x.domain(updatedData.map((d) => d.name));
-    y.domain([0, d3.max(updatedData, (d) => d.value)]);
+    // Function for Gridlines
+    function makeHorizontalGridlines() {
+      return d3.axisLeft(y)
+        .ticks(updatedData.length)
+        .tickSize(-width)
+        .tickFormat("");
+    }
 
-    svg
-      .append("g")
+    // Adding Gridlines
+    svg.append("g")
+      .attr("class", "grid")
+      .call(makeHorizontalGridlines())
+      .selectAll("line")
+      .attr("stroke", "#ccc")
+      .attr("stroke-dasharray", "3,3");
+
+    svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
-    svg
-      .append("text")
+    svg.append("g").call(d3.axisLeft(y));
+
+    const colorScale = d3.scaleOrdinal()
+      .domain(updatedData.map((d) => d.name))
+      .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
+
+    svg.append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 12 - margin.left)
-      .attr("x", 0 - height / 2)
+      .attr("y", 18 - margin.left)
+      .attr("x", 0 - (height / 2))
       .attr("dy", "1em")
+      .attr("class", "axis-label")
       .style("text-anchor", "middle")
       .attr("fill", "white")
       .text("Follower Count");
 
-    const colorScale = d3
-      .scaleOrdinal()
-      .domain(updatedData.map((d) => d.name))
-      .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
+    // Tooltip for hover
+    const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
 
-    const bars = svg
-      .selectAll(".bar")
+    const bars = svg.selectAll(".bar")
       .data(updatedData)
       .enter()
       .append("rect")
@@ -73,41 +91,31 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .attr("height", (d) => height - y(d.value))
       .attr("fill", (d) => colorScale(d.name));
 
-    const labels = svg
-      .selectAll(".bar-label")
-      .data(updatedData)
-      .enter()
-      .append("text")
-      .attr("class", "bar-label")
-      .attr("x", (d) => x(d.name) + x.bandwidth() / 2)
-      .attr("y", (d) => y(d.value) + (height - y(d.value)) / 2)
-      .attr("text-anchor", "middle")
-      .attr("fill", "white")
-      .style("display", "none")
-      .text((d) => d.value);
-
     bars.on("mouseover", function (event, d) {
-      d3.select(this)
+      select(this)
         .transition()
-        .duration(200)
-        .ease(d3.easeQuadInOut)
+        .duration(250)
+        .ease(easeBounce)
         .attr("opacity", 0.7);
 
-      labels
-        .filter((labelData) => labelData === d)
-        .style("display", "block")
-        .style("font-size", "16px")
-        .style("font-weight", "bolder");
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", .9);
+      tooltip.html(d.value)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 28) + "px");
     });
 
     bars.on("mouseout", function () {
-      d3.select(this)
+      select(this)
         .transition()
         .duration(200)
-        .ease(d3.easeQuadInOut)
+        .ease(easeBounce)
         .attr("opacity", 1);
 
-      labels.style("display", "none");
+      tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
     });
 
     svg.append("g").call(d3.axisLeft(y));
