@@ -10,6 +10,8 @@ import BubbleChart from "../components/BubbleChart";
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
   const [selectedDemographics, setSelectedDemographics] = useState([]);
+  const [partners, setPartners] = useState([]);
+  const [averageDuration, setAverageDuration] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [demographicAverages, setDemographicAverages] = useState({});
   const [demographicCounts, setDemographicCounts] = useState({});
@@ -23,7 +25,7 @@ function HomePage() {
     prevSelectedDemosRef.current = selectedDemographics;
   }, [selectedDemographics]);
 
-  // Fetch and set all available demographics from database
+  // Fetch and set all available demographics from database for dropdown menu
   useEffect(() => {
     // Getting demographics list
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
@@ -40,14 +42,34 @@ function HomePage() {
       });
   }, []);
 
+  // Fetching partner data
+  useEffect(() => {
+    setIsLoading(true);
+    axios.get('https://contract-manager.aquaflare.io/partners/', { withCredentials: true })
+      .then(response => {
+        setPartners(response.data);
+        console.log('partners', response.data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error("Error fetching partners:", error);
+        setIsLoading(false);
+      });
+  }, []);
 
   // Add a new useEffect to listen for changes in selectedDemographics
   useEffect(() => {
-    if (selectedDemographics.length > 0) {
-      loadDemographicData(selectedDemographics);
-      fetchFollowerCounts();
-    }
+    const fetchData = async () => {
+      if (selectedDemographics.length > 0) {
+        setIsLoading(true);
+        loadDemographicData(selectedDemographics);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [selectedDemographics]);
+
 
   // Modify your fetchDemographicData function
   const fetchDemographicData = () => {
@@ -93,8 +115,9 @@ function HomePage() {
     setIsLoading(false);
   };
 
+
   // Load demographic data
-  const loadDemographicData = (selectedDemographics) => {
+  const loadDemographicData = async (selectedDemographics) => {
     console.log("running...");
     setIsLoading(true);
     // array to store promises for fetching demographic data
@@ -107,7 +130,6 @@ function HomePage() {
     selectedDemographics.forEach((selectedDemo) => {
       // Find the corresponding demographic ID for the selected demographic
       const selectedDemoID = allDemographics.find((demo) => demo.name === selectedDemo)?.id;
-      console.log(selectedDemoID);
 
       if (selectedDemoID) {
         // Fetch demo categories that have the same demographic ID
@@ -122,6 +144,7 @@ function HomePage() {
                 userData.push({ demographic: demo.demo, userID: demo.creator });
               });
 
+              console.log("user data: ", userData);
               // Extract and store the categories in selectedDemoCategories
               const categories = filteredDemoData.map((demo) => demo.demo);
 
@@ -142,6 +165,8 @@ function HomePage() {
                 }
               });
 
+              console.log(demographicCounts);
+
               // Update your state or do other processing with the counts here
               console.log(`Counts for ${selectedDemo}:`, demographicCounts);
             })
@@ -155,15 +180,72 @@ function HomePage() {
     // Once all promises are resolved, you can set isLoading to false
     Promise.all(fetchPromises)
       .then(() => {
-        console.log('demographic counts', demographicCounts);
+        loadContractData(userData);
         fetchFollowerCounts(userData, demographicCounts);
         setIsLoading(false);
+        return userData;
       })
       .catch((error) => {
         console.error("Error fetching demographic data:", error);
         setIsLoading(false);
       });
   };
+
+  // fetches and sets average contract timline data
+  const loadContractData = async (userData) => {
+    try {
+      // Fetch contracts
+      const contractResponse = await axios.get('https://contract-manager.aquaflare.io/contracts/', { withCredentials: true });
+      const allContracts = contractResponse.data;
+  
+      // Create a structure to hold the sums and counts for averages later
+      const sumsAndCounts = {};
+  
+      // Iterate over each contract to populate sumsAndCounts
+      allContracts.forEach(contract => {
+        const userID = contract.user;
+        const partnerID = contract.partner;
+        const partnerName = partners.find(p => p.id === partnerID).name; // Replace with your actual logic to get the partner's name
+        const userDemographic = userData.find(u => u.userID === userID)?.demographic;
+  
+        if(userDemographic) {
+          // Initialize if not present
+          if (!sumsAndCounts[userDemographic]) {
+            sumsAndCounts[userDemographic] = {};
+          }
+          if (!sumsAndCounts[userDemographic][partnerName]) {
+            sumsAndCounts[userDemographic][partnerName] = { sum: 0, count: 0 };
+          }
+  
+          // Add to sum and increment count
+          const durationDays = (new Date(contract.end_date) - new Date(contract.start_date)) / (24 * 3600 * 1000);
+          sumsAndCounts[userDemographic][partnerName].sum += durationDays;
+          sumsAndCounts[userDemographic][partnerName].count += 1;
+        }
+      });
+  
+      // Calculate averages from sums and counts
+      const averages = Object.keys(sumsAndCounts).map(demographic => {
+        const partners = sumsAndCounts[demographic];
+        const partnerAverages = Object.keys(partners).map(partner => {
+          const { sum, count } = partners[partner];
+          return { partner, averageDuration: count ? Math.round(sum / count) : 0 };
+        });
+        return { demographic, partners: partnerAverages };
+      });
+  
+      // Log the result
+      console.log("Averages:", averages);
+  
+      // Update state
+      setAverageDuration(averages); // Ensure you have a state variable to hold this data
+  
+    } catch (error) {
+      console.error("Error fetching contracts:", error);
+    }
+  };
+   
+
 
   const fetchFollowerCounts = (userData, demographicCounts) => {
     axios.get("https://contract-manager.aquaflare.io/creator-platforms/", { withCredentials: true })
@@ -426,7 +508,7 @@ function HomePage() {
             </Fade>
             <p style={styles.chartText}>
               <span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
               </span>
             </p>
           </div>
@@ -439,12 +521,12 @@ function HomePage() {
             </Fade>
             <p style={styles.chartText}>
               <span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
               </span>
             </p>
           </div>
         </Fade>
-         {/* New Bubble Chart Section */}
+        {/* New Bubble Chart Section */}
         <Fade bottom>
           <div style={styles.chartContainer}>
             <h2 style={styles.chartTitle}>Contract Distribution by Partner</h2>
