@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import BarGraph from "../components/BarGraph";
-import LollipopPlot from "../components/LollipopPlot";
+import MultiLineGraph from "../components/MultiLineGraph";
+import BubbleChart from "../components/BubbleChart";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
 import loadingGif from "../imgs/loading2.gif";
 import '../styles/homePage.css';
-import BubbleChart from "../components/BubbleChart";
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
@@ -205,7 +205,7 @@ function HomePage() {
       allContracts.forEach(contract => {
         const userID = contract.user;
         const partnerID = contract.partner;
-        const partnerName = partners.find(p => p.id === partnerID).name; // Replace with your actual logic to get the partner's name
+        const partnerName = partners.find(p => p.id === partnerID).name;
         const userDemographic = userData.find(u => u.userID === userID)?.demographic;
   
         if(userDemographic) {
@@ -244,7 +244,6 @@ function HomePage() {
       console.error("Error fetching contracts:", error);
     }
   };
-   
 
 
   const fetchFollowerCounts = (userData, demographicCounts) => {
@@ -516,8 +515,7 @@ function HomePage() {
           <div style={styles.chartContainer}>
             <h2 style={styles.chartTitle}>Graph #2</h2>
             <Fade bottom>
-              <LollipopPlot selectedDemoCategories={selectedDemoCategories}
-                demographicAverages={demographicAverages} />
+              <MultiLineGraph averageDuration={averageDuration} />
             </Fade>
             <p style={styles.chartText}>
               <span>
@@ -589,8 +587,7 @@ function HomePage() {
             <div style={asideStyles.chartContainer}>
               <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
               <Fade bottom>
-                <LollipopPlot selectedDemoCategories={selectedDemoCategories}
-                  demographicAverages={demographicAverages} />
+                <MultiLineGraph averageDuration={averageDuration} />
               </Fade>
               <p style={asideStyles.chartText}>
                 {/* check if demographic is selected */}
