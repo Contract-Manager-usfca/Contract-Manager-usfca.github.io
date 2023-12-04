@@ -1,0 +1,68 @@
+.bar-chart text {
+  font-family: 'Lora', serif;
+}
+
+.multi-line-chart text {
+  font-family: 'Lora', serif;
+}
+
+.axis-label {
+  font-size: 14px;
+}
+
+svg {
+  background-color: #111111;
+}
+
+g {
+  color: white;
+}
+
+.line {
+  stroke-width: 2px;
+}
+
+.axis text {
+  fill: #ffffff;
+  font-size: 12px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: lightgrey;
+  shape-rendering: crispEdges;
+}
+
+.grid line {
+  stroke: rgb(138, 138, 138);
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.line {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.legend {
+  font-family: 'Arial', sans-serif;
+  font-size: 12px;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: 28px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: rgb(255, 255, 255);
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}

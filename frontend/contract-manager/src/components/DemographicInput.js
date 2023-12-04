@@ -31,6 +31,7 @@ const styles = {
     color: "white",
   },
   submitBtn: {
+    width: '80px', 
     padding: "5px 10px",
     margin: "10px",
     fontSize: "18px",
@@ -101,7 +102,7 @@ function CancelAdd(saveId, inputId, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "#67C9FF" : "#ffff",
+    color: savedText ? "#46C7A8" : "#ffff",
   };
   return (
     <div>

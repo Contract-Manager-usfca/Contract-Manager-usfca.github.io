@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import BarGraph from "../components/BarGraph";
-import LollipopPlot from "../components/LollipopPlot";
+import MultiLineGraph from "../components/MultiLineGraph";
+import BubbleChart from "../components/BubbleChart";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
 import loadingGif from "../imgs/loading2.gif";
 import '../styles/homePage.css';
-import BubbleChart from "../components/BubbleChart";
 
 function HomePage() {
   const [allDemographics, setAllDemographics] = useState([]);
   const [selectedDemographics, setSelectedDemographics] = useState([]);
+  const [partners, setPartners] = useState([]);
+  const [averageDuration, setAverageDuration] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [demographicAverages, setDemographicAverages] = useState({});
   const [demographicCounts, setDemographicCounts] = useState({});
@@ -23,7 +25,7 @@ function HomePage() {
     prevSelectedDemosRef.current = selectedDemographics;
   }, [selectedDemographics]);
 
-  // Fetch and set all available demographics from database
+  // Fetch and set all available demographics from database for dropdown menu
   useEffect(() => {
     // Getting demographics list
     axios.get('https://contract-manager.aquaflare.io/demographics/', { withCredentials: true })
@@ -40,14 +42,34 @@ function HomePage() {
       });
   }, []);
 
+  // Fetching partner data
+  useEffect(() => {
+    setIsLoading(true);
+    axios.get('https://contract-manager.aquaflare.io/partners/', { withCredentials: true })
+      .then(response => {
+        setPartners(response.data);
+        console.log('partners', response.data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error("Error fetching partners:", error);
+        setIsLoading(false);
+      });
+  }, []);
 
   // Add a new useEffect to listen for changes in selectedDemographics
   useEffect(() => {
-    if (selectedDemographics.length > 0) {
-      loadDemographicData(selectedDemographics);
-      fetchFollowerCounts();
-    }
+    const fetchData = async () => {
+      if (selectedDemographics.length > 0) {
+        setIsLoading(true);
+        loadDemographicData(selectedDemographics);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [selectedDemographics]);
+
 
   // Modify your fetchDemographicData function
   const fetchDemographicData = () => {
@@ -93,8 +115,9 @@ function HomePage() {
     setIsLoading(false);
   };
 
+
   // Load demographic data
-  const loadDemographicData = (selectedDemographics) => {
+  const loadDemographicData = async (selectedDemographics) => {
     console.log("running...");
     setIsLoading(true);
     // array to store promises for fetching demographic data
@@ -107,7 +130,6 @@ function HomePage() {
     selectedDemographics.forEach((selectedDemo) => {
       // Find the corresponding demographic ID for the selected demographic
       const selectedDemoID = allDemographics.find((demo) => demo.name === selectedDemo)?.id;
-      console.log(selectedDemoID);
 
       if (selectedDemoID) {
         // Fetch demo categories that have the same demographic ID
@@ -122,6 +144,7 @@ function HomePage() {
                 userData.push({ demographic: demo.demo, userID: demo.creator });
               });
 
+              console.log("user data: ", userData);
               // Extract and store the categories in selectedDemoCategories
               const categories = filteredDemoData.map((demo) => demo.demo);
 
@@ -142,6 +165,8 @@ function HomePage() {
                 }
               });
 
+              console.log(demographicCounts);
+
               // Update your state or do other processing with the counts here
               console.log(`Counts for ${selectedDemo}:`, demographicCounts);
             })
@@ -155,15 +180,71 @@ function HomePage() {
     // Once all promises are resolved, you can set isLoading to false
     Promise.all(fetchPromises)
       .then(() => {
-        console.log('demographic counts', demographicCounts);
+        loadContractData(userData);
         fetchFollowerCounts(userData, demographicCounts);
         setIsLoading(false);
+        return userData;
       })
       .catch((error) => {
         console.error("Error fetching demographic data:", error);
         setIsLoading(false);
       });
   };
+
+  // fetches and sets average contract timline data
+  const loadContractData = async (userData) => {
+    try {
+      // Fetch contracts
+      const contractResponse = await axios.get('https://contract-manager.aquaflare.io/contracts/', { withCredentials: true });
+      const allContracts = contractResponse.data;
+
+      // Create a structure to hold the sums and counts for averages later
+      const sumsAndCounts = {};
+
+      // Iterate over each contract to populate sumsAndCounts
+      allContracts.forEach(contract => {
+        const userID = contract.user;
+        const partnerID = contract.partner;
+        const partnerName = partners.find(p => p.id === partnerID).name;
+        const userDemographic = userData.find(u => u.userID === userID)?.demographic;
+
+        if (userDemographic) {
+          // Initialize if not present
+          if (!sumsAndCounts[userDemographic]) {
+            sumsAndCounts[userDemographic] = {};
+          }
+          if (!sumsAndCounts[userDemographic][partnerName]) {
+            sumsAndCounts[userDemographic][partnerName] = { sum: 0, count: 0 };
+          }
+
+          // Add to sum and increment count
+          const durationDays = (new Date(contract.end_date) - new Date(contract.start_date)) / (24 * 3600 * 1000);
+          sumsAndCounts[userDemographic][partnerName].sum += durationDays;
+          sumsAndCounts[userDemographic][partnerName].count += 1;
+        }
+      });
+
+      // Calculate averages from sums and counts
+      const averages = Object.keys(sumsAndCounts).map(demographic => {
+        const partners = sumsAndCounts[demographic];
+        const partnerAverages = Object.keys(partners).map(partner => {
+          const { sum, count } = partners[partner];
+          return { partner, averageDuration: count ? Math.round(sum / count) : 0 };
+        });
+        return { demographic, partners: partnerAverages };
+      });
+
+      // Log the result
+      console.log("Averages:", averages);
+
+      // Update state
+      setAverageDuration(averages); // Ensure you have a state variable to hold this data
+
+    } catch (error) {
+      console.error("Error fetching contracts:", error);
+    }
+  };
+
 
   const fetchFollowerCounts = (userData, demographicCounts) => {
     axios.get("https://contract-manager.aquaflare.io/creator-platforms/", { withCredentials: true })
@@ -245,14 +326,14 @@ function HomePage() {
     }
   }, [selectedDemographics]);
 
-
   // for main content graphs
   const styles = {
     mainContent: {
-      display: 'flex',
+      display: 'flex-start',
       flexDirection: 'column',
       justifyContent: 'center',
-      width: '100%',
+      alignItems: 'center',
+      width: '80%',
       padding: '20px',
       flexGrow: 1,
     },
@@ -260,28 +341,27 @@ function HomePage() {
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-around',
+      justifyContent: 'center',
+      alignItems: 'center',
       padding: '20px',
       margin: '20px 0',
-      backgroundColor: '#404040',
-      borderRadius: '10px',
-      boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+      width: '100%',
     },
     chartTitle: {
-      marginBottom: "20px",
-      textAlign: "center",
+      alignSelf: 'flex-start',
+      marginBottom: "30px",
+      marginLeft: '30px',
       fontSize: "25px",
-      color: "white",
+      color: '#5A8FF6',
     },
     chartText: {
       color: "white",
-      maxWidth: "100%",
+      maxWidth: "90%",
       fontSize: "17px",
-      marginTop: "20px",
+      marginTop: "30px",
       textAlign: "left",
     },
   };
-
 
   // styles for aside
   const asideStyles = {
@@ -413,47 +493,30 @@ function HomePage() {
 
   // Function to render the main content
   const renderMainContent = () => (
-    <main style={{ width: '60%', padding: '20px' }}>
-      <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Stats</h1>
+    <main style={styles.mainContent}>
+      <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Statistics</h1>
       <div>
         <Fade bottom>
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}>Graph #1</h2>
-            <h3 style={styles.chartText}><b>will change once new graph is inputed</b></h3>
-            <Fade bottom>
-              <BarGraph style={styles.graph} selectedDemoCategories={selectedDemoCategories}
-                demographicAverages={demographicAverages} />
-            </Fade>
-            <p style={styles.chartText}>
-              <span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
-              </span>
-            </p>
-          </div>
-
-          <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}>Graph #2</h2>
-            <Fade bottom>
-              <LollipopPlot selectedDemoCategories={selectedDemoCategories}
-                demographicAverages={demographicAverages} />
-            </Fade>
-            <p style={styles.chartText}>
-              <span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
-              </span>
-            </p>
-          </div>
-        </Fade>
-         {/* New Bubble Chart Section */}
-        <Fade bottom>
-          <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}>Contract Distribution by Partner</h2>
+            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
               <span>
-                This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+              </span>
+            </p>
+          </div>
+
+          <div style={styles.chartContainer}>
+            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
+            <Fade bottom>
+              <BubbleChart />
+            </Fade>
+            <p style={styles.chartText}>
+              <span>
+                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
               </span>
             </p>
           </div>
@@ -483,47 +546,27 @@ function HomePage() {
         <div>
           <Fade bottom>
             <div style={asideStyles.chartContainer}>
-              <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
+              <h2 style={asideStyles.chartTitle}>Average Follower Count</h2>
               <Fade bottom>
                 <BarGraph selectedDemoCategories={selectedDemoCategories}
                   demographicAverages={demographicAverages} />
               </Fade>
               <p style={asideStyles.chartText}>
-                {selectedDemographics.length > 0 ? (
-                  <span>
-                    The Demographics currently selected are:&nbsp;
-                    <span style={asideStyles.boldTextColor}>
-                      {selectedDemographics.join(", ")}
-                    </span>
-                  </span>
-                ) : (
-                  <span style={asideStyles.boldTextColor}>
-                    Make a Selection above to see the generated results
-                  </span>
-                )}
+                <span>
+                  &emsp;&emsp;The bar graph presents a comparison of average follower counts across various demographic segments. Each bar indicates the follower count for a specific demographic, providing a clear visual of comparative reach.
+                </span>
               </p>
             </div>
 
             <div style={asideStyles.chartContainer}>
-              <h2 style={asideStyles.chartTitle}>Average Follow Count</h2>
+              <h2 style={asideStyles.chartTitle}>Average Contract Duration</h2>
               <Fade bottom>
-                <LollipopPlot selectedDemoCategories={selectedDemoCategories}
-                  demographicAverages={demographicAverages} />
+                <MultiLineGraph averageDuration={averageDuration} />
               </Fade>
               <p style={asideStyles.chartText}>
-                {/* check if demographic is selected */}
-                {selectedDemographics.length > 0 ? (
-                  <span>
-                    The Demographics currently selected are:&nbsp;
-                    <span style={asideStyles.boldTextColor}>
-                      {selectedDemographics.join(", ")}
-                    </span>
-                  </span>
-                ) : (
-                  <span style={asideStyles.boldTextColor}>
-                    Make a Selection above to see the generated results
-                  </span>
-                )}
+                <span>
+                  &emsp;&emsp;This time series line graph charts the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
+                </span>
               </p>
             </div>
           </Fade>

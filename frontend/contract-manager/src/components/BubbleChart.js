@@ -51,8 +51,8 @@ const BubbleChart = () => {
   }, [nodes]);
 
   const drawChart = () => {
-    const width = 600; // Width of the SVG container
-    const height = 600; // Height of the SVG container
+    const width = 450; // Width of the SVG container
+    const height = 350; // Height of the SVG container
     const padding = 50; // Padding to ensure bubbles don't touch the SVG edges
 
     const svg = d3.select(svgRef.current)
@@ -79,8 +79,8 @@ const BubbleChart = () => {
       .attr("cy", d => d.y)
       .style("fill", d => colorScale(d.partnerName)) // Use the colorScale for fill color
       .style("fill-opacity", 0.8)
-      .attr("stroke", "black")
-      .style("stroke-width", 4)
+      .attr("stroke", "#1D1D1D")
+      .style("stroke-width", 2)
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
