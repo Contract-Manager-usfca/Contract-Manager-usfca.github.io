@@ -29,6 +29,7 @@ const styles = {
   }),
   submitBtn: {
     padding: "5px 10px",
+    width: '80px', 
     margin: "10px",
     fontSize: "18px",
     border: "1px solid #ffffff",
@@ -38,16 +39,11 @@ const styles = {
     color: "#ffffff",
     transition: "background-color 0.3s ease",
   },
-  deleteBtn: {
-    padding: ".8%",
-    margin: "2%",
-    fontSize: "18px",
-    border: "1px solid #ffffff",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "#444",
-    color: "#ffffff",
-    transition: "background-color 0.3s ease",
+  subBtnContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '5px 0',
   },
   container: {
     color: "white",
@@ -434,22 +430,24 @@ function ContractInput() {
       <div>
         <ul style={{ listStyleType: "none", padding: 0 }}>
           {contracts.map((contract, index) => (
-            <li key={index} style={styles.listItem}>
+            <li key={index} style={styles.subBtnContainer}>
               {contract.partner}: {formatDate(contract.start)} -{" "}
               {formatDate(contract.end)}. ${contract.amount}
               {/* TODO: Implement handleEdit functionality */}
-              <button
-                style={styles.deleteBtn}
-                onClick={() => handleEdit(index)}
-              >
-                Edit
-              </button>
-              <button
-                style={styles.deleteBtn}
-                onClick={() => handleDelete(index)}
-              >
-                Delete
-              </button>
+              <div>
+                <button
+                  style={styles.submitBtn}
+                  onClick={() => handleEdit(index)}
+                >
+                  Edit
+                </button>
+                <button
+                  style={styles.submitBtn}
+                  onClick={() => handleDelete(index)}
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>

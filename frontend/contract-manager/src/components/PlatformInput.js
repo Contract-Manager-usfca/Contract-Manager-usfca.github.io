@@ -5,7 +5,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   container: {
     color: "white",
-    // fontFamily: 'Ubuntu',
     backgroundColor: "#333",
     padding: "3%",
     paddingLeft: "6%",
@@ -32,6 +31,7 @@ const styles = {
   },
   submitBtn: {
     padding: "5px 10px",
+    width: '80px', 
     margin: "10px",
     fontSize: "18px",
     border: "1px solid #ffffff",
@@ -106,7 +106,7 @@ function CancelAdd(saveId, input1Id, input2Id, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "#67C9FF" : "#ffff",
+    color: savedText ? "#46C7A8" : "#ffff",
   };
   return (
     <div>
