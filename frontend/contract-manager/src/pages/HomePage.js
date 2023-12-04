@@ -326,14 +326,14 @@ function HomePage() {
     }
   }, [selectedDemographics]);
 
-
   // for main content graphs
   const styles = {
     mainContent: {
-      display: 'flex',
+      display: 'flex-start',
       flexDirection: 'column',
       justifyContent: 'center',
-      width: '100%',
+      alignItems: 'center',
+      width: '80%',
       padding: '20px',
       flexGrow: 1,
     },
@@ -341,27 +341,27 @@ function HomePage() {
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-around',
+      justifyContent: 'center',
+      alignItems: 'center',
       padding: '20px',
       margin: '20px 0',
-      borderRadius: '10px',
-      boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+      width: '100%',
     },
     chartTitle: {
-      marginBottom: "20px",
-      textAlign: "center",
+      alignSelf: 'flex-start',
+      marginBottom: "30px",
+      marginLeft: '30px',
       fontSize: "25px",
-      color: "white",
+      color: '#5A8FF6',
     },
     chartText: {
       color: "white",
-      maxWidth: "100%",
+      maxWidth: "90%",
       fontSize: "17px",
-      marginTop: "20px",
+      marginTop: "30px",
       textAlign: "left",
     },
   };
-
 
   // styles for aside
   const asideStyles = {
@@ -493,31 +493,30 @@ function HomePage() {
 
   // Function to render the main content
   const renderMainContent = () => (
-    <main style={{ width: '60%', padding: '20px' }}>
-      <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Stats</h1>
+    <main style={styles.mainContent}>
+      <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Statistics</h1>
       <div>
         <Fade bottom>
           <div style={styles.chartContainer}>
-            {/* New Bubble Chart Section */}
-            <h2 style={styles.chartTitle}>Contract Distribution Percentile</h2>
+            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
-            <span>
-                This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+              <span>
+                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
               </span>
             </p>
           </div>
 
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}>Graph #2</h2>
+            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
             <Fade bottom>
-              <MultiLineGraph averageDuration={averageDuration} />
+              <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
               <span>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. &nbsp;
+                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
               </span>
             </p>
           </div>
@@ -553,18 +552,9 @@ function HomePage() {
                   demographicAverages={demographicAverages} />
               </Fade>
               <p style={asideStyles.chartText}>
-                {selectedDemographics.length > 0 ? (
-                  <span>
-                    The Demographics currently selected are:&nbsp;
-                    <span style={asideStyles.boldTextColor}>
-                      {selectedDemographics.join(", ")}
-                    </span>
-                  </span>
-                ) : (
-                  <span style={asideStyles.boldTextColor}>
-                    Make a Selection above to see the generated results
-                  </span>
-                )}
+                <span>
+                  &emsp;&emsp;The bar graph presents a comparison of average follower counts across various demographic segments. Each bar indicates the follower count for a specific demographic, providing a clear visual of comparative reach.
+                </span>
               </p>
             </div>
 
@@ -574,19 +564,9 @@ function HomePage() {
                 <MultiLineGraph averageDuration={averageDuration} />
               </Fade>
               <p style={asideStyles.chartText}>
-                {/* check if demographic is selected */}
-                {selectedDemographics.length > 0 ? (
-                  <span>
-                    The Demographics currently selected are:&nbsp;
-                    <span style={asideStyles.boldTextColor}>
-                      {selectedDemographics.join(", ")}
-                    </span>
-                  </span>
-                ) : (
-                  <span style={asideStyles.boldTextColor}>
-                    Make a Selection above to see the generated results
-                  </span>
-                )}
+                <span>
+                  &emsp;&emsp;This time series line graph charts the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
+                </span>
               </p>
             </div>
           </Fade>

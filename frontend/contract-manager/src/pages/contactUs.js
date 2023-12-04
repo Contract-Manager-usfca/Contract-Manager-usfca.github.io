@@ -33,7 +33,7 @@ const styles = {
   h2: {
     fontSize: '23px',
     fontWeight: "bold",
-    color: '#8CD5FF',
+    color: '#5A8FF6',
     marginLeft: '5%'
   },
   formSection: {
