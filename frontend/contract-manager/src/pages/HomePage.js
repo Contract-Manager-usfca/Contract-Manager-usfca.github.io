@@ -95,10 +95,8 @@ function HomePage() {
             // Add the selected demographic to the state
             selectDemographic(demographicName);
           }
-          console.log('selected: ', selectedDemographics);
           // Clear the searchQuery
           setSearchQuery("");
-
         }
       })
       .catch((error) => {
@@ -149,6 +147,7 @@ function HomePage() {
               const categories = filteredDemoData.map((demo) => demo.demo);
 
               // Use a Set to ensure only unique categories are added
+              setSelectedDemoCategories(new Set());
               categories.forEach((category) => {
                 setSelectedDemoCategories((prev) => new Set([...prev, category]));
               });
@@ -238,7 +237,7 @@ function HomePage() {
       console.log("Averages:", averages);
 
       // Update state
-      setAverageDuration(averages); // Ensure you have a state variable to hold this data
+      setAverageDuration(averages);
 
     } catch (error) {
       console.error("Error fetching contracts:", error);
@@ -299,17 +298,7 @@ function HomePage() {
     if (!selectedDemographics.includes(demographic)) {
       setSelectedDemographics((prev) => [...prev, demographic]);
     }
-  };
-
-  const deselectDemographic = (demographic) => {
-    setSelectedDemographics((prev) => prev.filter(item => item !== demographic));
-
-    // Remove the deselected demographic from selectedDemoCategories
-    setSelectedDemoCategories((prev) => {
-      const updatedCategories = new Set(prev);
-      updatedCategories.delete(demographic);
-      return updatedCategories;
-    });
+    setSelectedDemographics([demographic]);
   };
 
   const clearSelectedDemographics = () => {
@@ -408,7 +397,7 @@ function HomePage() {
       width: "100%",
       display: "flex",
       gap: "10px",
-      marginBottom: "20px",
+      marginBottom: "30px",
     },
     dropdownStyles: {
       width: "100%",
@@ -431,23 +420,6 @@ function HomePage() {
       backgroundColor: "#545AEC",
       color: '#E3E4FF',
     },
-    chipContainer: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      gap: "10px",
-      marginTop: '2%',
-      marginBottom: "7%",
-    },
-    chip: {
-      display: "inline-flex",
-      padding: "5px 10px",
-      border: "1px solid #8CD5FF",
-      borderRadius: "20px",
-      backgroundColor: "#303030",
-      color: "white",
-      cursor: "pointer",
-    },
     loadingTitle: {
       color: "white",
       paddingRight: "5%",
@@ -468,24 +440,17 @@ function HomePage() {
         <select onChange={handleDropdownChange} style={asideStyles.dropdownStyles} value={searchQuery}>
           <option value="">Select a Demographic</option>
           {allDemographics.map((demographic) => (
-            <option key={demographic.id} value={demographic.name}>
+            <option
+              key={demographic.id}
+              value={demographic.name}
+              disabled={selectedDemographics.includes(demographic.name)}
+            >
               {demographic.name}
             </option>
           ))}
         </select>
         <button onClick={fetchDemographicData} style={asideStyles.button}>Select</button>
         <button onClick={clearSelectedDemographics} style={asideStyles.button}>Clear</button>
-      </div>
-      <div style={asideStyles.chipContainer}>
-        {!isLoading &&
-          Array.from(selectedDemoCategories).map((category, index) => (
-            <Fade left key={index}>
-              <div key={index} style={asideStyles.chip} onClick={() => deselectDemographic(category)}>
-                {category} x
-              </div>
-            </Fade>
-          ))
-        }
       </div>
       {renderGraphs()}
     </aside>
@@ -534,7 +499,7 @@ function HomePage() {
           <Fade bottom>
             <div style={asideStyles.loadingTitle}>
               <h2> Loading... </h2>
-            </div>x
+            </div>
             <img src={loadingGif} alt="Loading..." />
           </Fade>
         </div>
@@ -565,7 +530,7 @@ function HomePage() {
               </Fade>
               <p style={asideStyles.chartText}>
                 <span>
-                  &emsp;&emsp;This time series line graph charts the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
+                  &emsp;&emsp;This lined bubble chart displays the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
                 </span>
               </p>
             </div>

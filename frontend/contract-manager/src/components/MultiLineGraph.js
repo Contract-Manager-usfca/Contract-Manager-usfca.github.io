@@ -28,7 +28,7 @@ const MultiLineGraph = ({ averageDuration }) => {
     // Define scales
     const xScale = d3.scalePoint()
       .range([0, width])
-      .padding(0.5)
+      .padding(0.8)
       .domain(averageDuration[0].partners.map(d => d.partner));
 
     const yScale = d3.scaleLinear()
@@ -36,25 +36,25 @@ const MultiLineGraph = ({ averageDuration }) => {
       .domain([0, d3.max(averageDuration.flatMap(d => d.partners.map(p => p.averageDuration)))]);
 
     // Define line generator
-    const line = d3.line()
-      .x(d => xScale(d.partner))
-      .y(d => yScale(d.averageDuration));
+    // const line = d3.line()
+    //   .x(d => xScale(d.partner))
+    //   .y(d => yScale(d.averageDuration));
 
     // Define color scale
     const colorScale = d3.scaleOrdinal()
       .domain(averageDuration.map(d => d.demographic))
-      .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
+      .range(["#E41A1C", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
 
     // Draw lines
-    averageDuration.forEach((demo) => {
-      svg.append("path")
-        .datum(demo.partners)
-        .attr("fill", "none")
-        .attr("stroke", colorScale(demo.demographic))
-        .attr("stroke-width", 2)
-        .attr("class", "line")
-        .attr("d", line);
-    });
+    // averageDuration.forEach((demo) => {
+    //   svg.append("path")
+    //     .datum(demo.partners)
+    //     .attr("fill", "none")
+    //     .attr("stroke", colorScale(demo.demographic))
+    //     .attr("stroke-width", 2)
+    //     .attr("class", "line")
+    //     .attr("d", line);
+    // });
 
     // Draw gridlines
     svg.append("g")
@@ -95,7 +95,7 @@ const MultiLineGraph = ({ averageDuration }) => {
         .attr("stroke", "none")
         .attr("cx", d => xScale(d.partner))
         .attr("cy", d => yScale(d.averageDuration))
-        .attr("r", 5);
+        .attr("r", 6);
     });
 
     // X axis
@@ -123,7 +123,7 @@ const MultiLineGraph = ({ averageDuration }) => {
         .attr("stroke", "none")
         .attr("cx", d => xScale(d.partner))
         .attr("cy", d => yScale(d.averageDuration))
-        .attr("r", 5);
+        .attr("r", 6);
 
       // Hover functionality
       circles.on("mouseover", function (event, d) {
