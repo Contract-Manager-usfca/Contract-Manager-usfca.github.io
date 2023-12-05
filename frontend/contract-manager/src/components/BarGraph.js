@@ -63,7 +63,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
 
     const colorScale = d3.scaleOrdinal()
       .domain(updatedData.map((d) => d.name))
-      .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
+      .range(["#FFE601", "#00FF66", "#7D40FF", "#FF74AE"]);
 
     svg.append("text")
       .attr("transform", "rotate(-90)")

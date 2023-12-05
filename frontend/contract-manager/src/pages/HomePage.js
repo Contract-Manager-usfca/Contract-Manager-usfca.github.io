@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import BarGraph from "../components/BarGraph";
-import MultiLineGraph from "../components/MultiLineGraph";
+import StackedBarChart from "../components/StackedBarChart";
 import BubbleChart from "../components/BubbleChart";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
@@ -526,7 +526,7 @@ function HomePage() {
             <div style={asideStyles.chartContainer}>
               <h2 style={asideStyles.chartTitle}>Average Contract Duration</h2>
               <Fade bottom>
-                <MultiLineGraph averageDuration={averageDuration} />
+                <StackedBarChart averageDuration={averageDuration} />
               </Fade>
               <p style={asideStyles.chartText}>
                 <span>
