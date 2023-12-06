@@ -6,8 +6,12 @@
   font-family: 'Lora', serif;
 }
 
+.bubble-chart text {
+  font-family: 'Lora', serif;
+}
+
 .axis-label {
-  font-size: 14px;
+  font-size: 18px;
 }
 
 svg {
@@ -49,9 +53,8 @@ g {
   stroke-linecap: round;
 }
 
-.legend {
-  font-family: 'Arial', sans-serif;
-  font-size: 12px;
+.legend-text {
+  fill: rgb(251, 251, 251);
 }
 
 .tooltip {

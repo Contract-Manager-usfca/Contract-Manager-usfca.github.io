@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import BarGraph from "../components/BarGraph";
-import MultiLineGraph from "../components/MultiLineGraph";
+import StackedBarChart from "../components/StackedBarChart";
 import BubbleChart from "../components/BubbleChart";
 import axios from "axios";
 import Fade from "react-reveal/Fade";
@@ -48,7 +48,6 @@ function HomePage() {
     axios.get('https://contract-manager.aquaflare.io/partners/', { withCredentials: true })
       .then(response => {
         setPartners(response.data);
-        console.log('partners', response.data);
         setIsLoading(false);
       })
       .catch(error => {
@@ -95,10 +94,8 @@ function HomePage() {
             // Add the selected demographic to the state
             selectDemographic(demographicName);
           }
-          console.log('selected: ', selectedDemographics);
           // Clear the searchQuery
           setSearchQuery("");
-
         }
       })
       .catch((error) => {
@@ -149,6 +146,7 @@ function HomePage() {
               const categories = filteredDemoData.map((demo) => demo.demo);
 
               // Use a Set to ensure only unique categories are added
+              setSelectedDemoCategories(new Set());
               categories.forEach((category) => {
                 setSelectedDemoCategories((prev) => new Set([...prev, category]));
               });
@@ -156,7 +154,6 @@ function HomePage() {
               // Count users in each demographic category
               filteredDemoData.forEach((demo) => {
                 const category = demo.demo;
-                console.log(category);
 
                 if (category in demographicCounts) {
                   demographicCounts[category]++;
@@ -165,7 +162,6 @@ function HomePage() {
                 }
               });
 
-              console.log(demographicCounts);
 
               // Update your state or do other processing with the counts here
               console.log(`Counts for ${selectedDemo}:`, demographicCounts);
@@ -238,7 +234,7 @@ function HomePage() {
       console.log("Averages:", averages);
 
       // Update state
-      setAverageDuration(averages); // Ensure you have a state variable to hold this data
+      setAverageDuration(averages);
 
     } catch (error) {
       console.error("Error fetching contracts:", error);
@@ -278,13 +274,9 @@ function HomePage() {
         setDemographicCounts(demographicCounts);
         setDemographicAverages(categoryAverages);
 
-        console.log("Category counts:", demographicCounts);
-        console.log("Category averages:", categoryAverages);
-
         setTimeout(() => {
           setIsLoading(false);
         }, 3000);
-        console.log("Completed fetching and calculating averages");
       })
       .catch((error) => {
         console.error("Error fetching follower counts:", error);
@@ -299,17 +291,7 @@ function HomePage() {
     if (!selectedDemographics.includes(demographic)) {
       setSelectedDemographics((prev) => [...prev, demographic]);
     }
-  };
-
-  const deselectDemographic = (demographic) => {
-    setSelectedDemographics((prev) => prev.filter(item => item !== demographic));
-
-    // Remove the deselected demographic from selectedDemoCategories
-    setSelectedDemoCategories((prev) => {
-      const updatedCategories = new Set(prev);
-      updatedCategories.delete(demographic);
-      return updatedCategories;
-    });
+    setSelectedDemographics([demographic]);
   };
 
   const clearSelectedDemographics = () => {
@@ -385,7 +367,7 @@ function HomePage() {
       borderRadius: '10px',
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
       padding: '20px',
-      marginBottom: '10%',
+      marginBottom: '20%',
     },
     chartTitle: {
       marginBottom: "20px",
@@ -408,7 +390,7 @@ function HomePage() {
       width: "100%",
       display: "flex",
       gap: "10px",
-      marginBottom: "20px",
+      marginBottom: "30px",
     },
     dropdownStyles: {
       width: "100%",
@@ -431,23 +413,6 @@ function HomePage() {
       backgroundColor: "#545AEC",
       color: '#E3E4FF',
     },
-    chipContainer: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      gap: "10px",
-      marginTop: '2%',
-      marginBottom: "7%",
-    },
-    chip: {
-      display: "inline-flex",
-      padding: "5px 10px",
-      border: "1px solid #8CD5FF",
-      borderRadius: "20px",
-      backgroundColor: "#303030",
-      color: "white",
-      cursor: "pointer",
-    },
     loadingTitle: {
       color: "white",
       paddingRight: "5%",
@@ -468,24 +433,17 @@ function HomePage() {
         <select onChange={handleDropdownChange} style={asideStyles.dropdownStyles} value={searchQuery}>
           <option value="">Select a Demographic</option>
           {allDemographics.map((demographic) => (
-            <option key={demographic.id} value={demographic.name}>
+            <option
+              key={demographic.id}
+              value={demographic.name}
+              disabled={selectedDemographics.includes(demographic.name)}
+            >
               {demographic.name}
             </option>
           ))}
         </select>
         <button onClick={fetchDemographicData} style={asideStyles.button}>Select</button>
         <button onClick={clearSelectedDemographics} style={asideStyles.button}>Clear</button>
-      </div>
-      <div style={asideStyles.chipContainer}>
-        {!isLoading &&
-          Array.from(selectedDemoCategories).map((category, index) => (
-            <Fade left key={index}>
-              <div key={index} style={asideStyles.chip} onClick={() => deselectDemographic(category)}>
-                {category} x
-              </div>
-            </Fade>
-          ))
-        }
       </div>
       {renderGraphs()}
     </aside>
@@ -498,25 +456,25 @@ function HomePage() {
       <div>
         <Fade bottom>
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
+            <h2 style={styles.chartTitle}><b>Contract Quantity Distribution Among Partners</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
               <span>
-                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+                &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
               </span>
             </p>
           </div>
 
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
+            <h2 style={styles.chartTitle}><b>Contract Quantity Distribution Among Partners</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
               <span>
-                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+                &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
               </span>
             </p>
           </div>
@@ -534,7 +492,7 @@ function HomePage() {
           <Fade bottom>
             <div style={asideStyles.loadingTitle}>
               <h2> Loading... </h2>
-            </div>x
+            </div>
             <img src={loadingGif} alt="Loading..." />
           </Fade>
         </div>
@@ -561,11 +519,11 @@ function HomePage() {
             <div style={asideStyles.chartContainer}>
               <h2 style={asideStyles.chartTitle}>Average Contract Duration</h2>
               <Fade bottom>
-                <MultiLineGraph averageDuration={averageDuration} />
+                <StackedBarChart averageDuration={averageDuration} />
               </Fade>
               <p style={asideStyles.chartText}>
                 <span>
-                  &emsp;&emsp;This time series line graph charts the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
+                  &emsp;&emsp;This stacked bar chart displays the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
                 </span>
               </p>
             </div>
