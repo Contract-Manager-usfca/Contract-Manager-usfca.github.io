@@ -62,7 +62,7 @@ const BubbleChart = () => {
   // Color scale remains the same
   const colorScale = d3.scaleOrdinal()
     .domain(nodes.map(d => d.partnerName)) // Assuming you want to color by partner name
-    .range(["#C1E9FF", "#67C9FF", "#9C9FFB", "#3D7CF6"]);
+    .range(["#FF5D01", "#FFE601", "#00FF66", "#7D40FF"]); 
 
   // Adjust the x scale for padding
   const x = d3.scaleBand()

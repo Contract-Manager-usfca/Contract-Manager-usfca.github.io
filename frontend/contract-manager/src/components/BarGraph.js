@@ -40,7 +40,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Function for Gridlines
-    function makeHorizontalGridlines() {
+    function gridLines() {
       return d3.axisLeft(y)
         .ticks(updatedData.length)
         .tickSize(-width)
@@ -50,10 +50,10 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
     // Adding Gridlines
     svg.append("g")
       .attr("class", "grid")
-      .call(makeHorizontalGridlines())
+      .call(gridLines())
       .selectAll("line")
       .attr("stroke", "#ccc")
-      .attr("stroke-dasharray", "3,3");
+      .attr("stroke-dasharray", "4,4");
 
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -63,7 +63,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
 
     const colorScale = d3.scaleOrdinal()
       .domain(updatedData.map((d) => d.name))
-      .range(["#FFE601", "#00FF66", "#FF5D01", "#FF74AE"]);
+      .range(["#FFE601", "#00FF66", "#7D40FF", "#FF74AE"]);
 
     svg.append("text")
       .attr("transform", "rotate(-90)")

@@ -30,7 +30,7 @@ const StackedBarChart = ({ averageDuration }) => {
     // Define scales
     const xScale = d3.scaleBand()
       .range([0, width])
-      .padding(0.1)
+      .padding(0.3)
       // x-asix representing demographic
       .domain(averageDuration.map(d => d.demographic));
 
@@ -46,7 +46,7 @@ const StackedBarChart = ({ averageDuration }) => {
     // color scale for layers
     const colorScale = d3.scaleOrdinal()
       .domain(uniquePartners)
-      .range(["#FFE601", "#00FF66", "#FF5D01", "#FF5D01"]);
+      .range(["#FFE601", "#00FF66", "#7D40FF", "#FF74AE"]);
 
     // Tooltip for hover
     const tooltip = d3.select("body").append("div")
@@ -54,7 +54,7 @@ const StackedBarChart = ({ averageDuration }) => {
       .style("opacity", 0);
 
     // Function for Gridlines 
-    function makeHorizontalGridlines() {
+    function gridLines() {
       return d3.axisLeft(yScale)
         .ticks(5)
         .tickSize(-width)
@@ -64,10 +64,10 @@ const StackedBarChart = ({ averageDuration }) => {
     // Adding Gridlines
     svg.append("g")
       .attr("class", "grid")
-      .call(makeHorizontalGridlines())
+      .call(gridLines())
       .selectAll("line")
       .attr("stroke", "#ccc")
-      .attr("stroke-dasharray", "3,3");
+      .attr("stroke-dasharray", "4,4");
 
     // Preparing stackData with demographics as primary category and partners as layers
     const stackData = averageDuration.map(demo => {
@@ -95,6 +95,7 @@ const StackedBarChart = ({ averageDuration }) => {
       .selectAll("rect")
       .data(d => d)
       .enter().append("rect")
+      .attr("class", "bar")
       .attr("x", d => xScale(d.data.demographic))
       .attr("y", d => yScale(d[1]))
       .attr("height", d => yScale(d[0]) - yScale(d[1]))
@@ -120,6 +121,43 @@ const StackedBarChart = ({ averageDuration }) => {
       .attr("fill", "white")
       .style("text-anchor", "middle")
       .text("Average Duration");
+
+    // Determine the position for the legend
+    const legendX = margin.right + 20;
+    const legendY = -30;
+
+    // Create the legend
+    const legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${legendX}, ${legendY})`);
+
+    // Starting position for the first legend item
+    let xOffset = 0;
+
+    colorScale.domain().forEach((partner, index) => {
+      const legendItem = legend.append("g")
+        .attr("transform", `translate(${xOffset}, 0)`);
+
+      legendItem.append("rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", colorScale(partner));
+
+      legendItem.append("text")
+        .attr("x", 15)
+        .attr("y", 10)
+        .text(partner)
+        .attr("class", "legend-text")
+        .style("font-size", "14px")
+        .attr("fill", "#ffffff");
+
+      // Update xOffset for the next legend item
+      const textWidth = legendItem.select("text").node().getComputedTextLength();
+      xOffset += textWidth + 34;
+    });
+
+    // Adjust the height of the SVG to accommodate the legend
+    svg.attr("height", height + margin.top + margin.bottom + 20);
 
     // Hover functionality
     svg.selectAll(".demographic rect")
