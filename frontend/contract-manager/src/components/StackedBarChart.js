@@ -6,8 +6,6 @@ import "../styles/graph.css";
 const StackedBarChart = ({ averageDuration }) => {
   const svgRef = useRef(null);
 
-  console.log("average duration being given:", averageDuration);
-
   useEffect(() => {
     // Select the SVG element and clear it
     const svgElement = d3.select(svgRef.current);

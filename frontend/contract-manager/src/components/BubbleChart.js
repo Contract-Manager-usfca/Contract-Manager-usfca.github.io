@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import axios from 'axios';
+import "../styles/graph.css";
 
 const BubbleChart = () => {
   const [nodes, setNodes] = useState([]);
@@ -42,6 +43,7 @@ const BubbleChart = () => {
 
   useEffect(() => {
     fetchContractData();
+    // console.log(nodes);
   }, []);
 
   useEffect(() => {
@@ -53,31 +55,34 @@ const BubbleChart = () => {
   const drawChart = () => {
     const width = 450; // Width of the SVG container
     const height = 350; // Height of the SVG container
-    const padding = 50; // Padding to ensure bubbles don't touch the SVG edges
+    const padding = 30; // Padding to ensure bubbles don't touch the SVG edges
 
     const svg = d3.select(svgRef.current)
-    .attr('width', width)
-    .attr('height', height);
+      .attr('width', width)
+      .attr('height', height);
 
-  // Color scale remains the same
-  const colorScale = d3.scaleOrdinal()
-    .domain(nodes.map(d => d.partnerName)) // Assuming you want to color by partner name
-    .range(["#FF5D01", "#FFE601", "#00FF66", "#7D40FF"]); 
+    // used in order to rerender
+    svg.selectAll("*").remove();
 
-  // Adjust the x scale for padding
-  const x = d3.scaleBand()
-    .domain(nodes.map(d => d.group))
-    .range([padding, width - padding])
-    .padding(0.1);
+    // Color scale remains the same
+    const colorScale = d3.scaleOrdinal()
+      .domain(nodes.map(d => d.partnerName)) // Assuming you want to color by partner name
+      .range(["#FF5D01", "#FFE601", "#00FF66", "#7D40FF"]);
+
+    // Adjust the x scale for padding
+    const x = d3.scaleBand()
+      .domain(nodes.map(d => d.group))
+      .range([padding, width - padding])
+      .padding(0.1);
 
     const node = svg.append("g")
-    .selectAll("circle")
-    .data(nodes, d => d.id)
-    .join("circle")
+      .selectAll("circle")
+      .data(nodes, d => d.id)
+      .join("circle")
       .attr("r", d => d.radius)
       .attr("cx", d => x(d.group) + x.bandwidth() / 2)
       .attr("cy", d => d.y)
-      .style("fill", d => colorScale(d.partnerName)) // Use the colorScale for fill color
+      .style("fill", d => colorScale(d.partnerName))
       .style("fill-opacity", 0.8)
       .attr("stroke", "#1D1D1D")
       .style("stroke-width", 2)
@@ -87,19 +92,48 @@ const BubbleChart = () => {
         .on("end", dragended));
 
     simulationRef.current = d3.forceSimulation()
-        .force("x", d3.forceX().strength(0.5).x(d => x(d.group)))
-        .force("y", d3.forceY().strength(0.1).y(height / 2))
-        .force("center", d3.forceCenter().x(width / 2).y(height / 2))
-        .force("charge", d3.forceManyBody().strength(1))
-        .force("collide", d3.forceCollide().strength(.1).radius(d => d.radius + 2).iterations(1))
-        .nodes(nodes)
-        .on("tick", () => {
-          node
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y);
-        });
+      .force("x", d3.forceX().strength(0.5).x(d => x(d.group)))
+      .force("y", d3.forceY().strength(0.1).y(height / 2))
+      .force("center", d3.forceCenter().x(width / 2.3).y(height / 2))
+      .force("charge", d3.forceManyBody().strength(1))
+      .force("collide", d3.forceCollide().strength(.1).radius(d => d.radius + 2).iterations(1))
+      .nodes(nodes)
+      .on("tick", () => {
+        node
+          .attr("cx", d => d.x)
+          .attr("cy", d => d.y);
+      });
+
+    // // Labels for each partner
+    const partnerLabels = Array.from(new Set(nodes.map(d => d.partnerName)));
+
+    const labelGroups = svg.append("g")
+    .attr("class", "label-groups")
+    .selectAll("g")
+    .data(partnerLabels)
+    .enter()
+    .append("g")
+    .attr("transform", (d, i) => `translate(${x(nodes.find(n => n.partnerName === d).group) + x.bandwidth() / 2 - 10}, ${height - 40})`);
+
+  // Add color rectangles for each label
+  labelGroups.append("rect")
+    .attr("width", 20)
+    .attr("height", 20)
+    .attr("x", -30)
+    .attr("y", -10)
+    .style("fill", d => colorScale(d));
+
+  // Add text labels next to the rectangles
+  labelGroups.append("text")
+    .attr("x", 5)
+    .attr("y", 5)
+    .text(d => d)
+    .attr("class", "partner-label")
+    .style("text-anchor", "start")
+    .style("fill", "#ffffff")
+    .style("font-size", "17px");
   };
-  
+
 
   // Drag event handlers
   const dragstarted = (event, d) => {
@@ -121,9 +155,9 @@ const BubbleChart = () => {
     simulationRef.current.alpha(0.1).restart();
   };
 
-  
 
-  return <svg ref={svgRef}></svg>;
+
+  return <svg ref={svgRef} className="bubble-chart"></svg>;
 };
 
 export default BubbleChart;

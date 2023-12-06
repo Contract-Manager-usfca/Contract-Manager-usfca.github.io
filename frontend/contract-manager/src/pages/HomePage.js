@@ -367,7 +367,7 @@ function HomePage() {
       borderRadius: '10px',
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
       padding: '20px',
-      marginBottom: '10%',
+      marginBottom: '20%',
     },
     chartTitle: {
       marginBottom: "20px",
@@ -456,25 +456,25 @@ function HomePage() {
       <div>
         <Fade bottom>
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
+            <h2 style={styles.chartTitle}><b>Contract Quantity Distribution Among Partners</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
               <span>
-                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+                &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
               </span>
             </p>
           </div>
 
           <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}><b>Contract Distribution Percentile</b></h2>
+            <h2 style={styles.chartTitle}><b>Contract Quantity Distribution Among Partners</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
             <p style={styles.chartText}>
               <span>
-                &emsp;&emsp;This bubble chart visualizes the distribution of contracts among partners. Each bubble's size represents the proportion of the total contract amount associated with that partner.
+                &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
               </span>
             </p>
           </div>
