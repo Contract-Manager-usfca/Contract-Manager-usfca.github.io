@@ -1,12 +1,32 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import axios from 'axios';
-import "../styles/graph.css";
+import "../styles/charts.css";
 
 const BubbleChart = () => {
   const [nodes, setNodes] = useState([]);
   const svgRef = useRef(null);
   const simulationRef = useRef(null);
+
+  const defaultWidth = 450;
+  const defaultHeight = 350;
+  const defaultRatio = defaultWidth / defaultHeight;
+
+  const margin = { top: 20, right: 20, bottom: 10, left: 40 };
+
+  // Determine font size for the legend based on chart width
+  const getLegendFontSize = (width) => {
+    const baseFontSize = 2;
+    const scaleFactor = 0.02;
+    return Math.max(baseFontSize, baseFontSize * scaleFactor * width);
+  };
+
+  // Determine legend box size based on chart width
+  const getLegendBoxSize = (width) => {
+    const baseSize = 2.5; // Base size for the legend boxes
+    const scaleFactor = 0.02; // Adjust this factor based on your design
+    return Math.max(baseSize, baseSize * scaleFactor * width);
+  };
 
   const fetchContractData = async () => {
     try {
@@ -43,18 +63,47 @@ const BubbleChart = () => {
 
   useEffect(() => {
     fetchContractData();
-    // console.log(nodes);
   }, []);
 
   useEffect(() => {
-    if (nodes.length > 0 && svgRef.current) {
-      drawChart();
-    }
+    const handleResize = () => {
+      if (nodes.length > 0 && svgRef.current) {
+        const { width, height } = set_size();
+        drawChart(width, height);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
   }, [nodes]);
 
-  const drawChart = () => {
-    const width = 450; // Width of the SVG container
-    const height = 350; // Height of the SVG container
+  const set_size = () => {
+    const currentWidth = window.innerWidth;
+    const currentHeight = window.innerHeight;
+    const currentRatio = currentWidth / currentHeight;
+
+    let w, h;
+    if (currentRatio > defaultRatio) {
+      h = defaultHeight;
+      w = defaultWidth;
+    } else {
+      margin.left = 20;
+      w = currentWidth - 190;
+      h = w / defaultRatio;
+    }
+
+    return {
+      width: w - margin.left - margin.right,
+      height: h - margin.top - margin.bottom
+    };
+  };
+
+  const drawChart = (width, height) => {
+    const fontSize = getLegendFontSize(width);
+    const boxSize = getLegendBoxSize(width);
     const padding = 30; // Padding to ensure bubbles don't touch the SVG edges
 
     const svg = d3.select(svgRef.current)
@@ -108,30 +157,30 @@ const BubbleChart = () => {
     const partnerLabels = Array.from(new Set(nodes.map(d => d.partnerName)));
 
     const labelGroups = svg.append("g")
-    .attr("class", "label-groups")
-    .selectAll("g")
-    .data(partnerLabels)
-    .enter()
-    .append("g")
-    .attr("transform", (d, i) => `translate(${x(nodes.find(n => n.partnerName === d).group) + x.bandwidth() / 2 - 10}, ${height - 40})`);
+      .attr("class", "label-groups")
+      .selectAll("g")
+      .data(partnerLabels)
+      .enter()
+      .append("g")
+      .attr("transform", (d, i) => `translate(${x(nodes.find(n => n.partnerName === d).group) + x.bandwidth() / 2 - 10}, ${height - 40})`);
 
-  // Add color rectangles for each label
-  labelGroups.append("rect")
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("x", -30)
-    .attr("y", -10)
-    .style("fill", d => colorScale(d));
+    // Add color rectangles for each label
+    labelGroups.append("rect")
+      .attr("width", boxSize)
+      .attr("height", boxSize)
+      .attr("x", -22)
+      .attr("y", -9)
+      .style("fill", d => colorScale(d));
 
-  // Add text labels next to the rectangles
-  labelGroups.append("text")
-    .attr("x", 5)
-    .attr("y", 5)
-    .text(d => d)
-    .attr("class", "partner-label")
-    .style("text-anchor", "start")
-    .style("fill", "#ffffff")
-    .style("font-size", "17px");
+    // Add text labels next to the rectangles
+    labelGroups.append("text")
+      .attr("x", 4)
+      .attr("y", 5)
+      .text(d => d)
+      .attr("class", "partner-label")
+      .style("text-anchor", "start")
+      .style("fill", "#ffffff")
+      .style("font-size", `${fontSize}px`);
   };
 
 

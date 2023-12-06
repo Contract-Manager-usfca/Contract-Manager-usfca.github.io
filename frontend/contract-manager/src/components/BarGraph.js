@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { select, easeBounce } from "d3";
-import "../styles/graph.css";
+import "../styles/charts.css";
 
 const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
   const svgRef = useRef(null);

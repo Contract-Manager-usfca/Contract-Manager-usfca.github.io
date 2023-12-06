@@ -308,129 +308,11 @@ function HomePage() {
     }
   }, [selectedDemographics]);
 
-  // for main content graphs
-  const styles = {
-    mainContent: {
-      display: 'flex-start',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '80%',
-      padding: '20px',
-      flexGrow: 1,
-    },
-    chartContainer: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '20px',
-      margin: '20px 0',
-      width: '100%',
-    },
-    chartTitle: {
-      alignSelf: 'flex-start',
-      marginBottom: "30px",
-      marginLeft: '30px',
-      fontSize: "25px",
-      color: '#5A8FF6',
-    },
-    chartText: {
-      color: "white",
-      maxWidth: "90%",
-      fontSize: "17px",
-      marginTop: "30px",
-      textAlign: "left",
-    },
-  };
-
-  // styles for aside
-  const asideStyles = {
-    container: {
-      width: "40%",
-      backgroundColor: "#303030",
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      overflow: "auto",
-      flexGrow: 1,
-    },
-    chartContainer: {
-      flexGrow: 1,
-      width: '100%',
-      maxWidth: '100%',
-      justifyContent: 'space-between',
-      overflow: 'hidden',
-      backgroundColor: '#404040',
-      borderRadius: '10px',
-      boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-      padding: '20px',
-      marginBottom: '20%',
-    },
-    chartTitle: {
-      marginBottom: "20px",
-      textAlign: "center",
-      fontSize: "25px",
-      color: "white",
-    },
-    chartText: {
-      color: "white",
-      maxWidth: "100%",
-      fontSize: "15px",
-      marginTop: "20px",
-      textAlign: "left",
-    },
-    boldTextColor: {
-      color: "#8CD5FF",
-      fontWeight: "bold",
-    },
-    dropdown: {
-      width: "100%",
-      display: "flex",
-      gap: "10px",
-      marginBottom: "30px",
-    },
-    dropdownStyles: {
-      width: "100%",
-      padding: "10px",
-      borderRadius: "4px",
-      border: "1px solid #ccc",
-    },
-    searchInput: {
-      flexGrow: 1,
-      padding: "10px",
-      borderRadius: "4px",
-      border: "1px solid #ccc",
-    },
-    button: {
-      padding: "10px 15px",
-      fontSize: "16px",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      backgroundColor: "#545AEC",
-      color: '#E3E4FF',
-    },
-    loadingTitle: {
-      color: "white",
-      paddingRight: "5%",
-      paddingTop: "1.5%",
-    },
-    loadingCard: {
-      display: "flex",
-      alignItems: "center",
-      margin: "auto",
-      textAlign: "center",
-    },
-  };
-
   // Function to render the aside content
   const renderAside = () => (
-    <aside style={asideStyles.container}>
-      <div style={asideStyles.dropdown}>
-        <select onChange={handleDropdownChange} style={asideStyles.dropdownStyles} value={searchQuery}>
+    <aside className="asideContainer">
+      <div className="dropdown">
+        <select onChange={handleDropdownChange} className="dropdownStyles" value={searchQuery}>
           <option value="">Select a Demographic</option>
           {allDemographics.map((demographic) => (
             <option
@@ -442,8 +324,8 @@ function HomePage() {
             </option>
           ))}
         </select>
-        <button onClick={fetchDemographicData} style={asideStyles.button}>Select</button>
-        <button onClick={clearSelectedDemographics} style={asideStyles.button}>Clear</button>
+        <button onClick={fetchDemographicData} className="button">Select</button>
+        <button onClick={clearSelectedDemographics} className="button">Clear</button>
       </div>
       {renderGraphs()}
     </aside>
@@ -451,28 +333,28 @@ function HomePage() {
 
   // Function to render the main content
   const renderMainContent = () => (
-    <main style={styles.mainContent}>
+    <main className="mainContent">
       <h1 style={{ color: 'white', fontSize: '30px', textAlign: 'center', paddingBottom: '2%' }}>General Statistics</h1>
       <div>
         <Fade bottom>
-          <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}><b>Contract Quantity Distribution Among Partners</b></h2>
+          <div className="chartContainer">
+            <h2 className="chartTitle"><b>Contract Quantity Distribution Among Partners</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
-            <p style={styles.chartText}>
+            <p className="chartText">
               <span>
                 &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
               </span>
             </p>
           </div>
 
-          <div style={styles.chartContainer}>
-            <h2 style={styles.chartTitle}><b>Contract Quantity Distribution Among Partners</b></h2>
+          <div className="chartContainer">
+            <h2 className="chartTitle"><b>Contract Quantity Distribution Among Partners</b></h2>
             <Fade bottom>
               <BubbleChart />
             </Fade>
-            <p style={styles.chartText}>
+            <p className="chartText">
               <span>
                 &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
               </span>
@@ -488,9 +370,9 @@ function HomePage() {
     // currently loading and waiting for data
     if (isLoading) {
       return (
-        <div style={asideStyles.loadingCard}>
+        <div className="loadingCard">
           <Fade bottom>
-            <div style={asideStyles.loadingTitle}>
+            <div className="loadingTitle">
               <h2> Loading... </h2>
             </div>
             <img src={loadingGif} alt="Loading..." />
@@ -503,25 +385,25 @@ function HomePage() {
       return (
         <div>
           <Fade bottom>
-            <div style={asideStyles.chartContainer}>
-              <h2 style={asideStyles.chartTitle}>Average Follower Count</h2>
+            <div className="asideChartContainer">
+              <h2 className="asideChartTitle">Average Follower Count</h2>
               <Fade bottom>
                 <BarGraph selectedDemoCategories={selectedDemoCategories}
                   demographicAverages={demographicAverages} />
               </Fade>
-              <p style={asideStyles.chartText}>
+              <p className="asideChartText">
                 <span>
                   &emsp;&emsp;The bar graph presents a comparison of average follower counts across various demographic segments. Each bar indicates the follower count for a specific demographic, providing a clear visual of comparative reach.
                 </span>
               </p>
             </div>
 
-            <div style={asideStyles.chartContainer}>
-              <h2 style={asideStyles.chartTitle}>Average Contract Duration</h2>
+            <div className="asideChartContainer">
+              <h2 className="asideChartTitle">Average Contract Duration</h2>
               <Fade bottom>
                 <StackedBarChart averageDuration={averageDuration} />
               </Fade>
-              <p style={asideStyles.chartText}>
+              <p className="asideChartText">
                 <span>
                   &emsp;&emsp;This stacked bar chart displays the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
                 </span>
