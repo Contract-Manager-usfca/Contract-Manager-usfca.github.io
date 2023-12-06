@@ -48,7 +48,6 @@ function HomePage() {
     axios.get('https://contract-manager.aquaflare.io/partners/', { withCredentials: true })
       .then(response => {
         setPartners(response.data);
-        console.log('partners', response.data);
         setIsLoading(false);
       })
       .catch(error => {
@@ -155,7 +154,6 @@ function HomePage() {
               // Count users in each demographic category
               filteredDemoData.forEach((demo) => {
                 const category = demo.demo;
-                console.log(category);
 
                 if (category in demographicCounts) {
                   demographicCounts[category]++;
@@ -164,7 +162,6 @@ function HomePage() {
                 }
               });
 
-              console.log(demographicCounts);
 
               // Update your state or do other processing with the counts here
               console.log(`Counts for ${selectedDemo}:`, demographicCounts);
@@ -277,13 +274,9 @@ function HomePage() {
         setDemographicCounts(demographicCounts);
         setDemographicAverages(categoryAverages);
 
-        console.log("Category counts:", demographicCounts);
-        console.log("Category averages:", categoryAverages);
-
         setTimeout(() => {
           setIsLoading(false);
         }, 3000);
-        console.log("Completed fetching and calculating averages");
       })
       .catch((error) => {
         console.error("Error fetching follower counts:", error);
@@ -530,7 +523,7 @@ function HomePage() {
               </Fade>
               <p style={asideStyles.chartText}>
                 <span>
-                  &emsp;&emsp;This lined bubble chart displays the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
+                  &emsp;&emsp;This stacked bar chart displays the average contract durations with key companies for the selected demographic groups. Each line corresponds to a demographic, allowing for a direct comparison of contract lengths.
                 </span>
               </p>
             </div>

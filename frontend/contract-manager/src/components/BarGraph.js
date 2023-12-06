@@ -63,7 +63,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
 
     const colorScale = d3.scaleOrdinal()
       .domain(updatedData.map((d) => d.name))
-      .range(["#FFE601", "#00FF66", "#7D40FF", "#FF74AE"]);
+      .range(["#FFE601", "#00FF66", "#FF5D01", "#FF74AE"]);
 
     svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -101,7 +101,7 @@ const BarGraph = ({ selectedDemoCategories, demographicAverages }) => {
       tooltip.transition()
         .duration(200)
         .style("opacity", .9);
-      tooltip.html(d.value)
+      tooltip.html(`${d.value} followers`)
         .style("left", (event.pageX) + "px")
         .style("top", (event.pageY - 28) + "px");
     });
