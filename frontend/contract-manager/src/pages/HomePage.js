@@ -53,6 +53,7 @@ function HomePage() {
           id: demographic.id,
           name: demographic.demographic,
         }));
+        console.log("demos", demographicsArray);
         setAllDemographics(demographicsArray);
       })
       .catch((error) => {
