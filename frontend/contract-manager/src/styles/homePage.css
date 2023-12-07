@@ -1,0 +1,177 @@
+/* MAIN CONTENT STYLING */
+.mainContent {
+  display: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.chartContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.chartTitle {
+  align-self: flex-start;
+  margin-bottom: 30px;
+  margin-left: 30px;
+  font-size: 25px;
+  color: #5A8FF6;
+}
+
+.chartText {
+  color: white;
+  max-width: 90%;
+  font-size: 17px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+/* ASIDE STYLING */
+.asideContainer {
+  width: 40%;
+  background-color: #303030;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+  flex-grow: 1;
+}
+
+.asideChartContainer {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 100%;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: #404040;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  margin-bottom: 20%;
+}
+
+.asideChartTitle {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 25px;
+  color: white;
+}
+
+.asideChartText {
+  color: white;
+  max-width: 100%;
+  font-size: 15px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.dropdown {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.dropdownStyles {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.searchInput {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #545AEC;
+  color: #E3E4FF;
+}
+
+.loadingTitle {
+  color: white;
+  padding-right: 5%;
+  padding-top: 1.5%;
+}
+
+.loadingCard {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  text-align: center;
+}
+
+/* Mobile styles */
+@media only screen and (max-width: 768px) {
+  .mainContent,
+  .asideContainer {
+    width: 100%; 
+    padding: 10px;
+  }
+
+  .chartContainer,
+  .asideChartContainer {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .chartTitle,
+  .asideChartTitle {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-bottom: 15px;
+  }
+
+  .chartText,
+  .asideChartText {
+    font-size: 14px;
+    max-width: 100%;
+    margin-top: 15px;
+  }
+
+  .dropdown,
+  .dropdownStyles,
+  .searchInput {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .button {
+    padding: 8px;
+    margin: 0 5px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .chartTitle,
+  .asideChartTitle,
+  .chartText,
+  .asideChartText {
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  .dropdown {
+    gap: 5px;
+  }
+}

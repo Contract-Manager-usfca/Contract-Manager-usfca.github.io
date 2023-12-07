@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
-import Fade from 'react-reveal/Fade';
+import Fade from "react-reveal/Fade";
 
 const styles = {
   buttonContainer: {
-    textAlign: 'right',
-    marginRight: '17%',
+    textAlign: "right",
+    marginRight: "17%",
   },
   contractBtn: {
     padding: "5px 10px",
@@ -16,18 +16,20 @@ const styles = {
     transition: "background-color 0.3s ease",
   },
   contractBtn: (isHovered) => ({
-    padding: '10px 20px',
-    margin: '10px 0',
-    borderRadius: '4px',
-    border: 'none',
-    backgroundColor: isHovered ? '#889674' : '#444',
-    color: isHovered ? '#F3FBE9' : '#ffffff',
-    cursor: 'pointer',
-    justifyContent: 'end',
-    transition: 'background-color 0.3s ease, color 0.3s ease',
+    padding: "10px 20px",
+    fontFamily: "Lora",
+    margin: "10px 0",
+    borderRadius: "4px",
+    border: "none",
+    backgroundColor: isHovered ? "#8CD5FF" : "#545AEC",
+    color: isHovered ? "#4775CD" : "#C1E9FF",
+    cursor: "pointer",
+    justifyContent: "end",
+    transition: "background-color 0.3s ease, color 0.3s ease",
   }),
   submitBtn: {
     padding: "5px 10px",
+    width: '80px', 
     margin: "10px",
     fontSize: "18px",
     border: "1px solid #ffffff",
@@ -37,64 +39,59 @@ const styles = {
     color: "#ffffff",
     transition: "background-color 0.3s ease",
   },
-  deleteBtn: {
-    padding: ".8%",
-    margin: "2%",
-    fontSize: "18px",
-    border: "1px solid #ffffff",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "#444",
-    color: "#ffffff",
-    transition: "background-color 0.3s ease",
+  subBtnContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '5px 0',
   },
   container: {
-    color: 'white',
-    fontFamily: 'Ubuntu',
-    backgroundColor: '#333',
-    padding: '3%',
-    paddingLeft: '6%',
-    borderRadius: '5px',
-    width: '80%',
-    margin: '35px auto',
-    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    color: "white",
+    fontFamily: "Ubuntu",
+    backgroundColor: "#333",
+    padding: "3%",
+    paddingLeft: "6%",
+    borderRadius: "5px",
+    width: "80%",
+    margin: "35px auto",
+    boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
   },
   header: {
-    paddingBottom: '10px',
-    textAlign: 'left',
-    color: '#CBE1AE',
+    paddingBottom: "10px",
+    textAlign: "left",
+    color: "#9C9FFB",
+    fontSize: "24px",
   },
   formLabel: {
-    display: 'block',
-    textAlign: 'left',
-    marginBottom: '5px',
-    color: 'white',
+    display: "block",
+    textAlign: "left",
+    marginBottom: "5px",
+    color: "white",
   },
   formInput: {
-    width: '80%',
-    padding: '10px',
-    margin: '5px 0 15px 0',
-    marginLeft: '2%',
-    border: '1px solid #8EAA6A',
-    borderRadius: '4px',
-    backgroundColor: '#444',
-    color: 'white',
-    fontSize: '16px',
+    width: "80%",
+    padding: "10px",
+    margin: "5px 0 15px 0",
+    marginLeft: "2%",
+    border: "1px solid #C1E9FF",
+    borderRadius: "4px",
+    backgroundColor: "#444",
+    color: "white",
+    fontSize: "16px",
   },
   formSelect: {
-    width: '100%',
-    padding: '10px',
-    margin: '5px 0 15px 0',
-    marginLeft: '2%',
-    border: '1px solid #8EAA6A',
-    borderRadius: '4px',
-    backgroundColor: '#444',
-    color: 'white',
-    fontSize: '16px',
-    appearance: 'none',
-    width: '80%',
+    width: "100%",
+    padding: "10px",
+    margin: "5px 0 15px 0",
+    marginLeft: "2%",
+    border: "1px solid #C1E9FF",
+    borderRadius: "4px",
+    backgroundColor: "#444",
+    color: "white",
+    fontSize: "16px",
+    appearance: "none",
+    width: "80%",
   },
-  // Style for input box
 };
 
 function ContractInput() {
@@ -111,6 +108,9 @@ function ContractInput() {
   const [users, setUsers] = useState([]);
   // for hover effect
   const [isHovered, setIsHovered] = useState(false);
+  const [contractId, setContractId] = useState(null);
+  // Use useRef to create a mutable object
+  const contractRef = useRef();
 
   useEffect(() => {
     const fetchCreatorId = async () => {
@@ -148,47 +148,44 @@ function ContractInput() {
     fetchCreatorId();
   }, [getIdTokenClaims, isLoading]);
 
+  const fetchContracts = async () => {
+    try {
+      const response = await axios.get(
+        "https://contract-manager.aquaflare.io/partners/"
+      );
+      const fetchedPartners = response.data;
+      setPartners(fetchedPartners);
+
+      //Fetch all contracts, filter for the logged in user
+      const contractsResponse = await axios.get(
+        "https://contract-manager.aquaflare.io/contracts/"
+      );
+      const allContracts = contractsResponse.data;
+
+      const creatorContracts = allContracts.filter((c) => c.user === creatorId);
+
+      // Accumulate contracts in a separate array
+      const updatedContracts = creatorContracts.map((c) => ({
+        partner: fetchedPartners.find((p) => p.id === c.partner).name,
+        amount: c.amount_paid,
+        start: c.start_date,
+        end: c.end_date,
+      }));
+
+      // Update the state once after the loop
+      setContracts((prevContracts) => [...updatedContracts]);
+    } catch (error) {
+      console.error("Error fetching contracts:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchContracts = async () => {
-      try {
-        const response = await axios.get(
-          "https://contract-manager.aquaflare.io/partners/"
-        );
-        const fetchedPartners = response.data;
-        setPartners(fetchedPartners);
-
-        //Fetch all contracts, filter for the logged in user
-        const contractsResponse = await axios.get(
-          "https://contract-manager.aquaflare.io/contracts/"
-        );
-        const allContracts = contractsResponse.data;
-
-        const creatorContracts = allContracts.filter(
-          (c) => c.user === creatorId
-        );
-
-        // Accumulate contracts in a separate array
-        const updatedContracts = creatorContracts.map((c) => ({
-          partner: fetchedPartners.find((p) => p.id === c.partner).name,
-          amount: c.amount_paid,
-          start: c.start_date,
-          end: c.end_date,
-        }));
-
-        // Update the state once after the loop
-        setContracts((prevContracts) => [
-          ...prevContracts,
-          ...updatedContracts,
-        ]);
-      } catch (error) {
-        console.error("Error fetching contracts:", error);
-      }
-    };
     fetchContracts();
-  }, [creatorId]); //creatorId is a dependency
+  }, [creatorId, contracts]); //dependencies; every time creatorId or contracts changes, re-fetch contracts
 
-  const saveResult = (maybeId) => {
-    console.log(maybeId);
+  const [errorBanner, setErrorBanner] = useState(null);
+
+  const saveResult = () => {
     const newContract = {
       partner: formData.partner,
       amount: formData.amount,
@@ -203,11 +200,9 @@ function ContractInput() {
       newContract.end !== ""
     ) {
       const partnerId = partners.find((p) => p.name === newContract.partner).id;
-      setContracts((prevContracts) => [...prevContracts, newContract]);
 
-      console.log(maybeId);
       //This is a new save, so we POST
-      if (maybeId === null) {
+      if (contractId === null) {
         try {
           axios
             .post("https://contract-manager.aquaflare.io/contracts/", {
@@ -219,6 +214,7 @@ function ContractInput() {
             })
             .then(() => {
               console.log("Saved successfully!");
+              setContracts((prevContracts) => [...prevContracts, newContract]);
             })
             .catch((error) => {
               console.error("Error saving contract info:", error);
@@ -228,11 +224,11 @@ function ContractInput() {
           console.log("Error POSTing contract: ", error);
         }
       } else {
-        //else, maybeId has a value, so we can PUT
+        //else, contractId has a value so we put bc we're editing
         try {
           axios
             .put(
-              `https://contract-manager.aquaflare.io/contracts/${maybeId}/`,
+              `https://contract-manager.aquaflare.io/contracts/${contractId}/`,
               {
                 amount_paid: newContract.amount,
                 start_date: newContract.start,
@@ -243,6 +239,12 @@ function ContractInput() {
             )
             .then(() => {
               console.log("Saved successfully!");
+
+              setContracts((prevContracts) =>
+                prevContracts.map((c) =>
+                  c === contractRef.current ? newContract : c
+                )
+              );
             })
             .catch((error) => {
               console.error("Error saving contract info:", error);
@@ -269,7 +271,7 @@ function ContractInput() {
     ncb.style.display = "block";
   };
 
-  const ShowForm = (edit, contract, id) => {
+  const ShowForm = (edit, contract) => {
     var f = document.getElementById("myForm");
     var ncb = document.getElementById("newContract");
     f.style.display = "block";
@@ -287,24 +289,41 @@ function ContractInput() {
         start: startDate,
         end: endDate,
       });
-
-      document.getElementById("save").onclick = () => saveResult(id);
     }
   };
 
   const handleInputChange = (elem) => {
     const { id, value } = elem.target;
-    setFormData({ ...formData, [id]: value });
+    //TODO: this is ugly
+    if (id === "amount" && value < 0) {
+      setErrorBanner("Amount paid must be greater than or equal to zero.");
+    } else if (id === "end") {
+      var f = document.getElementById("myForm");
+      var startDate = f.start.value;
+      console.log(value <= startDate);
+      if (value <= startDate) {
+        setErrorBanner("Start date must be before the end date.");
+      } else {
+        setErrorBanner(null);
+        setFormData({ ...formData, [id]: value });
+      }
+    } else {
+      setErrorBanner(null);
+      setFormData({ ...formData, [id]: value });
+    }
   };
 
+  useEffect(() => {
+    if (contractId !== null) {
+      ShowForm(true, contractRef.current);
+    }
+  }, [contractId]);
+
   const handleEdit = async (index) => {
-    const contract = contracts[index];
-
-    //show form
-    //update contracts array
-    //update database
-
     try {
+      await fetchContracts();
+      const contract = contracts[index];
+      contractRef.current = contract;
       //Fetch all contracts, filter for the logged in user
       const contractsResponse = await axios.get(
         "https://contract-manager.aquaflare.io/contracts/"
@@ -320,7 +339,8 @@ function ContractInput() {
           c.start === contract.start_date &&
           c.end === contract.end_date
       );
-      ShowForm(true, contract, contractToEdit.id);
+
+      setContractId(contractToEdit.id);
     } catch (error) {
       console.log("Error fetching contracts: ", error);
     }
@@ -375,7 +395,8 @@ function ContractInput() {
   // Function to format date as dd Month yyyy, e.g. 3 October 2019
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return utcDate.toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -384,6 +405,7 @@ function ContractInput() {
 
   // Function to hide the form
   const hideForm = () => {
+    setErrorBanner(null);
     var form = document.getElementById("myForm");
     var ncb = document.getElementById("newContract");
     form.style.display = "none";
@@ -392,81 +414,112 @@ function ContractInput() {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.header}>Contracts:</h3>
-      <h6 styles={{ paddingBottom: '2%', textAlign: 'left', }}>
+      {/* Display the error banner if it exists */}
+      {errorBanner && (
+        <div
+          style={{ backgroundColor: "red", padding: "10px", color: "white" }}
+        >
+          {errorBanner}
+        </div>
+      )}
+      <h1 style={styles.header}>Contracts:</h1>
+      <h6 styles={{ paddingBottom: "2%", textAlign: "left" }}>
         Input contract information
       </h6>
       <div>
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
+        <ul style={{ listStyleType: "none", padding: 0 }}>
           {contracts.map((contract, index) => (
-            <li key={index} style={styles.listItem}>
-              {contract.partner}: {formatDate(contract.start)} - {formatDate(contract.end)}. ${contract.amount}
+            <li key={index} style={styles.subBtnContainer}>
+              {contract.partner}: {formatDate(contract.start)} -{" "}
+              {formatDate(contract.end)}. ${contract.amount}
               {/* TODO: Implement handleEdit functionality */}
-              {/* <button style={styles.button} onClick={() => handleEdit(index)}>Edit</button> */}
-              <button style={styles.deleteBtn} onClick={() => handleDelete(index)}>Delete</button>
+              <div>
+                <button
+                  style={styles.submitBtn}
+                  onClick={() => handleEdit(index)}
+                >
+                  Edit
+                </button>
+                <button
+                  style={styles.submitBtn}
+                  onClick={() => handleDelete(index)}
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
       </div>
       <Fade bottom>
-      <form id="myForm" name="myForm" style={{ display: "none" }}>
-        <label style={styles.formLabel} htmlFor="partner">Partner: </label>
-        <select
-          id="partner"
-          value={formData.partner}
-          onChange={handleInputChange}
-          style={styles.formSelect}
-        >
-          <option>Select...</option>
-          {partners.map((partner) => (
-            <option key={partner.id} value={partner.name}>{partner.name}</option>
-          ))}
-        </select>
-        <br />
-        <label style={styles.formLabel} htmlFor="amount">Amount Paid (in US Dollars):</label>
-        <input
-          type="number"
-          id="amount"
-          placeholder="Amount Paid"
-          value={formData.amount}
-          onChange={handleInputChange}
-          style={styles.formInput}
-        />
-        <br />
-        <label style={styles.formLabel} htmlFor="start">Contract start date—</label>
-        <input
-          type="date"
-          id="start"
-          value={formData.start}
-          onChange={handleInputChange}
-          style={styles.formInput}
-        />
-        <br />
-        <label style={styles.formLabel} htmlFor="end">Contract end date—</label>
-        <input
-          type="date"
-          id="end"
-          value={formData.end}
-          onChange={handleInputChange}
-          style={styles.formInput}
-        />
-        <br />
-        <div style={styles.buttonContainer}>
+        <form id="myForm" name="myForm" style={{ display: "none" }}>
+          <label style={styles.formLabel} htmlFor="partner">
+            Partner:{" "}
+          </label>
+          <select
+            id="partner"
+            value={formData.partner}
+            onChange={handleInputChange}
+            style={styles.formSelect}
+          >
+            <option>Select...</option>
+            {partners.map((partner) => (
+              <option key={partner.id} value={partner.name}>
+                {partner.name}
+              </option>
+            ))}
+          </select>
+          <br />
+          <label style={styles.formLabel} htmlFor="amount">
+            Amount Paid (in US Dollars):
+          </label>
           <input
-            type="button"
-            id="save"
-            value="Save"
-            onClick={() => saveResult(null)}
-            style={styles.submitBtn}
+            type="number"
+            id="amount"
+            placeholder="Amount Paid"
+            value={formData.amount}
+            onChange={handleInputChange}
+            style={styles.formInput}
           />
+          <br />
+          <label style={styles.formLabel} htmlFor="start">
+            Contract start date—
+          </label>
           <input
-            type="button"
-            value="Cancel"
-            onClick={hideForm}
-            style={styles.submitBtn}
+            type="date"
+            id="start"
+            value={formData.start}
+            onChange={handleInputChange}
+            style={styles.formInput}
           />
-        </div>
-      </form>
+          <br />
+          <label style={styles.formLabel} htmlFor="end">
+            Contract end date—
+          </label>
+          <input
+            type="date"
+            id="end"
+            value={formData.end}
+            onChange={handleInputChange}
+            style={styles.formInput}
+          />
+          <br />
+          <div style={styles.buttonContainer}>
+            <input
+              type="button"
+              id="save"
+              value="Save"
+              onClick={() => saveResult()}
+              style={styles.submitBtn}
+            />
+            <input
+              type="button"
+              value="Cancel"
+              onClick={hideForm}
+              style={styles.submitBtn}
+            />
+          </div>
+        </form>
       </Fade>
       <div>
         <button

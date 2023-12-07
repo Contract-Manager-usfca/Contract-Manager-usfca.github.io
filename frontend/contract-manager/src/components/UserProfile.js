@@ -92,10 +92,9 @@ function UserProfile() {
       textAlign: 'center',
       justifyContent: 'space-between',
       padding: '2% 5% 0% 6%',
-      fontFamily: 'Ubuntu',
     },
     logoutButton: {
-      color: isHovering ? "#CBE1AE" : "#ffff",
+      color: isHovering ? "#8CD5FF" : "#ffff",
       transition: 'color 0.3s ease, color 0.3s ease',
       backgroundColor: "transparent",
       border: "none",
@@ -105,7 +104,7 @@ function UserProfile() {
       fontSize: '1em',
     },
     h1: {
-      color: "#C188FB",
+      color: "#C1E9FF",
       textAlign: 'left',
       fontSize: '2.5em',
     },

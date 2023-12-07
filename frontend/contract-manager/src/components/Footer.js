@@ -1,77 +1,34 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const styles = {
-    container: {
-        backgroundColor: '#111111',
-        padding: '20px 0',
-        position: 'static',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-    },
-    footer: {
-        maxWidth: '1200px',
-        width: '75%',
-        margin: 'auto',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '60px',
-        padding: '10px 20px',
-        backgroundColor: '#3E3E3E',
-    },
-    credits: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        paddingTop: '1%',
-        color: 'white',
-    },
-    link: (isHovered) => ({
-        color: isHovered ? '#9487E4' : 'white',
-        textDecoration: 'none',
-        marginLeft: '20px',
-        padding: '5px 10px',
-        transition: 'background-color 0.3s ease, color 0.3s ease',
-    }),
-};
+import logo from '../imgs/logo.png';
+import '../styles/basics.css';
 
 export default function Footer() {
-    const [hoveredLink, setHoveredLink] = useState(null);
+
+    // Function to scroll to the top of the page
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.footer}>
-                {/* Use the Link component to navigate to different routes */}
-                <Link
-                    to="/"
-                    style={styles.link(hoveredLink === 'Home')}
-                    onMouseEnter={() => setHoveredLink('Home')}
-                    onMouseLeave={() => setHoveredLink(null)}
-                >
+        <div className='footerContainer'>
+            <div className='footer'>
+                {/* Link component needed to navigate to different routes */}
+                <Link to="/" onClick={scrollToTop} className='link'>
                     Home
                 </Link>
-                <Link
-                    to="/AboutUs"
-                    style={styles.link(hoveredLink === 'About Us')}
-                    onMouseEnter={() => setHoveredLink('About Us')}
-                    onMouseLeave={() => setHoveredLink(null)}
-                >
+                <Link to="/AboutUs" className='link'>
                     About Us
                 </Link>
-                <Link
-                    to="/ContactUs"
-                    style={styles.link(hoveredLink === 'Contact Us')}
-                    onMouseEnter={() => setHoveredLink('Contact Us')}
-                    onMouseLeave={() => setHoveredLink(null)}
-                >
+                <Link to="/ContactUs" className='link'>
                     Contact Us
                 </Link>
             </div>
-            <div style={styles.credits}>
-                <p>&copy; 2023 Contract Manager. All rights reserved.</p>
+            <div className='credits'>
+                <p>&copy; 2023 Zephyr <img src={logo} alt="logo" className='img' /> All rights reserved.</p>
             </div>
         </div>
     );

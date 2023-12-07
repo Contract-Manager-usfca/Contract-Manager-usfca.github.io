@@ -4,20 +4,21 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const styles = {
   container: {
-    color: 'white',
-    fontFamily: 'Ubuntu',
-    backgroundColor: '#333',
-    padding: '3%',
-    paddingLeft: '6%',
-    borderRadius: '5px',
-    width: '80%',
-    margin: '35px auto',
-    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    color: "white",
+    fontFamily: "Ubuntu",
+    backgroundColor: "#333",
+    padding: "3%",
+    paddingLeft: "6%",
+    borderRadius: "5px",
+    width: "80%",
+    margin: "35px auto",
+    boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
   },
   header: {
-    paddingBottom: '10px',
-    textAlign: 'left',
-    color: '#CBE1AE',
+    paddingBottom: "10px",
+    textAlign: "left",
+    color: "#9C9FFB",
+    fontSize: "24px",
   },
   platformBtn: {
     padding: "5px 15px",
@@ -30,6 +31,7 @@ const styles = {
     color: "white",
   },
   submitBtn: {
+    width: '80px', 
     padding: "5px 10px",
     margin: "10px",
     fontSize: "18px",
@@ -42,28 +44,28 @@ const styles = {
     display: "none",
   },
   inputBox: {
-    width: '80%',
-    padding: '10px',
-    margin: '5px 0 15px 0',
-    marginLeft: '2%',
-    border: '1px solid #8EAA6A',
-    borderRadius: '4px',
-    backgroundColor: '#444',
-    color: 'white',
-    fontSize: '16px',
+    width: "80%",
+    padding: "10px",
+    margin: "5px 0 15px 0",
+    marginLeft: "2%",
+    border: "1px solid #C1E9FF",
+    borderRadius: "4px",
+    backgroundColor: "#444",
+    color: "white",
+    fontSize: "16px",
   },
   inputContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    width: '100%',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "100%",
   },
   btnContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '83%',
-    marginTop: '10px',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: "10px",
   },
 };
 
@@ -100,7 +102,7 @@ function CancelAdd(saveId, inputId, cancelId, deleteId) {
 
 function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
   const platformStyle = {
-    color: savedText ? "#ACD575" : "#ffff",
+    color: savedText ? "#46C7A8" : "#ffff",
   };
   return (
     <div>
@@ -312,9 +314,9 @@ function DemographicInput() {
           prevDemographics.map((d) =>
             d.demographic === elementId
               ? {
-                ...d,
-                savedText: `${inputValue}`,
-              }
+                  ...d,
+                  savedText: `${inputValue}`,
+                }
               : d
           )
         );
@@ -334,9 +336,9 @@ function DemographicInput() {
               prevDemographics.map((d) =>
                 d.demographic === elementId
                   ? {
-                    ...d,
-                    savedText: `${inputValue}`,
-                  }
+                      ...d,
+                      savedText: `${inputValue}`,
+                    }
                   : d
               )
             );
@@ -353,6 +355,8 @@ function DemographicInput() {
     }
   };
 
+  const [errorBanner, setErrorBanner] = useState(null);
+
   const handleInputAndSave = (
     saveId,
     inputId,
@@ -364,24 +368,29 @@ function DemographicInput() {
     if (inputElement) {
       const inputValue = inputElement.value;
       if (inputValue) {
-        const demographic = demographics.find(
-          (d) => d.demographic === elementId
-        );
-        if (demographic) {
-          const demographicId = demographic.id;
-
-          handleUpdateRelationship(
-            creatorId,
-            demographicId,
-            inputValue,
-            elementId
-          );
+        if (inputElement.id === "AgeInput" && inputValue <= 0) {
+          setErrorBanner("Age must be greater than zero.");
         } else {
-          console.error("Demographic not found");
+          setErrorBanner(null);
+          const demographic = demographics.find(
+            (d) => d.demographic === elementId
+          );
+          if (demographic) {
+            const demographicId = demographic.id;
+
+            handleUpdateRelationship(
+              creatorId,
+              demographicId,
+              inputValue,
+              elementId
+            );
+          }
         }
+      } else {
+        console.error("Demographic not found");
       }
-      CancelAdd(saveId, inputId, cancelId, deleteId);
     }
+    CancelAdd(saveId, inputId, cancelId, deleteId);
   };
 
   const handleDelete = (saveId, inputId, cancelId, elementId, deleteId) => {
@@ -443,7 +452,15 @@ function DemographicInput() {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.header}>Demographics:</h3>
+      {/* Display the error banner if it exists */}
+      {errorBanner && (
+        <div
+          style={{ backgroundColor: "red", padding: "10px", color: "white" }}
+        >
+          {errorBanner}
+        </div>
+      )}
+      <h1 style={styles.header}>Demographics:</h1>
       {demographics.map((demographic) => (
         <ElementInput
           key={demographic.demographic}

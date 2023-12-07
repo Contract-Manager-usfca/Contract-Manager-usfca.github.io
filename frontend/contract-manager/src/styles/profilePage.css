@@ -1,0 +1,233 @@
+/* Profile Styling */
+.profileContainer {
+  color: #CBE1AE;
+  font-family: sans-serif;
+  background-color: #202020;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: auto;
+  max-width: 950px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.section {
+  background-color: #333;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.specialSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.specialSubSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.subSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header {
+  color: #9C9FFB;
+  font-size: 22px;
+  border-bottom: none;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+.name {
+  color: #C1E9FF;
+  font-size: 2.7em;
+  margin: 0% 0% 8% 15%;
+}
+
+.profileRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.label {
+  font-weight: bold;
+  color: #CBE1AE;
+}
+
+.subLabel {
+  color: white;
+  font-size: 20px;
+}
+
+.profileValue {
+  color: white;
+  font-size: 20px;
+}
+
+.profileImg {
+  width: 300px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.socialIcon {
+  margin: auto;
+  padding-left: 50%;
+}
+
+.socialIconsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.earningsCard {
+  background-color: #404040;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #CBE1AE;
+}
+
+.earningsHeader {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.earningsAmount {
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+}
+
+.viewBtn {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: none;
+  background-color: #545AEC;
+  color: #C1E9FF;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease,
+}
+
+.viewBtn:hover {
+  background-color: #8CD5FF;
+  color: #4775CD;
+}
+
+.social-icon {
+  text-decoration: none;
+  font-size: 2.5em;
+  color: #fff;
+  align-items: flex-start;
+}
+
+.social-icon:hover {
+  text-decoration: none;
+  color: rgb(54, 108, 217);
+  transition: color 0.3s ease;
+}
+
+/* For tablets */
+@media (max-width: 768px) {
+  .profileContainer {
+      max-width: 90%;
+      padding: 15px;
+  }
+
+  .section, .earningsCard {
+      width: 95%;
+  }
+
+  .specialSection{
+    padding: 15px;
+  }
+
+  .header {
+      font-size: 20px;
+  }
+
+  .name {
+      font-size: 2.2em;
+      margin: 0% 0% 5% 10%;
+  }
+
+  .profileImg {
+      width: 250px;
+  }
+
+  .social-icon {
+    font-size: 1.3em;
+  }
+
+  .viewBtn{
+      font-size: 16px;
+  }
+
+  .subLabel, .profileValue {
+      font-size: 18px;
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+  .profileContainer {
+      max-width: 100%;
+      padding: 10px;
+  }
+
+  .section, .earningsCard {
+      width: 100%;
+  }
+
+  .header {
+      font-size: 18px;
+  }
+
+  .name {
+      font-size: 2em;
+      margin: 3% 0% 3% 5%;
+  }
+
+  .profileImg {
+      width: 200px;
+  }
+
+  .social-icon {
+    font-size: 18px;
+  }
+
+  .viewBtn {
+      font-size: 14px;
+  }
+
+  .subLabel, .profileValue {
+      font-size: 16px;
+  }
+}

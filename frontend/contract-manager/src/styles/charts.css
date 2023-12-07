@@ -1,0 +1,83 @@
+.bar-chart {
+  width: 100%;
+}
+
+.bar-chart text {
+  font-family: 'Lora', serif;
+}
+
+.multi-line-chart text {
+  font-family: 'Lora', serif;
+}
+
+.bubble-chart text {
+  font-family: 'Lora', serif;
+}
+
+.axis-label {
+  font-size: 18px;
+}
+
+svg {
+  background-color: #111111;
+}
+
+g {
+  color: white;
+}
+
+.line {
+  stroke-width: 2px;
+}
+
+.axis text {
+  fill: #ffffff;
+  font-size: 12px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: lightgrey;
+  shape-rendering: crispEdges;
+}
+
+.grid line {
+  stroke: rgb(138, 138, 138);
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+
+.line {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.legend-text {
+  fill: rgb(251, 251, 251);
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: 28px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: rgb(255, 255, 255);
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* Mobile styles */
+@media only screen and (max-width: 480px) {
+  .axis-label,
+  .bar-label {
+    font-size: 10px;
+  }
+}

@@ -1,75 +1,37 @@
 import React from 'react';
 import Fade from 'react-reveal/Fade';
 import usPhoto from '../imgs/aboutPhoto2.png';
+import '../styles/basics.css';
 
 const styles = {
-  container: {
-    color: 'white',
-    fontFamily: 'sans-serif',
-    backgroundColor: 'rgb(37, 37, 37)',
-    minHeight: '100vh',
-    padding: '20px',
-  },
-  header: {
-    padding: '1% 0',
-    textAlign: 'center',
-  },
-  main: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgb(37, 37, 37)',
-    padding: '20px',
-    borderRadius: '5px',
-    minHeight: 'calc(100vh - 40px)',
-  },
-  aboutSection: {
-    backgroundColor: '#404040',
-    margin: '20px 0',
-    padding: '20px',
-    borderRadius: '5px',
-    width: '65%',
-    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-  },
-  h2: {
-    paddingBottom: '10px',
-    color: '#CBE1AE',
-    marginLeft: '5%'
-  },
-  img: {
-    maxWidth: "600px",
-    maxHeight: "300px",
-    width: "100%",
-    height: "auto",
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+  boldTextColor: {
+    color: '#9C9FFB',
+    fontWeight: "bold",
   },
 };
 
 function AboutUs() {
   return (
-    <div style={styles.container}>
+    <div className="basicsContainer">
       <Fade bottom>
-        <main style={styles.main}>
-          <header style={styles.header}>
+        <main className="basicsMain">
+          <header className="header">
             <h1>About Us</h1>
           </header>
-          <section style={styles.aboutSection}>
-            <h2 style={styles.h2}>Our Story</h2>
+          <section className="aboutSection">
+            <h2 className="specialHeader">Our Story</h2>
             <p>
-              &emsp;&emsp;We are a group of devoted individuals passionate about <b>creating innovative and efficient software.</b> Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies.
+              &emsp;&emsp;We are a group of devoted individuals passionate about creating innovative and efficient software. Our team comprises highly skilled software engineers ready to put the word and time in. We take pride in our work and strive to deliver high-quality results. At our core, we believe in collaboration, communication, and creativity. Our team constantly learns and improves, and we take pride in adapting to new challenges and technologies.
               <br /><br />
-              &emsp;&emsp;This project, <b>Contract Manager</b>, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
+              &emsp;&emsp;This project, <b style={styles.boldTextColor}>Zephyr</b>, is here to provide visibility and insight into the statistics of content creators with accessible ease. This platform is a multi-use tool used to give creators a place to view their earnings and see how they compare to others based on many demographic factors. We provide content for content creators.
             </p>
           </section>
-          <section style={styles.aboutSection}>
-            <h2 style={styles.h2}>Our Team</h2>
+          <section className="aboutSection">
+            <h2 className="specialHeader">Our Team</h2>
             <p>
-              Meet our passionate team of professionals, each bringing <b>a unique set of skills and dedication</b> to ensure the success of this project!
+              Meet our passionate team of professionals, each bringing a unique set of skills and dedication to ensure the success of this project!
             </p>
-            <img src={usPhoto} alt="team" style={styles.img} />
+            <img src={usPhoto} alt="team photos" className="aboutImg" />
           </section>
         </main>
       </Fade>
