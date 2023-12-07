@@ -120,55 +120,36 @@
   text-align: center;
 }
 
-
 /* Mobile styles */
 @media only screen and (max-width: 768px) {
-  /* main content styling */
-  .mainContent {
-    width: 55%;
+  .mainContent,
+  .asideContainer {
+    width: 100%; 
     padding: 10px;
   }
 
-  .chartContainer {
+  .chartContainer,
+  .asideChartContainer {
     margin: 10px 0;
     padding: 10px;
+    width: 100%;
   }
 
-  .chartTitle {
-    font-size: 20px;
-    margin-left: 20px;
-    margin-bottom: 20px;
-  }
-
-  .chartText {
-    font-size: 15px;
-    max-width: 100%;
-    margin-top: 20px;
-  }
-
-  /* Aside styles */
-  .asideContainer {
-    width: 35%;
-    padding: 10px;
-  }
-
+  .chartTitle,
   .asideChartTitle {
-    font-size: 16px;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-bottom: 15px;
   }
 
-  .asideChartContainer,
+  .chartText,
   .asideChartText {
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: small;
+    font-size: 14px;
+    max-width: 100%;
+    margin-top: 15px;
   }
 
-  .dropdown {
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-
+  .dropdown,
   .dropdownStyles,
   .searchInput {
     width: 100%;
@@ -176,37 +157,18 @@
   }
 
   .button {
-    width: auto;
     padding: 8px;
-    flex-grow: 1;
-    margin: 0 5px; 
+    margin: 0 5px;
   }
 }
 
 @media only screen and (max-width: 480px) {
-  .asideContainer {
-    width: 100%;
-    padding: 5px;
-  }
-
-  .mainContent {
-    width: 100%;
-
-  }
-
+  .chartTitle,
   .asideChartTitle,
+  .chartText,
   .asideChartText {
-    font-size: 12px;
+    font-size: 16px;
     padding: 5px;
-  }
-
-  .chartTitle {
-    font-size: 18px;
-    margin-left: 15px;
-  }
-
-  .chartText {
-    font-size: 14px;
   }
 
   .dropdown {
