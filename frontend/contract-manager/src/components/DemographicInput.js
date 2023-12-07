@@ -44,7 +44,7 @@ const styles = {
     display: "none",
   },
   inputBox: {
-    width: "80%",
+    width: "100%",
     padding: "10px",
     margin: "5px 0 15px 0",
     marginLeft: "2%",
@@ -82,16 +82,22 @@ function AddInput(saveId, inputId, cancelId, deleteId) {
   }
 }
 
-function CancelAdd(saveId, inputId, cancelId, deleteId) {
+function CancelAdd(saveId, inputId, cancelId, deleteId, otherInputId) {
   var s = document.getElementById(saveId);
   var i = document.getElementById(inputId);
   var c = document.getElementById(cancelId);
   var d = document.getElementById(deleteId);
+  var o = document.getElementById(otherInputId);
   if (s.style.display === "inline-block") {
     s.style.display = "none";
     i.style.display = "none";
     c.style.display = "none";
     d.style.display = "none";
+    if (o) {
+      o.style.display = "none";
+      // setSelectedOption(o.value);
+      o.value = "";
+    }
 
     // Reset the input field to empty
     if (i && i.tagName === "INPUT") {
@@ -100,7 +106,16 @@ function CancelAdd(saveId, inputId, cancelId, deleteId) {
   }
 }
 
-function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
+function ElementInput({
+  element,
+  savedText,
+  onSave,
+  onCancel,
+  onDelete,
+  demographicOptions,
+  onSelectChange,
+  selectedOption,
+}) {
   const platformStyle = {
     color: savedText ? "#46C7A8" : "#ffff",
   };
@@ -113,7 +128,8 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
               `${element}Save`,
               `${element}Input`,
               `${element}Cancel`,
-              `${element}Delete`
+              `${element}Delete`,
+              `${element}OtherInput`
             )
           }
           id={element}
@@ -127,12 +143,42 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
       </div>
       <div>
         <div style={styles.inputContainer}>
-          <input
-            type="text"
-            placeholder="Demographic..."
-            id={`${element}Input`}
-            style={{ ...styles.inputBox, display: "none" }}
-          />
+          {/* If we're inputting age, manually input, otherwise provide a dropdown with selected options. */}
+          {/* TODO: Store age as birth date instead. NOTE: This requires reworking the db to accept birth year. */}
+          {element === "Age" ? (
+            <input
+              type="number"
+              id={`${element}Input`}
+              style={{ ...styles.inputBox, display: "none" }}
+              defaultValue={savedText}
+            />
+          ) : (
+            <div>
+              <select
+                id={`${element}Input`}
+                style={{ ...styles.inputBox, display: "none" }}
+                defaultValue={savedText}
+                onChange={(e) => onSelectChange(element, e.target.value)}
+                value={selectedOption}
+              >
+                {demographicOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+                <option value={`${element}Other`}>Other...</option>
+              </select>
+              {/* Display an input box for "Other..." option */}
+              {selectedOption === `${element}Other` && (
+                <input
+                  type="text"
+                  style={{ ...styles.inputBox, display: "inline-block" }}
+                  id={`${element}OtherInput`}
+                  placeholder="Enter other demographic..."
+                />
+              )}
+            </div>
+          )}
         </div>
         <div style={styles.btnContainer}>
           <button
@@ -142,7 +188,8 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
                 `${element}Input`,
                 `${element}Cancel`,
                 element,
-                `${element}Delete`
+                `${element}Delete`,
+                `${element}OtherInput`
               )
             }
             id={`${element}Save`}
@@ -157,7 +204,8 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
                 `${element}Input`,
                 `${element}Cancel`,
                 element,
-                `${element}Delete`
+                `${element}Delete`,
+                `${element}OtherInput`
               )
             }
             id={`${element}Delete`}
@@ -171,7 +219,8 @@ function ElementInput({ element, savedText, onSave, onCancel, onDelete }) {
                 `${element}Save`,
                 `${element}Input`,
                 `${element}Cancel`,
-                `${element}Delete`
+                `${element}Delete`,
+                `${element}OtherInput`
               )
             }
             id={`${element}Cancel`}
@@ -190,6 +239,34 @@ function DemographicInput() {
   const [creatorId, setCreatorId] = useState(null);
   const [demographics, setDemographics] = useState([]);
   const [users, setUsers] = useState([]);
+  // Inside the DemographicInput component
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleSelectChange = (element, value) => {
+    // Update the selected option in the state
+    setSelectedOption(value);
+  };
+
+  const handleCancel = async (
+    saveId,
+    inputId,
+    cancelId,
+    deleteId,
+    otherInputId
+  ) => {
+    CancelAdd(saveId, inputId, cancelId, deleteId, otherInputId);
+    var otherElement = document.getElementById(otherInputId);
+    if (otherElement) {
+      const otherValue = otherElement.value;
+      if (otherValue) {
+        // Refetch the demographics after handling the "Other" input update
+        await fetchDemographics();
+
+        // Set selectedOption to the newly entered value
+        setSelectedOption(otherValue);
+      }
+    }
+  };
 
   // Fetch creator ID on component mount
   useEffect(() => {
@@ -229,37 +306,46 @@ function DemographicInput() {
   }, [getIdTokenClaims, isLoading]);
 
   // Fetch demographics on component mount
+
+  const fetchDemographics = async () => {
+    try {
+      const response = await axios.get(
+        "https://contract-manager.aquaflare.io/demographics/"
+      );
+      const fetchedDemographics = response.data;
+
+      // Fetch all creator-demographic relationships for the logged-in user
+      const relationshipsResponse = await axios.get(
+        "https://contract-manager.aquaflare.io/creator-demographics/"
+      );
+      const relationships = relationshipsResponse.data;
+
+      // Update the state for demographics, including the savedText and the options for each dropdown menu
+      setDemographics(
+        fetchedDemographics.map((d) => {
+          const filteredOptions = relationships.filter(
+            (r) => r.demographic === d.id
+          );
+
+          const savedTextObject = filteredOptions.find(
+            (r) => r.creator === creatorId
+          );
+
+          const savedText = savedTextObject ? savedTextObject.demo : "";
+
+          const demoOptions = filteredOptions.map((r) => r.demo);
+          return {
+            ...d,
+            options: Array.from(new Set(demoOptions)),
+            savedText: savedText, // Set to an empty string if no relationship exists
+          };
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching demographics:", error);
+    }
+  };
   useEffect(() => {
-    const fetchDemographics = async () => {
-      try {
-        const response = await axios.get(
-          "https://contract-manager.aquaflare.io/demographics/"
-        );
-        const fetchedDemographics = response.data;
-
-        // Fetch all creator-demographic relationships for the logged-in user
-        const relationshipsResponse = await axios.get(
-          "https://contract-manager.aquaflare.io/creator-demographics/"
-        );
-        const relationships = relationshipsResponse.data;
-
-        // Update the state for demographics, including the savedText
-        setDemographics(
-          fetchedDemographics.map((d) => {
-            const relationship = relationships.find(
-              (r) => r.demographic === d.id && r.creator === creatorId
-            );
-            return {
-              ...d,
-              savedText: relationship ? `${relationship.demo}` : "", // Set to an empty string if no relationship exists
-            };
-          })
-        );
-      } catch (error) {
-        console.error("Error fetching demographics:", error);
-      }
-    };
-
     fetchDemographics();
   }, [creatorId]); // Include creatorId as a dependency
 
@@ -357,15 +443,45 @@ function DemographicInput() {
 
   const [errorBanner, setErrorBanner] = useState(null);
 
-  const handleInputAndSave = (
+  const handleInputAndSave = async (
     saveId,
     inputId,
     cancelId,
     elementId,
-    deleteId
+    deleteId,
+    otherInputId
   ) => {
     var inputElement = document.getElementById(inputId);
-    if (inputElement) {
+    var otherElement = document.getElementById(otherInputId);
+    if (otherElement) {
+      const otherValue = otherElement.value;
+      if (otherValue) {
+        //format user inputted options
+        const lowerCase = otherValue.toLowerCase();
+        const editedValue =
+          lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
+
+        const demographic = demographics.find(
+          (d) => d.demographic === elementId
+        );
+        if (demographic) {
+          const demographicId = demographic.id;
+
+          await handleUpdateRelationship(
+            creatorId,
+            demographicId,
+            editedValue,
+            elementId
+          );
+
+          // Refetch the demographics after handling the "Other" input update
+          await fetchDemographics();
+
+          // Set selectedOption to the newly entered value
+          setSelectedOption(editedValue);
+        }
+      }
+    } else if (inputElement) {
       const inputValue = inputElement.value;
       if (inputValue) {
         if (inputElement.id === "AgeInput" && inputValue <= 0) {
@@ -390,11 +506,18 @@ function DemographicInput() {
         console.error("Demographic not found");
       }
     }
-    CancelAdd(saveId, inputId, cancelId, deleteId);
+    handleCancel(saveId, inputId, cancelId, deleteId, otherInputId);
   };
 
-  const handleDelete = (saveId, inputId, cancelId, elementId, deleteId) => {
-    CancelAdd(saveId, inputId, cancelId, deleteId);
+  const handleDelete = async (
+    saveId,
+    inputId,
+    cancelId,
+    elementId,
+    deleteId,
+    otherInputId
+  ) => {
+    handleCancel(saveId, inputId, cancelId, deleteId, otherInputId);
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 
@@ -426,7 +549,8 @@ function DemographicInput() {
               )
               .then(() => {
                 console.log("Relationship deleted successfully!");
-
+                //Refresh demographics
+                fetchDemographics();
                 // Update the state for demographics, setting savedText to an empty string
                 setDemographics((prevDemographics) =>
                   prevDemographics.map((d) =>
@@ -471,8 +595,11 @@ function DemographicInput() {
           element={demographic.demographic}
           savedText={demographic.savedText}
           onSave={handleInputAndSave}
-          onCancel={CancelAdd}
+          onCancel={handleCancel}
           onDelete={handleDelete}
+          demographicOptions={demographic.options}
+          onSelectChange={handleSelectChange}
+          selectedOption={selectedOption}
         />
       ))}
     </div>
