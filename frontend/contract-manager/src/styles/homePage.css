@@ -124,41 +124,42 @@
 @media only screen and (max-width: 768px) {
   .mainContent,
   .asideContainer {
-    width: 100%; 
-    padding: 10px;
+    width: 95%; 
+    padding: 15px;
   }
 
   .chartContainer,
   .asideChartContainer {
     margin: 10px 0;
-    padding: 10px;
-    width: 100%;
+    padding: 15px; 
+    width: auto; 
   }
 
   .chartTitle,
   .asideChartTitle {
-    font-size: 18px;
-    margin-left: 10px;
-    margin-bottom: 15px;
+    max-width: 50%;
+    font-size: 20px;
+    margin-left: 200px;
+    margin-bottom: 20px;
   }
 
   .chartText,
   .asideChartText {
-    font-size: 14px;
-    max-width: 100%;
-    margin-top: 15px;
+    font-size: 16px;
+    max-width: 50%;
+    margin-top: 20px;
   }
 
   .dropdown,
   .dropdownStyles,
   .searchInput {
-    width: 100%;
-    margin-bottom: 10px;
+    width: auto;
+    margin-bottom: 15px;
   }
 
   .button {
-    padding: 8px;
-    margin: 0 5px;
+    padding: 10px;
+    margin: 0 10px;
   }
 }
 
@@ -167,11 +168,11 @@
   .asideChartTitle,
   .chartText,
   .asideChartText {
-    font-size: 16px;
-    padding: 5px;
+    font-size: 18px;
+    padding: 10px;
   }
 
   .dropdown {
-    gap: 5px;
+    gap: 10px;
   }
 }
