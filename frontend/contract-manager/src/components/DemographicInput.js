@@ -247,6 +247,27 @@ function DemographicInput() {
     setSelectedOption(value);
   };
 
+  const handleCancel = async (
+    saveId,
+    inputId,
+    cancelId,
+    deleteId,
+    otherInputId
+  ) => {
+    CancelAdd(saveId, inputId, cancelId, deleteId, otherInputId);
+    var otherElement = document.getElementById(otherInputId);
+    if (otherElement) {
+      const otherValue = otherElement.value;
+      if (otherValue) {
+        // Refetch the demographics after handling the "Other" input update
+        await fetchDemographics();
+
+        // Set selectedOption to the newly entered value
+        setSelectedOption(otherValue);
+      }
+    }
+  };
+
   // Fetch creator ID on component mount
   useEffect(() => {
     const fetchCreatorId = async () => {
@@ -485,7 +506,7 @@ function DemographicInput() {
         console.error("Demographic not found");
       }
     }
-    CancelAdd(saveId, inputId, cancelId, deleteId, otherInputId);
+    handleCancel(saveId, inputId, cancelId, deleteId, otherInputId);
   };
 
   const handleDelete = async (
@@ -496,7 +517,7 @@ function DemographicInput() {
     deleteId,
     otherInputId
   ) => {
-    CancelAdd(saveId, inputId, cancelId, deleteId, otherInputId);
+    handleCancel(saveId, inputId, cancelId, deleteId, otherInputId);
     // Find the demographicId based on the selected demographic name
     const demographic = demographics.find((d) => d.demographic === elementId);
 
@@ -570,7 +591,7 @@ function DemographicInput() {
           element={demographic.demographic}
           savedText={demographic.savedText}
           onSave={handleInputAndSave}
-          onCancel={CancelAdd}
+          onCancel={handleCancel}
           onDelete={handleDelete}
           demographicOptions={demographic.options}
           onSelectChange={handleSelectChange}
