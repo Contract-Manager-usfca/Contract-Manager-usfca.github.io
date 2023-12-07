@@ -4,6 +4,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from 'react-router-dom';
 import typeLogo from '../imgs/typeLogo.png';
+import '../styles/basics.css';
 
 const styles = {
   nav: {
@@ -27,14 +28,14 @@ export default function Navbar() {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
   return (
-    <div style={styles.nav}>
+    <div className="navigation">
       <Link
         to="/"
       >
-      <img src={typeLogo} alt="type logo" style={styles.img} />
+      <img src={typeLogo} alt="type logo" className="navImg" />
       </Link>
-      <div style={styles.links}>
-        <Nav class='bg-transparent'>
+      <div className="navlinks">
+        <Nav class=' special bg-transparent'>
           <NavDropdown
             className="dropdown bg-large"
             title="☰"
@@ -68,8 +69,6 @@ export default function Navbar() {
                 Profile
               </NavDropdown.Item>
             )}
-
-
 
             {/* If not already authenticated, generate a login button. Otherwise, logout. */}
             {!isAuthenticated ? (

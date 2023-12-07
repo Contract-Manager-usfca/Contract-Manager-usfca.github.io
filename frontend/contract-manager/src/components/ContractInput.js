@@ -92,7 +92,6 @@ const styles = {
     appearance: "none",
     width: "80%",
   },
-  // Style for input box
 };
 
 function ContractInput() {

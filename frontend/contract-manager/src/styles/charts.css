@@ -1,3 +1,7 @@
+.bar-chart {
+  width: 100%;
+}
+
 .bar-chart text {
   font-family: 'Lora', serif;
 }
@@ -68,4 +72,12 @@ g {
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
+}
+
+/* Mobile styles */
+@media only screen and (max-width: 480px) {
+  .axis-label,
+  .bar-label {
+    font-size: 10px;
+  }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import axios from 'axios';
-import "../styles/graph.css";
+import "../styles/charts.css";
 
 const BubbleChart = () => {
   const [nodes, setNodes] = useState([]);

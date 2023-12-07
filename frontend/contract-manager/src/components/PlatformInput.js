@@ -63,7 +63,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
-    width: "83%",
+    width: "100%",
     marginTop: "10px",
   },
 };

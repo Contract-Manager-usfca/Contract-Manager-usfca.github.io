@@ -1,109 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
-import '../styles/UserProfilePage.css';
-
-const styles = {
-    container: {
-        color: '#CBE1AE',
-        fontFamily: 'sans-serif',
-        backgroundColor: '#202020',
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        margin: 'auto',
-        maxWidth: '950px',
-        borderRadius: '5px',
-        boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-    },
-    section: {
-        backgroundColor: '#333',
-        margin: '20px 0',
-        padding: '20px',
-        borderRadius: '5px',
-        width: '100%',
-        boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-    },
-    header: {
-        color: '#9C9FFB',
-        fontSize: '22px',
-        borderBottom: 'none',
-        paddingBottom: '10px',
-        marginBottom: '20px',
-    },
-    name: {
-        color: '#C1E9FF',
-        fontSize: '2.5em',
-        margin: '0% 0% 8% 15%',
-    },
-    row: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '10px',
-        color: 'white',
-    },
-    label: {
-        fontWeight: 'bold',
-        color: '#CBE1AE',
-    },
-    subLabel: {
-        color: 'white',
-    },
-    value: {
-        color: 'white',
-    },
-    img: {
-        width: '300px',
-        height: 'auto',
-        borderRadius: '5px',
-    },
-    socialIcon: {
-        margin: 'auto',
-        paddingLeft: '50%',
-    },
-    socialIconsContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    earningsCard: {
-        backgroundColor: '#404040',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        padding: '20px',
-        marginTop: '20px',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        color: '#CBE1AE',
-    },
-    earningsHeader: {
-        fontSize: '20px',
-        color: 'white',
-        marginBottom: '10px',
-    },
-    earningsAmount: {
-        fontSize: '36px',
-        fontWeight: 'bold',
-        color: 'white',
-    },
-    viewBtn: {
-        fontSize: "18px",
-    },
-    viewBtn: (isHovered) => ({
-        padding: '10px 20px',
-        margin: '10px 0',
-        borderRadius: '4px',
-        border: 'none',
-        backgroundColor: isHovered ? '#8CD5FF' : '#545AEC',
-        color: isHovered ? '#4775CD' : '#C1E9FF',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s ease, color 0.3s ease',
-    }),
-};
+import '../styles/profilePage.css';
 
 
 function UserProfilePage() {
@@ -117,8 +15,6 @@ function UserProfilePage() {
     const [groupedContractsData, setGroupedContractsData] = useState([]);
     const [platformsData, setPlatformsData] = useState([]);
     const [userPlatformsData, setUserPlatformsData] = useState([]);
-    // for hover effect
-    const [isHovered, setIsHovered] = useState(false);
 
 
     // Dictionary to map platform names to icons and URL patterns
@@ -227,52 +123,32 @@ function UserProfilePage() {
 
     return (
         <div style={{ backgroundColor: "#252525" }}>
-            <div style={styles.container}>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: '20px',
-                }}>
-                    <img src="https://i.imgur.com/tdi3NGa.png" alt="Profile" style={styles.img} />
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <h1 style={styles.name}>{profileData?.name}</h1>
+            <div className='profileContainer'>
+                <div className='specialSection'>
+                    <img src="https://i.imgur.com/tdi3NGa.png" alt="Profile" className='profileImg' />
+                    <div className='specialSubSection'>
+                        <h1 className='name'>{profileData?.name}</h1>
                         <div>
-                            <div style={styles.socialIconsContainer}>
+                            <div className='socialIconsContainer'>
                                 {generateSocialLinks().map((icon, index) => (
-                                    <span key={index} style={styles.socialIcon}>{icon}</span>
+                                    <span key={index} className='socialIcon'>{icon}</span>
                                 ))}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div style={styles.section}>
-                    <h1 style={styles.header}>Demographics:</h1>
+                <div className='section'>
+                    <h1 className='header'>Demographics:</h1>
                     {demographicsData.map((demo, index) => (
-                        <div key={index} style={styles.row}>
-                            <span style={styles.subLabel}>{demo.demo}</span>
+                        <div key={index} className='profileRow'>
+                            <span className='subLabel'>{demo.demo}</span>
                         </div>
                     ))}
                 </div>
-                <div style={styles.section}>
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '20px'
-                    }}>
-                        <h1 style={styles.header}>Contracts</h1>
-                        <button onClick={handleToggleGroupedView}
-                            style={styles.viewBtn(isHovered)}
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
-                        >
+                <div className='section'>
+                    <div className='subSection'>
+                        <h1 className='header'>Contracts</h1>
+                        <button onClick={handleToggleGroupedView} className='viewBtn'>
                             {groupedByPartner ? 'Show Individual' : 'Group by Partner'}
                         </button>
                     </div>
@@ -281,32 +157,32 @@ function UserProfilePage() {
                         contractsData.map((contract, index) => {
                             const partnerName = partnersData.find(partner => partner.id === contract.partner)?.name || 'Unknown';
                             return (
-                                <div key={index} style={styles.row}>
-                                    <span style={styles.subLabel}>Contract #{contract.id} with {partnerName}:</span>
-                                    <span style={styles.value}>${contract.amount_paid}</span>
+                                <div key={index} className='profileRow'>
+                                    <span className='subLabel'>Contract #{contract.id} with {partnerName}:</span>
+                                    <span className='profileValue'>${contract.amount_paid}</span>
                                 </div>
                             );
                         })
                     ) : (
                         // Show grouped contracts
                         groupedContractsData.map((group, index) => (
-                            <div key={index} style={styles.row}>
-                                <span style={styles.subLabel}>{group.partnerName}:</span>
-                                <span style={styles.value}>${group.total}</span>
+                            <div key={index} className='profileRow'>
+                                <span className='subLabel'>{group.partnerName}:</span>
+                                <span className='profileValue'>${group.total}</span>
                             </div>
                         ))
                     )}
-                    <div style={styles.earningsCard}>
-                        <div style={styles.earningsHeader}>Total Earnings</div>
-                        <div style={styles.earningsAmount}>${totalEarnings}</div>
+                    <div className='earningsCard'>
+                        <div className='earningsHeader'>Total Earnings</div>
+                        <div className='earningsAmount'>${totalEarnings}</div>
                     </div>
                 </div>
-                <div style={styles.section}>
-                    <h1 style={styles.header}>Platforms</h1>
+                <div className='section'>
+                    <h1 className='header'>Platforms</h1>
                     {userPlatformsData.map((platform, index) => (
-                        <div key={index} style={styles.row}>
-                            <span style={styles.subLabel}>{getPlatformName(platform.platform)}:</span>
-                            <span style={styles.value}>{platform.handle} ({platform.follower_count} followers)</span>
+                        <div key={index} className='profileRow'>
+                            <span className='subLabel'>{getPlatformName(platform.platform)}:</span>
+                            <span className='profileValue'>{platform.handle} ({platform.follower_count} followers)</span>
                         </div>
                     ))}
                 </div>
