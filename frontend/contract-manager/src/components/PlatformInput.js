@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   container: {
     color: "white",
+    fontFamily: "Ubuntu",
     backgroundColor: "#333",
     padding: "3%",
     paddingLeft: "6%",
@@ -504,6 +505,10 @@ function PlatformInput() {
         </div>
       )}
       <h1 style={styles.header}>Platforms:</h1>
+      <h6 styles={{ paddingBottom: "2%", textAlign: "left" }}>
+        Click on a platform to add information. This information is optional and
+        always anonymous.
+      </h6>
       {platforms.map((platform) => (
         <ElementInput
           key={platform.name}

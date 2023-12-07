@@ -31,7 +31,7 @@ const styles = {
     color: "white",
   },
   submitBtn: {
-    width: '80px', 
+    width: "80px",
     padding: "5px 10px",
     margin: "10px",
     fontSize: "18px",
@@ -461,6 +461,10 @@ function DemographicInput() {
         </div>
       )}
       <h1 style={styles.header}>Demographics:</h1>
+      <h6 styles={{ paddingBottom: "2%", textAlign: "left" }}>
+        Click on a demographic to add information. This information is optional
+        and always anonymous.
+      </h6>
       {demographics.map((demographic) => (
         <ElementInput
           key={demographic.demographic}
