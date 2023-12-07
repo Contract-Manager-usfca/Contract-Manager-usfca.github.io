@@ -29,7 +29,7 @@ const styles = {
   }),
   submitBtn: {
     padding: "5px 10px",
-    width: '80px', 
+    width: "80px",
     margin: "10px",
     fontSize: "18px",
     border: "1px solid #ffffff",
@@ -40,10 +40,10 @@ const styles = {
     transition: "background-color 0.3s ease",
   },
   subBtnContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '5px 0',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "5px 0",
   },
   container: {
     color: "white",
@@ -289,6 +289,8 @@ function ContractInput() {
         start: startDate,
         end: endDate,
       });
+    } else {
+      setContractId(null);
     }
   };
 
@@ -300,7 +302,6 @@ function ContractInput() {
     } else if (id === "end") {
       var f = document.getElementById("myForm");
       var startDate = f.start.value;
-      console.log(value <= startDate);
       if (value <= startDate) {
         setErrorBanner("Start date must be before the end date.");
       } else {
@@ -392,7 +393,7 @@ function ContractInput() {
     }
   };
 
-  // Function to format date as dd Month yyyy, e.g. 3 October 2019
+  // Function to format date as Month dd, yyyy (e.g. October 3, 2019)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
@@ -401,6 +402,11 @@ function ContractInput() {
       month: "long",
       year: "numeric",
     });
+  };
+
+  // Formats the amount paid to have a $ and separate thousands with commas
+  const formatPaid = (amountPaid) => {
+    return "$" + amountPaid.toLocaleString();
   };
 
   // Function to hide the form
@@ -431,8 +437,7 @@ function ContractInput() {
           {contracts.map((contract, index) => (
             <li key={index} style={styles.subBtnContainer}>
               {contract.partner}: {formatDate(contract.start)} -{" "}
-              {formatDate(contract.end)}. ${contract.amount}
-              {/* TODO: Implement handleEdit functionality */}
+              {formatDate(contract.end)}. {formatPaid(contract.amount)}
               <div>
                 <button
                   style={styles.submitBtn}
@@ -523,7 +528,7 @@ function ContractInput() {
       </Fade>
       <div>
         <button
-          onClick={() => ShowForm(false, null, null)}
+          onClick={() => ShowForm(false, null)}
           id="newContract"
           style={styles.contractBtn(isHovered)}
           onMouseEnter={() => setIsHovered(true)}

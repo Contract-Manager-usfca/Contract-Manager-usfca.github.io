@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const styles = {
   container: {
     color: "white",
+    fontFamily: "Ubuntu",
     backgroundColor: "#333",
     padding: "3%",
     paddingLeft: "6%",
@@ -31,7 +32,7 @@ const styles = {
   },
   submitBtn: {
     padding: "5px 10px",
-    width: '80px', 
+    width: "80px",
     margin: "10px",
     fontSize: "18px",
     border: "1px solid #ffffff",
@@ -272,7 +273,9 @@ function PlatformInput() {
             return {
               ...p,
               savedText: relationship
-                ? `${relationship.handle}: ${relationship.follower_count} followers.`
+                ? `${relationship.handle}: ${formatFollow(
+                    relationship.follower_count
+                  )} followers.`
                 : "", // Set to an empty string if no relationship exists
             };
           })
@@ -486,6 +489,11 @@ function PlatformInput() {
     }
   };
 
+  // Formats the followers to separate thousands with commas
+  const formatFollow = (followers) => {
+    return followers.toLocaleString();
+  };
+
   return (
     <div style={styles.container}>
       {/* Display the error banner if it exists */}
@@ -497,6 +505,10 @@ function PlatformInput() {
         </div>
       )}
       <h1 style={styles.header}>Platforms:</h1>
+      <h6 styles={{ paddingBottom: "2%", textAlign: "left" }}>
+        Click on a platform to add information. This information is optional and
+        always anonymous.
+      </h6>
       {platforms.map((platform) => (
         <ElementInput
           key={platform.name}
