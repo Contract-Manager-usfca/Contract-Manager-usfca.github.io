@@ -31,7 +31,7 @@ const styles = {
   },
   submitBtn: {
     padding: "5px 10px",
-    width: '80px', 
+    width: "80px",
     margin: "10px",
     fontSize: "18px",
     border: "1px solid #ffffff",
@@ -272,7 +272,9 @@ function PlatformInput() {
             return {
               ...p,
               savedText: relationship
-                ? `${relationship.handle}: ${relationship.follower_count} followers.`
+                ? `${relationship.handle}: ${formatFollow(
+                    relationship.follower_count
+                  )} followers.`
                 : "", // Set to an empty string if no relationship exists
             };
           })
@@ -484,6 +486,11 @@ function PlatformInput() {
     } else {
       console.error("Platform not found");
     }
+  };
+
+  // Formats the followers to separate thousands with commas
+  const formatFollow = (followers) => {
+    return followers.toLocaleString();
   };
 
   return (
