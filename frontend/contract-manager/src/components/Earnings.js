@@ -1,7 +1,7 @@
 // EarningsChart.js
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import "../styles/earningschart.css"; // Make sure the CSS is correctly linked
+import "../styles/charts.css";
 
 const EarningsChart = ({ contracts }) => {
   const svgRef = useRef(null);
@@ -43,6 +43,7 @@ const EarningsChart = ({ contracts }) => {
     const width = 800 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
+
     // Create the SVG container
     const svg = d3.select(svgRef.current)
       .append("svg")
@@ -67,6 +68,9 @@ const EarningsChart = ({ contracts }) => {
     svg.append("g")
       .call(d3.axisLeft(y));
 
+    const colorScale = d3.scaleOrdinal()
+      .range(["#9EA1FF", "#8CD5FF", "#C1E9FF", "#2E35D7"]);
+
     // Create the bars
     svg.selectAll(".bar")
       .data(data.earningsArray)
@@ -76,38 +80,38 @@ const EarningsChart = ({ contracts }) => {
       .attr("y", (d) => y(d))
       .attr("width", x.bandwidth())
       .attr("height", (d) => height - y(d))
-      .attr("fill", "#69b3a2");
+      .attr("fill", (d, i) => colorScale(data.earningsArray.map((_, i) => i)));
 
     // Append the percentile lines and labels
     const percentiles = [
-        { value: data.median, label: "Median", color: "#ff0000" },
-        { value: data.q3, label: "75th Percentile", color: "#00ff00" },
-        { value: data.q9, label: "90th Percentile", color: "#0000ff" }
-      ];
+      { value: data.median, label: "Median", color: "#FF5D01" },
+      { value: data.q3, label: "75th Percentile", color: "#00FF19" },
+      { value: data.q9, label: "90th Percentile", color: "#C10051" }
+    ];
 
-      percentiles.forEach(percentile => {
-        // Append percentile line
-        svg.append("line")
-          .attr("class", "percentile-line") // Apply CSS class for styling
-          .attr("x1", 0)
-          .attr("x2", width)
-          .attr("y1", y(percentile.value))
-          .attr("y2", y(percentile.value))
-          .attr("stroke", percentile.color)
-          .attr("stroke-dasharray", "4")
-          .attr("stroke-width", "2");
-      
-        // Append text label for the percentile
-        svg.append("text")
-          .attr("x", width)
-          .attr("y", y(percentile.value))
-          .attr("dy", "-0.2em")
-          .attr("dx", "-0.5em")
-          .attr("text-anchor", "end")
-          .attr("fill", percentile.color)
-          .style("font-size", "12px")
-          .text(percentile.label);
-      });
+    percentiles.forEach(percentile => {
+      // Append percentile line
+      svg.append("line")
+        .attr("class", "percentile-line") // Apply CSS class for styling
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(percentile.value))
+        .attr("y2", y(percentile.value))
+        .attr("stroke", percentile.color)
+        .attr("stroke-dasharray", "4")
+        .attr("stroke-width", "2");
+
+      // Append text label for the percentile
+      svg.append("text")
+        .attr("x", width)
+        .attr("y", y(percentile.value))
+        .attr("dy", "-0.2em")
+        .attr("dx", "-0.5em")
+        .attr("text-anchor", "end")
+        .attr("fill", percentile.color)
+        .style("font-size", "12px")
+        .text(percentile.label);
+    });
 
     // X-axis label
     svg.append("text")

@@ -53,6 +53,7 @@ function HomePage() {
           id: demographic.id,
           name: demographic.demographic,
         }));
+        console.log("demos", demographicsArray);
         setAllDemographics(demographicsArray);
       })
       .catch((error) => {
@@ -368,13 +369,13 @@ function HomePage() {
           </div>
 
           <div className="chartContainer">
-            <h2 className="chartTitle"><b>Contract Quantity Distribution Among Partners</b></h2>
+            <h2 className="chartTitle"><b>Content Creator Salary Distribution</b></h2>
             <Fade bottom>
-              <BubbleChart />
+              <EarningsChart contracts={contracts} />
             </Fade>
             <p className="chartText">
               <span>
-                &emsp;&emsp;This bubble chart provides a visual representation of contract distributions among various partners. Each bubble corresponds to a single contract, and the clusters of bubbles illustrate the relative share of the total contract value associated with each partner.
+                &emsp;&emsp;This earnings chart provides a visual representation of salary distributions as a Content Creator.
               </span>
             </p>
           </div>
@@ -439,7 +440,6 @@ function HomePage() {
     <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#252525" }}>
       {renderAside()}
       {renderMainContent()}
-      <EarningsChart contracts={contracts} /> {/* Use the EarningsChart component */}
     </div>
   );
 }
