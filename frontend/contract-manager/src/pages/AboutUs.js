@@ -3,6 +3,7 @@ import Fade from 'react-reveal/Fade';
 import usPhoto from '../imgs/aboutPhoto2.png';
 import '../styles/basics.css';
 
+// Inline CSS styling
 const styles = {
   boldTextColor: {
     color: '#9C9FFB',

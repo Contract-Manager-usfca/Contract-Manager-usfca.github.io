@@ -11,6 +11,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
+// Function to scroll to top of page
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -30,6 +31,7 @@ function App() {
         <ScrollToTop />
         <div className="flex-column justify-center align-center min-100-vh bg-primary">
           <NavBar />
+          {/* Link Routing */}
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/dashboard" element={<Dashboard />} />

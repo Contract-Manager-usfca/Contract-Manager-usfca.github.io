@@ -6,24 +6,6 @@ import { Link } from 'react-router-dom';
 import typeLogo from '../imgs/typeLogo.png';
 import '../styles/basics.css';
 
-const styles = {
-  nav: {
-    display: "flex",
-    alignItems: "center",
-    padding: "0px 20px",
-    backgroundColor: "white",
-    justifyContent: "space-between",
-    color: "black",
-  },
-  links: {
-    color: "#1D1D1D",
-  },
-  img: {
-    height: 'auto',
-    width: '160px',
-  }
-};
-
 export default function Navbar() {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
@@ -32,10 +14,11 @@ export default function Navbar() {
       <Link
         to="/"
       >
-      <img src={typeLogo} alt="type logo" className="navImg" />
+        <img src={typeLogo} alt="type logo" className="navImg" />
       </Link>
       <div className="navlinks">
         <Nav class=' special bg-transparent'>
+          {/* Navbar dropdown menu */}
           <NavDropdown
             className="dropdown bg-large"
             title="☰"

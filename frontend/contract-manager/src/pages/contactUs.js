@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Fade from 'react-reveal/Fade';
 
 function ContactUs() {
@@ -11,9 +10,10 @@ function ContactUs() {
             <h1>Contact Us</h1>
           </header>
           <section className='formSection'>
+            {/* Form to user response */}
             <h2 className='specialh2'>Any Questions?</h2>
             <form className='form'>
-              <input type="text" placeholder="Your Name" className='input'/>
+              <input type="text" placeholder="Your Name" className='input' />
               <input type="email" placeholder="Your Email" className='input' />
               <textarea placeholder="Your Message" className='textbox'></textarea>
               <button
