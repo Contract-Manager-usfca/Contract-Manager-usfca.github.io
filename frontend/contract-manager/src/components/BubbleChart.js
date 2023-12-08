@@ -3,27 +3,30 @@ import * as d3 from "d3";
 import axios from 'axios';
 import "../styles/charts.css";
 
+// Bubble chart component
 const BubbleChart = () => {
   const [nodes, setNodes] = useState([]);
+  // Reference to the SVG container for D3 manipulation
   const svgRef = useRef(null);
   const simulationRef = useRef(null);
 
+  // Function to fetch contracts and parnters
   const fetchContractData = async () => {
     try {
       const contractsResponse = await axios.get('https://contract-manager.aquaflare.io/contracts/');
       const partnersResponse = await axios.get('https://contract-manager.aquaflare.io/partners/');
 
-      const totalAmount = contractsResponse.data.reduce((sum, contract) => sum + contract.amount_paid, 0);
+      // Mapping response to grab ID, name, and total amount
       const partnerAmounts = partnersResponse.data.map(partner => ({
         id: partner.id,
         name: partner.name,
         totalAmount: contractsResponse.data
           .filter(contract => contract.partner === partner.id)
           .reduce((sum, contract) => sum + contract.amount_paid, 0),
-        category: partner.id, // Assuming each partner is a separate category
+        category: partner.id,
       }));
 
-      // Create a node for each contract
+      // Creating nodes for each contract
       const contractNodes = contractsResponse.data.map(contract => {
         const partner = partnerAmounts.find(p => p.id === contract.partner);
         return {
@@ -31,50 +34,55 @@ const BubbleChart = () => {
           partnerName: partner ? partner.name : 'Unknown',
           amount_paid: contract.amount_paid,
           group: contract.partner,
-          radius: 20, // You can also scale this based on the contract amount if desired
+          radius: 20,
         };
       });
 
+      // Setting created nodes
       setNodes(contractNodes);
     } catch (error) {
       console.error("Error fetching contract data:", error);
     }
   };
 
+  // Use effect to call fetch data function
   useEffect(() => {
     fetchContractData();
-    // console.log(nodes);
   }, []);
 
   useEffect(() => {
+    // Check to make sure data is accessible
     if (nodes.length > 0 && svgRef.current) {
       drawChart();
     }
   }, [nodes]);
 
   const drawChart = () => {
-    const width = 450; // Width of the SVG container
-    const height = 350; // Height of the SVG container
-    const padding = 30; // Padding to ensure bubbles don't touch the SVG edges
+    // Initialize default d3 canvas size
+    const width = 450;
+    const height = 350;
+    const padding = 30;
 
+    // Setting width and height attributes
     const svg = d3.select(svgRef.current)
       .attr('width', width)
       .attr('height', height);
 
-    // used in order to rerender
+    // Clearing any existing elements in the container before drawing new ones
     svg.selectAll("*").remove();
 
-    // Color scale remains the same
+    // Setting color scale for bubbles
     const colorScale = d3.scaleOrdinal()
-      .domain(nodes.map(d => d.partnerName)) // Assuming you want to color by partner name
+      .domain(nodes.map(d => d.partnerName))
       .range(["#FF5D01", "#FFE601", "#00FF66", "#7D40FF"]);
 
-    // Adjust the x scale for padding
+    // Defining scales for the x-axis (band scale)
     const x = d3.scaleBand()
       .domain(nodes.map(d => d.group))
       .range([padding, width - padding])
       .padding(0.1);
 
+    // Rendering bubbles based on given data 
     const node = svg.append("g")
       .selectAll("circle")
       .data(nodes, d => d.id)
@@ -104,36 +112,35 @@ const BubbleChart = () => {
           .attr("cy", d => d.y);
       });
 
-    // // Labels for each partner
+    // Setting partner lables
     const partnerLabels = Array.from(new Set(nodes.map(d => d.partnerName)));
 
     const labelGroups = svg.append("g")
-    .attr("class", "label-groups")
-    .selectAll("g")
-    .data(partnerLabels)
-    .enter()
-    .append("g")
-    .attr("transform", (d, i) => `translate(${x(nodes.find(n => n.partnerName === d).group) + x.bandwidth() / 2 - 10}, ${height - 40})`);
+      .attr("class", "label-groups")
+      .selectAll("g")
+      .data(partnerLabels)
+      .enter()
+      .append("g")
+      .attr("transform", (d, i) => `translate(${x(nodes.find(n => n.partnerName === d).group) + x.bandwidth() / 2 - 10}, ${height - 40})`);
 
-  // Add color rectangles for each label
-  labelGroups.append("rect")
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("x", -30)
-    .attr("y", -10)
-    .style("fill", d => colorScale(d));
+    // Render rectangles for corresponding partners in legend
+    labelGroups.append("rect")
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("x", -30)
+      .attr("y", -10)
+      .style("fill", d => colorScale(d));
 
-  // Add text labels next to the rectangles
-  labelGroups.append("text")
-    .attr("x", 5)
-    .attr("y", 5)
-    .text(d => d)
-    .attr("class", "partner-label")
-    .style("text-anchor", "start")
-    .style("fill", "#ffffff")
-    .style("font-size", "17px");
+    // Render partner names in legend
+    labelGroups.append("text")
+      .attr("x", 5)
+      .attr("y", 5)
+      .text(d => d)
+      .attr("class", "partner-label")
+      .style("text-anchor", "start")
+      .style("fill", "#ffffff")
+      .style("font-size", "17px");
   };
-
 
   // Drag event handlers
   const dragstarted = (event, d) => {
@@ -154,8 +161,6 @@ const BubbleChart = () => {
     // Restart the simulation with a low alpha so that it cools down slowly
     simulationRef.current.alpha(0.1).restart();
   };
-
-
 
   return <svg ref={svgRef} className="bubble-chart"></svg>;
 };

@@ -3,17 +3,20 @@ import * as d3 from "d3";
 import { select, easeBounce } from "d3";
 import "../styles/charts.css";
 
+// StackedBarChart component that takes in calculated average contract duration
 const StackedBarChart = ({ averageDuration }) => {
+  // Reference to the SVG container for D3 manipulation
   const svgRef = useRef(null);
 
   useEffect(() => {
-    // Select the SVG element and clear it
+    // D3 selections and SVG container setup
     const svgElement = d3.select(svgRef.current);
     svgElement.selectAll("*").remove();
 
+    // Ensuring averageDuration data is available before proceeding
     if (!averageDuration.length) return;
 
-    // Define margins, width, and height
+    // Margin and dimensions setup for the chart
     const margin = { top: 50, right: 20, bottom: 35, left: 100 };
     const height = 350 - margin.top - margin.bottom;
     const width = 450 - margin.left - margin.right;
@@ -25,11 +28,10 @@ const StackedBarChart = ({ averageDuration }) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Define scales
+    // Defining scales for the x-axis (band scale) and y-axis (linear scale)
     const xScale = d3.scaleBand()
       .range([0, width])
       .padding(0.3)
-      // x-asix representing demographic
       .domain(averageDuration.map(d => d.demographic));
 
     const yMax = d3.max(averageDuration, d => d3.sum(d.partners.map(p => p.averageDuration)));
@@ -37,11 +39,11 @@ const StackedBarChart = ({ averageDuration }) => {
       .range([height, 0])
       .domain([0, yMax]);
 
-    // Color scale now represents partners
+    // Mapping data to grab partnerNames
     const partnerNames = averageDuration.flatMap(d => d.partners.map(p => p.partner));
     const uniquePartners = Array.from(new Set(partnerNames));
 
-    // color scale for layers
+    // Setting color scale for layers
     const colorScale = d3.scaleOrdinal()
       .domain(uniquePartners)
       .range(["#FFE601", "#00FF66", "#7D40FF", "#FF74AE"]);
@@ -51,7 +53,7 @@ const StackedBarChart = ({ averageDuration }) => {
       .attr("class", "tooltip")
       .style("opacity", 0);
 
-    // Function for Gridlines 
+    // Function to add Gridlines
     function gridLines() {
       return d3.axisLeft(yScale)
         .ticks(5)
@@ -76,7 +78,7 @@ const StackedBarChart = ({ averageDuration }) => {
       return obj;
     });
 
-    // Stack the data
+    // Stacking the data
     const stack = d3.stack()
       .keys(uniquePartners)
       .order(d3.stackOrderNone)
@@ -84,7 +86,7 @@ const StackedBarChart = ({ averageDuration }) => {
 
     const layers = stack(stackData);
 
-    // Draw the stacked bars
+    // Rendering stacked bars based on given data
     svg.selectAll(".demographic")
       .data(layers)
       .enter().append("g")
@@ -99,16 +101,16 @@ const StackedBarChart = ({ averageDuration }) => {
       .attr("height", d => yScale(d[0]) - yScale(d[1]))
       .attr("width", xScale.bandwidth());
 
-    // Add the X Axis
+    // Adding x-axis
     svg.append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(xScale));
 
-    // Add the Y Axis
+    // Adding y-axis
     svg.append("g")
       .call(d3.axisLeft(yScale));
 
-    // Y Axis with label 
+    // Adding y-axis label 
     svg.append("g")
       .call(d3.axisLeft(yScale))
       .append("text")
@@ -120,11 +122,11 @@ const StackedBarChart = ({ averageDuration }) => {
       .style("text-anchor", "middle")
       .text("Average Duration");
 
-    // Determine the position for the legend
+    // Determineing position for the legend
     const legendX = margin.right + 20;
     const legendY = -30;
 
-    // Create the legend
+    // Rendering legend for clarity
     const legend = svg.append("g")
       .attr("class", "legend")
       .attr("transform", `translate(${legendX}, ${legendY})`);
@@ -132,6 +134,7 @@ const StackedBarChart = ({ averageDuration }) => {
     // Starting position for the first legend item
     let xOffset = 0;
 
+    // Grabbing each partner name and corresponding color representation
     colorScale.domain().forEach((partner, index) => {
       const legendItem = legend.append("g")
         .attr("transform", `translate(${xOffset}, 0)`);
@@ -157,7 +160,7 @@ const StackedBarChart = ({ averageDuration }) => {
     // Adjust the height of the SVG to accommodate the legend
     svg.attr("height", height + margin.top + margin.bottom + 20);
 
-    // Hover functionality
+    // hover functionality to display values
     svg.selectAll(".demographic rect")
       .on("mouseover", function (event, d) {
         select(this)
